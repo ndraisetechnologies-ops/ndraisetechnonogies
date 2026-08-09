@@ -1,0 +1,183 @@
+.detail-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 4rem 6rem;
+}
+
+.detail-header-banner {
+  padding: 3.5rem;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(13, 19, 36, 0.95) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  box-shadow: 0 20px 50px -10px rgba(99, 102, 241, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.detail-header-content {
+  max-width: 650px;
+}
+
+.detail-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+  line-height: 1.15;
+}
+
+.detail-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.detail-header-desc {
+  font-size: 1.05rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.detail-header-graphic {
+  width: 140px;
+  height: 140px;
+  border-radius: 28px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 2px solid rgba(56, 189, 248, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.25);
+  flex-shrink: 0;
+}
+
+/* Tabs Bar */
+.detail-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 2.5rem;
+  padding-bottom: 0.5rem;
+  overflow-x: auto;
+}
+
+.detail-tab-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.detail-tab-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.detail-tab-btn.active {
+  color: #ffffff;
+  background: rgba(99, 102, 241, 0.15);
+  border-bottom: 2px solid var(--primary);
+}
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2.5rem;
+}
+
+.detail-main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.detail-section-card {
+  padding: 2rem;
+}
+
+.detail-section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+}
+
+.detail-text-paragraph {
+  color: #94a3b8;
+  line-height: 1.7;
+  font-size: 0.98rem;
+  margin-bottom: 1rem;
+}
+
+/* Skills Checklist */
+.skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.skill-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #e2e8f0;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.skill-check-icon {
+  color: #38bdf8;
+}
+
+/* Info Grid Box */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.9rem;
+}
+
+.info-label {
+  color: #64748b;
+}
+
+.info-value {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .detail-page {
+    padding: 2rem 1.5rem;
+  }
+  .detail-header-banner {
+    flex-direction: column;
+    padding: 2rem;
+  }
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+}
