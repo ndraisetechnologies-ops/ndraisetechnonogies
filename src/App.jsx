@@ -7,6 +7,8 @@ import InternshipDetailPage from './pages/Internships/InternshipDetailPage';
 import StudentDashboard from './pages/Dashboard/StudentDashboard';
 import AdminDashboard from './pages/Dashboard/AdminDashboard';
 import VerifyCertificatePage from './pages/VerifyCertificate/VerifyCertificatePage';
+import OfferLetterPage from './pages/OfferLetter/OfferLetterPage';
+import MyCertificatesPage from './pages/MyCertificates/MyCertificatesPage';
 import AuthModal from './components/Modals/AuthModal';
 import ApplyModal from './components/Modals/ApplyModal';
 import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
@@ -23,7 +25,7 @@ export default function App() {
   
   // Theme management ('light' or 'dark')
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'light';
+    return localStorage.getItem('theme') || 'dark';
   });
 
   useEffect(() => {
@@ -85,6 +87,16 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const openOfferLetterPage = () => {
+    setCurrentView('offer-letter');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const openMyCertificatesPage = () => {
+    setCurrentView('my-certificates');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="app-container">
       {/* Main Navbar */}
@@ -103,8 +115,8 @@ export default function App() {
           toggleTheme={toggleTheme}
           onVerifyClick={scrollToVerifier}
           onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
-          onOfferLetterClick={() => setOfferLetterModalOpen(true)}
-          onCertificatesClick={scrollToVerifier}
+          onOfferLetterClick={openOfferLetterPage}
+          onCertificatesClick={openMyCertificatesPage}
           onPolicyClick={(type) => setPolicyModal({ isOpen: true, type })}
           showToast={showToast}
         />
@@ -141,6 +153,18 @@ export default function App() {
 
         {currentView === 'verify' && (
           <VerifyCertificatePage />
+        )}
+
+        {currentView === 'offer-letter' && (
+          <OfferLetterPage user={user} />
+        )}
+
+        {currentView === 'my-certificates' && (
+          <MyCertificatesPage 
+            user={user} 
+            onExploreClick={() => setCurrentView('internships')}
+            onSubmitTasksClick={() => setTaskSubmissionModalOpen(true)}
+          />
         )}
 
         {currentView === 'student-dashboard' && (

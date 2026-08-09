@@ -55,13 +55,6 @@ export default function Navbar({
       hasDropdown: true,
       options: [
         { label: '📚 Browse Courses', actionType: 'browse-courses' },
-        { label: 'Full Stack Web Development', id: 'internships' },
-        { label: 'Python & Data Science Masterclass', id: 'internships' },
-        { label: 'AI & Machine Learning Foundations', id: 'internships' },
-        { label: 'Mobile App Development (React Native)', id: 'internships' },
-        { label: 'Cybersecurity & Ethical Hacking', id: 'internships' },
-        { label: 'UI/UX & Product Design', id: 'internships' },
-        { label: 'Java & System Design', id: 'internships' }
       ]
     },
     {
@@ -72,7 +65,7 @@ export default function Navbar({
         { label: '🎯 Check ATS Score', actionType: 'ats-score' },
         { label: '✉️ Job Email Builder', actionType: 'email-builder' },
         { label: '🧠 Interview Preparation', actionType: 'interview-prep' },
-        { label: '📤 Submit Tasks', actionType: 'submit-task' }
+        // { label: '📤 Submit Tasks', actionType: 'submit-task' }
       ]
     },
     { 

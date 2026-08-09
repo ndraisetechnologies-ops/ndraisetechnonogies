@@ -1,39 +1,48 @@
 import React from 'react';
-import { ArrowRight, Play, ShieldCheck, Award, Code2, Sparkles, Send } from 'lucide-react';
+import { ArrowRight, Play, BookOpen, Code2, TrendingUp, Sparkles, Award, Send } from 'lucide-react';
 import './Hero.css';
 
 export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick }) {
+  const scrollToHowItWorks = () => {
+    const el = document.getElementById('how-it-works');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section className="hero-section">
       <div className="hero-content">
+        {/* Top Tag Pill */}
+        <div className="hero-badge-tag">
+          <Sparkles size={14} className="sparkle-icon" />
+          <span>LEARN • BUILD • GROW</span>
+        </div>
+
+        {/* 3-Line Headline Title */}
         <h1 className="hero-title">
-          <span className="title-line title-line-1">Build Projects.</span>
-          <span className="title-line title-line-2">Earn Credentials.</span>
-          <span className="title-line title-line-3">Launch Tech Career.</span>
+          <span className="title-line title-line-1">Build Skills.</span>
+          <span className="title-line title-line-2">Build Projects.</span>
+          <span className="title-line title-line-3">Build Your Future.</span>
         </h1>
 
+        {/* Subdescription */}
         <p className="hero-description">
-          ND Raise Technologies Virtual Internship Program empowers engineering & tech students with 4-week self-paced virtual project tracks, instant offer letters, verifiable QR certificates, and Letters of Recommendation (LOR).
+          ND Raise Technologies helps students gain practical experience through structured internships, real-world projects and industry-focused learning.
         </p>
 
+        {/* Action Buttons */}
         <div className="hero-buttons">
-          <button className="btn-primary" onClick={onExploreClick}>
-            <span>Explore Virtual Domains</span>
+          <button className="btn-primary hero-btn-main" onClick={onExploreClick}>
+            <span>Explore Internships</span>
             <ArrowRight size={18} />
           </button>
 
-          <button className="btn-secondary" onClick={onVerifyClick}>
-            <Award size={18} color="#f59e0b" />
-            <span>Verify Certificate</span>
-          </button>
-
-          <button className="btn-secondary" onClick={onSubmitTaskClick}>
-            <Send size={16} color="#38bdf8" />
-            <span>Submit Task Links</span>
+          <button className="btn-secondary hero-btn-sub" onClick={scrollToHowItWorks}>
+            <span>How It Works</span>
+            <Play size={13} fill="currentColor" style={{ marginLeft: '2px' }} />
           </button>
         </div>
 
-        {/* Highlights Row */}
+        {/* Feature Highlights Strip */}
         <div className="hero-features-strip">
           <div className="strip-item">
             <span className="strip-dot green"></span>
@@ -50,90 +59,80 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
         </div>
       </div>
 
+      {/* Right Side Visual Component */}
       <div className="hero-visual">
         <div className="hero-bg-glow animate-pulse-glow"></div>
 
         <div className="hero-image-wrapper">
-          {/* Stylized Holographic CodeAlpha Tech Graphic SVG */}
-          <svg width="100%" height="100%" viewBox="0 0 600 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="600" height="500" fill="#090D1A" />
+          {/* Tech Grid Backdrop & SVG Illustration */}
+          <svg width="100%" height="100%" viewBox="0 0 540 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="540" height="440" fill="#050814" rx="20" />
 
-            {/* Background Grid Lines */}
-            <g opacity="0.15" stroke="#6366F1" strokeWidth="1">
-              <path d="M0 100H600M0 200H600M0 300H600M0 400H600" />
-              <path d="M100 0V500M200 0V500M300 0V500M400 0V500M500 0V500" />
+            {/* Grid Line Network */}
+            <g opacity="0.12" stroke="#38BDF8" strokeWidth="1">
+              <path d="M0 60H540M0 120H540M0 180H540M0 240H540M0 300H540M0 360H540" />
+              <path d="M60 0V440M120 0V440M180 0V440M240 0V440M300 0V440M360 0V440M420 0V440M480 0V440" />
             </g>
 
-            {/* Glowing Radial Orb */}
-            <circle cx="300" cy="220" r="140" fill="url(#hero-orb-grad)" opacity="0.6" />
+            {/* Glowing Center Radial */}
+            <circle cx="230" cy="200" r="130" fill="url(#hero-orb-grad)" opacity="0.5" />
 
-            {/* Holographic Coding Screen */}
-            <rect x="140" y="100" width="320" height="200" rx="16" fill="#0F172A" stroke="url(#hero-stroke-grad)" strokeWidth="2" />
-            <rect x="150" y="110" width="300" height="24" rx="6" fill="#1E293B" />
-            <circle cx="165" cy="122" r="4" fill="#EF4444" />
-            <circle cx="180" cy="122" r="4" fill="#F59E0B" />
-            <circle cx="195" cy="122" r="4" fill="#10B981" />
+            {/* Central IDE/Browser Preview Window */}
+            <rect x="60" y="75" width="310" height="195" rx="14" fill="#0D1427" stroke="url(#hero-window-border)" strokeWidth="1.8" />
+            
+            {/* Window Top Controls */}
+            <rect x="68" y="83" width="294" height="24" rx="6" fill="#151D33" />
+            <circle cx="82" cy="95" r="4" fill="#EF4444" />
+            <circle cx="96" cy="95" r="4" fill="#F59E0B" />
+            <circle cx="110" cy="95" r="4" fill="#10B981" />
 
-            {/* Brand Logo on Screen */}
-            <g transform="translate(240, 145)">
-              <rect x="0" y="0" width="120" height="42" rx="8" fill="#FFFFFF" stroke="#6366F1" strokeWidth="1.5" />
-              <image href="/logo.jpg" x="2" y="2" width="116" height="38" preserveAspectRatio="xMidYMid meet" />
+            {/* Logo Display Header Inside Window */}
+            <g transform="translate(155, 118)">
+              <rect x="0" y="0" width="120" height="42" rx="8" fill="#FFFFFF" stroke="#6366F1" strokeWidth="1" />
+              <image href="/logo.jpg" x="4" y="4" width="112" height="34" preserveAspectRatio="xMidYMid meet" />
             </g>
 
-            {/* Code Lines Visual */}
-            <line x1="165" y1="200" x2="260" y2="200" stroke="#38BDF8" strokeWidth="4" strokeLinecap="round" />
-            <line x1="165" y1="220" x2="340" y2="220" stroke="#818CF8" strokeWidth="4" strokeLinecap="round" />
-            <line x1="165" y1="240" x2="290" y2="240" stroke="#C084FC" strokeWidth="4" strokeLinecap="round" />
-            <line x1="165" y1="260" x2="380" y2="260" stroke="#34D399" strokeWidth="4" strokeLinecap="round" />
+            {/* Code / Content Highlight Lines */}
+            <line x1="85" y1="180" x2="200" y2="180" stroke="#38BDF8" strokeWidth="3.5" strokeLinecap="round" />
+            <line x1="85" y1="200" x2="280" y2="200" stroke="#818CF8" strokeWidth="3.5" strokeLinecap="round" />
+            <line x1="85" y1="220" x2="240" y2="220" stroke="#C084FC" strokeWidth="3.5" strokeLinecap="round" />
+            <line x1="85" y1="240" x2="320" y2="240" stroke="#34D399" strokeWidth="3.5" strokeLinecap="round" />
 
-            {/* Laptop Base */}
-            <path d="M100 320 H500 L460 350 H140 Z" fill="url(#laptop-base-grad)" />
-            <rect x="260" y="325" width="80" height="6" rx="3" fill="#64748B" />
-
-            {/* Student Silhouette / Glow */}
-            <path d="M220 480 C220 400 250 370 300 370 C350 370 380 400 380 480 Z" fill="url(#student-silhouette)" />
-            <circle cx="300" cy="330" r="32" fill="#1E1B4B" stroke="#6366F1" strokeWidth="2" />
+            {/* Monitor Base Stand & Student Silhouette */}
+            <path d="M180 300 C180 250 200 230 230 230 C260 230 280 250 280 300 Z" fill="url(#student-silhouette)" />
+            <circle cx="230" cy="210" r="28" fill="#1A1848" stroke="#6366F1" strokeWidth="2" />
 
             <defs>
-              <radialGradient id="hero-orb-grad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(300 220) rotate(90) scale(140)">
+              <radialGradient id="hero-orb-grad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(230 200) rotate(90) scale(130)">
                 <stop stopColor="#6366F1" stopOpacity="0.4" />
                 <stop offset="1" stopColor="#06B6D4" stopOpacity="0" />
               </radialGradient>
-              <linearGradient id="hero-stroke-grad" x1="140" y1="100" x2="460" y2="300" gradientUnits="userSpaceOnUse">
+              <linearGradient id="hero-window-border" x1="60" y1="75" x2="370" y2="270" gradientUnits="userSpaceOnUse">
                 <stop stopColor="#38BDF8" />
                 <stop offset="0.5" stopColor="#818CF8" />
                 <stop offset="1" stopColor="#C084FC" />
               </linearGradient>
-              <linearGradient id="laptop-base-grad" x1="100" y1="320" x2="500" y2="350" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#1E293B" />
-                <stop offset="1" stopColor="#0F172A" />
-              </linearGradient>
-              <linearGradient id="student-silhouette" x1="300" y1="370" x2="300" y2="480" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#312E81" />
-                <stop offset="1" stopColor="#0F172A" stopOpacity="0.8" />
+              <linearGradient id="student-silhouette" x1="230" y1="230" x2="230" y2="300" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#2563EB" />
+                <stop offset="1" stopColor="#050814" stopOpacity="0.8" />
               </linearGradient>
             </defs>
           </svg>
 
-          {/* Floating Badges */}
-          <div className="floating-badge badge-top-right animate-float">
-            <div className="badge-icon-bg" style={{ background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8' }}>
-              <Code2 size={18} />
-            </div>
-            <div>
-              <div className="badge-number">3 Tasks</div>
-              <div className="badge-text">Per Domain Track</div>
-            </div>
+          {/* Floating Action Pill Badges (Right Side Column) */}
+          <div className="hero-pill-badge pill-learn animate-float">
+            <BookOpen size={16} className="pill-icon" />
+            <span>LEARN</span>
           </div>
 
-          <div className="floating-badge badge-bottom-left animate-float-delayed">
-            <div className="badge-icon-bg" style={{ background: 'rgba(52, 211, 153, 0.2)', color: '#34d399' }}>
-              <Award size={18} />
-            </div>
-            <div>
-              <div className="badge-number">ISO Verifiable</div>
-              <div className="badge-text">QR Certificate & LOR</div>
-            </div>
+          <div className="hero-pill-badge pill-build animate-float-delayed">
+            <Code2 size={16} className="pill-icon" />
+            <span>BUILD</span>
+          </div>
+
+          <div className="hero-pill-badge pill-grow animate-float">
+            <TrendingUp size={16} className="pill-icon" />
+            <span>GROW</span>
           </div>
         </div>
       </div>

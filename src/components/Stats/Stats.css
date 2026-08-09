@@ -51,6 +51,16 @@
   color: var(--text-main);
   line-height: 1.1;
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s ease;
+}
+
+.stat-number.is-rolling {
+  color: #38bdf8;
+}
+
+.stat-number.is-static {
+  color: var(--text-main);
 }
 
 .stat-label {

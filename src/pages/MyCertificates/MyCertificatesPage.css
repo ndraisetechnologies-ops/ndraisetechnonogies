@@ -1,0 +1,293 @@
+.my-certificates-page {
+  min-height: calc(100vh - 120px);
+  padding: 4rem 1.5rem 6rem;
+  background: var(--bg-dark);
+}
+
+.certificates-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header & Stat Strip */
+.page-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2.5rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.my-certs-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--text-main);
+  font-family: 'Georgia', serif;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+.my-certs-subtitle {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+/* Top Right Stat Card (Matching Reference Image) */
+.earned-stat-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  min-width: 220px;
+}
+
+.stat-card-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.stat-card-number {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #0284c7;
+  line-height: 1;
+}
+
+.stat-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e0f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Search Bar */
+.certs-search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 280px;
+}
+
+.search-icon {
+  color: var(--text-muted);
+}
+
+.certs-search-input {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  width: 100%;
+  outline: none;
+}
+
+.search-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* EMPTY STATE CARD - MATCHING REFERENCE IMAGE 100% */
+.empty-certificates-card {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 4rem 2.5rem;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.empty-icon-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.empty-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  font-family: 'Georgia', serif;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.empty-subtitle {
+  color: #475569;
+  font-size: 1.05rem;
+  max-width: 520px;
+  margin: 0 auto 2.25rem;
+  line-height: 1.6;
+}
+
+.start-assessing-btn {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 0.95rem 2.5rem;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  box-shadow: 0 10px 30px rgba(2, 132, 199, 0.35);
+  transition: all 0.25s ease;
+}
+
+.start-assessing-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(2, 132, 199, 0.5);
+}
+
+/* EARNED CERTIFICATES GRID */
+.certificates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1.75rem;
+}
+
+.certificate-card {
+  padding: 2rem 1.65rem;
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.certificate-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.card-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.verified-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.cert-id-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-glass);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+}
+
+.cert-track-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 1rem;
+  line-height: 1.35;
+}
+
+.cert-details-list {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.skills-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.skill-chip {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  background: rgba(99, 102, 241, 0.1);
+  color: #a78bfa;
+  font-weight: 600;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.flex-btn {
+  flex: 1;
+  padding: 0.6rem;
+  font-size: 0.82rem;
+  justify-content: center;
+}
+
+.icon-only {
+  flex: 0 0 40px;
+  padding: 0.6rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .my-certs-title {
+    font-size: 2.2rem;
+  }
+
+  .certificates-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .earned-stat-card {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .empty-certificates-card {
+    padding: 3rem 1.5rem;
+  }
+}

@@ -5,7 +5,16 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/jpeg" href="/logo.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ND RASE Technologies| Learn • Build • Grow - Structured Internships & Real-World Projects</title>
+  <title>ND RAISE Technologies | Learn • Code • Grow - Virtual Internships & Projects</title>
+  <!-- Inline Script to prevent theme color flash on page refresh -->
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      } catch (e) {}
+    })();
+  </script>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
