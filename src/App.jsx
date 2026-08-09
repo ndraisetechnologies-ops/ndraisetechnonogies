@@ -23,7 +23,7 @@ export default function App() {
   
   // Theme management ('light' or 'dark')
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'light';
+    return localStorage.getItem('theme') || 'dark';
   });
 
   useEffect(() => {
