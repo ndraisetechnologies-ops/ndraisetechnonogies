@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Menu, X, ChevronDown, ArrowRight, Sun, Moon, UserCheck, ShieldCheck, Send, Award, HelpCircle, BookOpen } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Menu, X, ChevronDown, ArrowRight, Sun, Moon, UserCheck, ShieldCheck, Send, Award, HelpCircle, BookOpen, LogOut, LayoutDashboard, FileText } from 'lucide-react';
 import './Navbar.css';
 
 export default function Navbar({ 
@@ -7,16 +7,31 @@ export default function Navbar({
   setCurrentView, 
   openAuthModal, 
   user, 
+  onLogout,
   theme, 
   toggleTheme, 
   onVerifyClick, 
   onSubmitTaskClick,
   onOfferLetterClick,
   onCertificatesClick,
-  onPolicyClick
+  onPolicyClick,
+  showToast
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
+
+  // Close user dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setUserMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const menuItems = [
     { 
@@ -36,28 +51,30 @@ export default function Navbar({
       ]
     },
     { 
-      id: 'virtual-domains', 
-      label: 'Virtual Domains', 
+      id: 'skill-courses', 
+      label: 'Skill Courses', 
       hasDropdown: true,
       options: [
-        { label: 'Web Development (4-Week)', id: 'internships' },
-        { label: 'Python Programming (4-Week)', id: 'internships' },
-        { label: 'Data Science & Analytics', id: 'internships' },
-        { label: 'AI & Machine Learning', id: 'internships' },
-        { label: 'Mobile App Development', id: 'internships' },
-        { label: 'Cybersecurity Analyst', id: 'internships' },
-        { label: 'UI/UX Design', id: 'internships' },
-        { label: 'Java Development', id: 'internships' }
+        { label: '📚 Browse Courses', actionType: 'browse-courses' },
+        { label: 'Full Stack Web Development', id: 'internships' },
+        { label: 'Python & Data Science Masterclass', id: 'internships' },
+        { label: 'AI & Machine Learning Foundations', id: 'internships' },
+        { label: 'Mobile App Development (React Native)', id: 'internships' },
+        { label: 'Cybersecurity & Ethical Hacking', id: 'internships' },
+        { label: 'UI/UX & Product Design', id: 'internships' },
+        { label: 'Java & System Design', id: 'internships' }
       ]
     },
     {
-      id: 'submit-tasks',
-      label: 'Submit Tasks',
-      hasDropdown: false,
-      isSpecialAction: true,
-      actionFn: () => {
-        if (onSubmitTaskClick) onSubmitTaskClick();
-      }
+      id: 'career-tools',
+      label: 'Career Tools',
+      hasDropdown: true,
+      options: [
+        { label: '🎯 Check ATS Score', actionType: 'ats-score' },
+        { label: '✉️ Job Email Builder', actionType: 'email-builder' },
+        { label: '🧠 Interview Preparation', actionType: 'interview-prep' },
+        { label: '📤 Submit Tasks', actionType: 'submit-task' }
+      ]
     },
     { 
       id: 'more', 
@@ -76,6 +93,20 @@ export default function Navbar({
   const handleNavClick = (item) => {
     if (item.isSpecialAction && item.actionFn) {
       item.actionFn();
+    } else if (item.actionType === 'browse-courses') {
+      setCurrentView('internships');
+    } else if (item.actionType === 'ats-score') {
+      if (onSubmitTaskClick) {
+        onSubmitTaskClick();
+      } else {
+        alert('🎯 Check ATS Score: Upload your resume to calculate score compatibility!');
+      }
+    } else if (item.actionType === 'email-builder') {
+      alert('✉️ Job Email Builder: Generate HR cold emails & cover letters!');
+    } else if (item.actionType === 'interview-prep') {
+      alert('🧠 Interview Preparation: Technical questions & behavioral drills!');
+    } else if (item.actionType === 'submit-task') {
+      if (onSubmitTaskClick) onSubmitTaskClick();
     } else if (item.actionType === 'apply-now') {
       setCurrentView('internships');
     } else if (item.actionType === 'verify') {
@@ -103,7 +134,7 @@ export default function Navbar({
       }
     } else if (item.actionType === 'contact' || item.actionType === 'terms' || item.actionType === 'privacy' || item.actionType === 'cookies') {
       if (onPolicyClick) onPolicyClick(item.actionType);
-    } else if (item.id === 'internships' || item.id === 'virtual-domains') {
+    } else if (item.id === 'internships' || item.id === 'skill-courses' || item.id === 'virtual-domains') {
       setCurrentView('internships');
     } else {
       setCurrentView('home');
@@ -207,13 +238,86 @@ export default function Navbar({
         </button>
 
         {user ? (
-          <button 
-            className="btn-portal" 
-            onClick={() => setCurrentView('student-dashboard')}
-          >
-            <UserCheck size={16} />
-            <span>Student Dashboard</span>
-          </button>
+          <div className="user-profile-wrapper" ref={userMenuRef}>
+            <button 
+              type="button"
+              className="user-profile-pill" 
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+            >
+              <div className="user-avatar-circle">
+                <span>{user.name ? user.name.charAt(0).toUpperCase() : 'D'}</span>
+              </div>
+              <span className="user-profile-name">{user.name || 'Divilash'}</span>
+              <ChevronDown size={14} className={`user-chevron ${userMenuOpen ? 'open' : ''}`} />
+            </button>
+
+            {userMenuOpen && (
+              <div className="user-profile-dropdown">
+                <div className="dropdown-user-header">
+                  <div className="user-avatar-circle header-avatar">
+                    <span>{user.name ? user.name.charAt(0).toUpperCase() : 'D'}</span>
+                  </div>
+                  <div className="user-info-text">
+                    <div className="info-name">{user.name || 'Divilash'}</div>
+                    <div className="info-email">{user.email || 'student@ndtech.com'}</div>
+                  </div>
+                </div>
+
+                <div className="user-dropdown-divider" />
+
+                <button 
+                  type="button"
+                  className="user-dropdown-item" 
+                  onClick={() => {
+                    setCurrentView('student-dashboard');
+                    setUserMenuOpen(false);
+                  }}
+                >
+                  <LayoutDashboard size={16} />
+                  <span>Student Dashboard</span>
+                </button>
+
+                <button 
+                  type="button"
+                  className="user-dropdown-item" 
+                  onClick={() => {
+                    if (onCertificatesClick) onCertificatesClick();
+                    else setCurrentView('student-dashboard');
+                    setUserMenuOpen(false);
+                  }}
+                >
+                  <Award size={16} />
+                  <span>My Certificates</span>
+                </button>
+
+                <button 
+                  type="button"
+                  className="user-dropdown-item" 
+                  onClick={() => {
+                    if (onOfferLetterClick) onOfferLetterClick();
+                    setUserMenuOpen(false);
+                  }}
+                >
+                  <FileText size={16} />
+                  <span>Download Offer Letter</span>
+                </button>
+
+                <div className="user-dropdown-divider" />
+
+                <button 
+                  type="button"
+                  className="user-dropdown-item logout-item" 
+                  onClick={() => {
+                    if (onLogout) onLogout();
+                    setUserMenuOpen(false);
+                  }}
+                >
+                  <LogOut size={16} />
+                  <span>Logout</span>
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <>
             <button 

@@ -3,7 +3,6 @@ import Hero from '../../components/Hero/Hero';
 import Stats from '../../components/Stats/Stats';
 import HowItWorks from '../../components/HowItWorks/HowItWorks';
 import PopularInternships from '../../components/PopularInternships/PopularInternships';
-import CertificateVerifier from '../../components/CertificateVerifier/CertificateVerifier';
 import Testimonials from '../../components/Testimonials/Testimonials';
 import FAQ from '../../components/FAQ/FAQ';
 import CollegeSection from '../../components/CollegeSection/CollegeSection';
@@ -36,7 +35,6 @@ export default function Home({
         onViewAllClick={onViewAllClick}
         onOpenTasksModal={onOpenTasksModal}
       />
-      <CertificateVerifier />
       <Testimonials />
       <FAQ />
       <CollegeSection />

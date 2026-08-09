@@ -6,6 +6,7 @@ import InternshipsPage, { ALL_INTERNSHIPS } from './pages/Internships/Internship
 import InternshipDetailPage from './pages/Internships/InternshipDetailPage';
 import StudentDashboard from './pages/Dashboard/StudentDashboard';
 import AdminDashboard from './pages/Dashboard/AdminDashboard';
+import VerifyCertificatePage from './pages/VerifyCertificate/VerifyCertificatePage';
 import AuthModal from './components/Modals/AuthModal';
 import ApplyModal from './components/Modals/ApplyModal';
 import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
@@ -80,13 +81,8 @@ export default function App() {
   };
 
   const scrollToVerifier = () => {
-    if (currentView !== 'home') {
-      setCurrentView('home');
-    }
-    setTimeout(() => {
-      const el = document.getElementById('verify-certificate');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }, 150);
+    setCurrentView('verify');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -98,6 +94,11 @@ export default function App() {
           setCurrentView={setCurrentView}
           openAuthModal={(mode) => setAuthModal({ isOpen: true, mode })}
           user={user}
+          onLogout={() => {
+            setUser(null);
+            setCurrentView('home');
+            showToast('Logged out successfully');
+          }}
           theme={theme}
           toggleTheme={toggleTheme}
           onVerifyClick={scrollToVerifier}
@@ -105,6 +106,7 @@ export default function App() {
           onOfferLetterClick={() => setOfferLetterModalOpen(true)}
           onCertificatesClick={scrollToVerifier}
           onPolicyClick={(type) => setPolicyModal({ isOpen: true, type })}
+          showToast={showToast}
         />
       )}
 
@@ -135,6 +137,10 @@ export default function App() {
             onApplyClick={handleApplyClick}
             onShareClick={() => showToast('Internship link copied to clipboard!')}
           />
+        )}
+
+        {currentView === 'verify' && (
+          <VerifyCertificatePage />
         )}
 
         {currentView === 'student-dashboard' && (
