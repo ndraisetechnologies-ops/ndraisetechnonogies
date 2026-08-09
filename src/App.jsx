@@ -8,6 +8,7 @@ import StudentDashboard from './pages/Dashboard/StudentDashboard';
 import AdminDashboard from './pages/Dashboard/AdminDashboard';
 import VerifyCertificatePage from './pages/VerifyCertificate/VerifyCertificatePage';
 import OfferLetterPage from './pages/OfferLetter/OfferLetterPage';
+import MyCertificatesPage from './pages/MyCertificates/MyCertificatesPage';
 import AuthModal from './components/Modals/AuthModal';
 import ApplyModal from './components/Modals/ApplyModal';
 import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
@@ -91,6 +92,11 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const openMyCertificatesPage = () => {
+    setCurrentView('my-certificates');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="app-container">
       {/* Main Navbar */}
@@ -110,7 +116,7 @@ export default function App() {
           onVerifyClick={scrollToVerifier}
           onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
           onOfferLetterClick={openOfferLetterPage}
-          onCertificatesClick={scrollToVerifier}
+          onCertificatesClick={openMyCertificatesPage}
           onPolicyClick={(type) => setPolicyModal({ isOpen: true, type })}
           showToast={showToast}
         />
@@ -151,6 +157,14 @@ export default function App() {
 
         {currentView === 'offer-letter' && (
           <OfferLetterPage user={user} />
+        )}
+
+        {currentView === 'my-certificates' && (
+          <MyCertificatesPage 
+            user={user} 
+            onExploreClick={() => setCurrentView('internships')}
+            onSubmitTasksClick={() => setTaskSubmissionModalOpen(true)}
+          />
         )}
 
         {currentView === 'student-dashboard' && (
