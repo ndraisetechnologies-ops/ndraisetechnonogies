@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, X, ChevronDown, ArrowRight, Sun, Moon, UserCheck, ShieldCheck, Send, Award, HelpCircle, BookOpen, LogOut, LayoutDashboard, FileText } from 'lucide-react';
+import { Menu, X, ChevronDown, ArrowRight, Sun, Moon, UserCheck, ShieldCheck, Send, Award, HelpCircle, BookOpen, LogOut, LayoutDashboard, FileText, Star } from 'lucide-react';
 import './Navbar.css';
 
 export default function Navbar({ 
@@ -14,6 +14,7 @@ export default function Navbar({
   onSubmitTaskClick,
   onOfferLetterClick,
   onCertificatesClick,
+  onReviewsClick,
   onPolicyClick,
   showToast
 }) {
@@ -66,7 +67,6 @@ export default function Navbar({
         { label: '🎯 Check ATS Score', actionType: 'ats-score' },
         { label: '✉️ Job Email Builder', actionType: 'email-builder' },
         { label: '🧠 Interview Preparation', actionType: 'interview-prep' },
-        // { label: '📤 Submit Tasks', actionType: 'submit-task' }
       ]
     },
     { 
@@ -74,7 +74,7 @@ export default function Navbar({
       label: 'More', 
       hasDropdown: true,
       options: [
-        { label: 'Student Reviews', id: 'home', anchor: 'testimonials' },
+        { label: '⭐ Student Reviews', actionType: 'reviews' },
         { label: 'Contact Support', actionType: 'contact' },
         { label: 'Terms & Conditions', actionType: 'terms' },
         { label: 'Privacy Policy', actionType: 'privacy' },
@@ -103,12 +103,8 @@ export default function Navbar({
     } else if (item.actionType === 'apply-now') {
       setCurrentView('internships');
     } else if (item.actionType === 'verify') {
-      if (currentView !== 'home') setCurrentView('home');
-      setTimeout(() => {
-        const el = document.getElementById('verify-certificate');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-        if (onVerifyClick) onVerifyClick();
-      }, 100);
+      if (onVerifyClick) onVerifyClick();
+      else setCurrentView('verify');
     } else if (item.actionType === 'offer-letter') {
       if (onOfferLetterClick) {
         onOfferLetterClick();
@@ -119,11 +115,13 @@ export default function Navbar({
       if (onCertificatesClick) {
         onCertificatesClick();
       } else {
-        if (currentView !== 'home') setCurrentView('home');
-        setTimeout(() => {
-          const el = document.getElementById('verify-certificate');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        setCurrentView('my-certificates');
+      }
+    } else if (item.actionType === 'reviews') {
+      if (onReviewsClick) {
+        onReviewsClick();
+      } else {
+        setCurrentView('reviews');
       }
     } else if (item.actionType === 'contact' || item.actionType === 'terms' || item.actionType === 'privacy' || item.actionType === 'cookies') {
       if (onPolicyClick) onPolicyClick(item.actionType);
@@ -144,59 +142,48 @@ export default function Navbar({
 
   return (
     <header className="navbar-container">
-      {/* 1. Left Brand Logo Section */}
-      <div className="nav-brand">
-        <div className="brand-logo-badge">
-          <img src="/logo.jpg" alt="ND Technologies Logo" className="brand-logo-img" />
-        </div>
-        <div className="brand-text">
-          <div className="brand-title">
-            ND <span>TECHNOLOGIES</span>
-          </div>
-          <div className="brand-tagline">LEARN • CODE • GROW</div>
+      {/* 1. Logo */}
+      <div className="navbar-logo" onClick={() => setCurrentView('home')}>
+        <img src="/logo.jpg" alt="ND Raise Technologies Logo" className="logo-img" />
+        <div className="logo-text-group">
+          <span className="logo-title">ND Raise Technologies</span>
+          <span className="logo-subtitle">ISO 9001:2015 Certified Platform</span>
         </div>
       </div>
 
-      {/* 2. Center Floating Navigation Menu */}
-      <nav className={`nav-pill-wrapper ${mobileOpen ? 'mobile-open' : ''}`}>
-        <ul className="nav-pill-list">
+      {/* 2. Desktop Navigation Menu */}
+      <nav className={`nav-menu ${mobileOpen ? 'open' : ''}`}>
+        <ul className="nav-list">
           {menuItems.map((item) => {
-            const isActive = currentView === item.id || (item.id === 'internships-folder' && currentView === 'internships');
-            const isDropdownOpen = activeDropdown === item.id;
-
+            const isActive = currentView === item.id;
             return (
               <li 
                 key={item.id} 
-                className={`nav-pill-item ${item.hasDropdown ? 'has-dropdown' : ''}`}
+                className={`nav-item ${item.hasDropdown ? 'has-dropdown' : ''}`}
                 onMouseEnter={() => item.hasDropdown && setActiveDropdown(item.id)}
                 onMouseLeave={() => item.hasDropdown && setActiveDropdown(null)}
               >
-                <button
-                  className={`nav-pill-link ${isActive ? 'active' : ''} ${isDropdownOpen ? 'dropdown-active' : ''}`}
-                  onClick={() => {
-                    if (item.hasDropdown) {
-                      setActiveDropdown(isDropdownOpen ? null : item.id);
-                    } else {
+                <a 
+                  href={`#${item.id}`}
+                  className={`nav-link ${isActive ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (!item.hasDropdown) {
                       handleNavClick(item);
                     }
                   }}
                 >
                   <span>{item.label}</span>
-                  {item.hasDropdown && (
-                    <ChevronDown 
-                      size={15} 
-                      className={`chevron-icon ${isDropdownOpen ? 'rotate' : ''}`} 
-                    />
-                  )}
-                </button>
+                  {item.hasDropdown && <ChevronDown size={14} className="dropdown-chevron" />}
+                </a>
 
                 {/* Dropdown Menu */}
-                {item.hasDropdown && item.options && (
-                  <div className={`nav-dropdown-menu ${isDropdownOpen ? 'open' : ''}`}>
+                {item.hasDropdown && activeDropdown === item.id && (
+                  <div className="dropdown-menu animate-fade-in">
                     {item.options.map((opt, idx) => (
-                      <a
+                      <a 
                         key={idx}
-                        href="#"
+                        href="#option"
                         className="dropdown-item"
                         onClick={(e) => {
                           e.preventDefault();
@@ -275,7 +262,7 @@ export default function Navbar({
                   className="user-dropdown-item" 
                   onClick={() => {
                     if (onCertificatesClick) onCertificatesClick();
-                    else setCurrentView('student-dashboard');
+                    else setCurrentView('my-certificates');
                     setUserMenuOpen(false);
                   }}
                 >
@@ -295,46 +282,52 @@ export default function Navbar({
                   <span>Download Offer Letter</span>
                 </button>
 
+                <button 
+                  type="button"
+                  className="user-dropdown-item" 
+                  onClick={() => {
+                    if (onReviewsClick) onReviewsClick();
+                    else setCurrentView('reviews');
+                    setUserMenuOpen(false);
+                  }}
+                >
+                  <Star size={16} color="#f59e0b" />
+                  <span>Student Reviews</span>
+                </button>
+
                 <div className="user-dropdown-divider" />
 
                 <button 
                   type="button"
-                  className="user-dropdown-item logout-item" 
+                  className="user-dropdown-item logout-btn" 
                   onClick={() => {
-                    if (onLogout) onLogout();
                     setUserMenuOpen(false);
+                    onLogout();
                   }}
                 >
                   <LogOut size={16} />
-                  <span>Logout</span>
+                  <span>Sign Out</span>
                 </button>
               </div>
             )}
           </div>
         ) : (
-          <>
-            <button 
-              className="nav-login-btn" 
-              onClick={() => openAuthModal('login')}
-            >
-              Login
+          <div className="auth-buttons-group">
+            <button className="btn-secondary nav-login-btn" onClick={() => openAuthModal('login')}>
+              Sign In
             </button>
-
-            <button 
-              className="nav-join-btn" 
-              onClick={() => openAuthModal('register')}
-            >
-              <span>Apply Now</span>
-              <ArrowRight size={16} className="btn-arrow-icon" />
+            <button className="btn-primary nav-register-btn" onClick={() => openAuthModal('register')}>
+              <span>Get Started</span>
+              <ArrowRight size={16} />
             </button>
-          </>
+          </div>
         )}
 
-        {/* Mobile Menu Toggle Button */}
+        {/* Mobile Hamburger Toggle */}
         <button 
-          className="mobile-toggle" 
+          className="mobile-hamburger-btn"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle navigation menu"
+          aria-label="Toggle Mobile Menu"
         >
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
