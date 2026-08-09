@@ -10,6 +10,10 @@ import VerifyCertificatePage from './pages/VerifyCertificate/VerifyCertificatePa
 import OfferLetterPage from './pages/OfferLetter/OfferLetterPage';
 import MyCertificatesPage from './pages/MyCertificates/MyCertificatesPage';
 import StudentReviewsPage from './pages/StudentReviews/StudentReviewsPage';
+import ContactUsPage from './pages/ContactUs/ContactUsPage';
+import TermsAndConditionsPage from './pages/TermsAndConditions/TermsAndConditionsPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicy/PrivacyPolicyPage';
+import CookiesPolicyPage from './pages/CookiesPolicy/CookiesPolicyPage';
 import AuthModal from './components/Modals/AuthModal';
 import ApplyModal from './components/Modals/ApplyModal';
 import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
@@ -175,7 +179,23 @@ export default function App() {
         )}
 
         {currentView === 'reviews' && (
-          <StudentReviewsPage user={user} />
+          <StudentReviewsPage user={user} setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'contact' && (
+          <ContactUsPage user={user} setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'terms' && (
+          <TermsAndConditionsPage setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'privacy' && (
+          <PrivacyPolicyPage setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'cookies' && (
+          <CookiesPolicyPage setCurrentView={setCurrentView} />
         )}
 
         {currentView === 'student-dashboard' && (
@@ -199,7 +219,11 @@ export default function App() {
 
       {/* Main Footer */}
       {currentView !== 'student-dashboard' && currentView !== 'admin-dashboard' && (
-        <Footer setCurrentView={setCurrentView} />
+        <Footer 
+          setCurrentView={setCurrentView} 
+          user={user}
+          onAuthClick={(mode) => setAuthModal({ isOpen: true, mode })}
+        />
       )}
 
       {/* Modals */}

@@ -13,6 +13,18 @@
   transition: all 0.3s ease;
 }
 
+/* Strict Image Safety Constraint */
+.navbar-container img,
+.navbar-logo img,
+.logo-img,
+.brand-logo-img {
+  max-height: 44px;
+  max-width: 44px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
 /* 1. Left Brand Logo */
 .nav-brand {
   display: flex;
