@@ -1,211 +1,184 @@
 import React, { useState } from 'react';
-import { Star, Search, Filter, Quote, CheckCircle2, Linkedin, MessageSquare, ThumbsUp, Send, Award } from 'lucide-react';
+import { Star, Search, PlusCircle, Heart, Home, Send, Quote, CheckCircle2 } from 'lucide-react';
 import './StudentReviewsPage.css';
 
 const INITIAL_REVIEWS = [
   {
     id: 1,
-    name: 'Rohan Verma',
-    domain: 'Web Development Virtual Internship',
-    college: 'IIT Delhi',
-    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80',
+    name: 'Muhammad Taha',
+    role: 'Web Dev intern',
+    initial: 'M',
+    quote: 'Great experience with ND RAISE Technologies, enhanced my skills and allowed me to put the verified certificate on my resume',
     rating: 5,
-    date: 'August 02, 2026',
-    verified: true,
-    project: 'Full-Stack E-Commerce Platform',
-    quote: 'The 4-week Web Development internship at ND Raise Technologies gave me practical project experience that I could highlight on my resume. The mentor guidance and real-world tasks boosted my confidence immensely!',
-    linkedin: 'https://linkedin.com'
+    category: 'Web Development'
   },
   {
     id: 2,
-    name: 'Ananya Sharma',
-    domain: 'Python Programming Track',
-    college: 'BITS Pilani',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-    rating: 5,
-    date: 'July 28, 2026',
-    verified: true,
-    project: 'Automated Web Scraper & Data Pipeline',
-    quote: 'Awesome virtual internship platform! The structure of the weekly tasks forced me to write clean Python code and learn key libraries. Receiving the ISO 9001 verified certificate helped me land my summer tech job.',
-    linkedin: 'https://linkedin.com'
+    name: 'Mohamed Khaled Rammah',
+    role: 'Machine Learning Intern',
+    initial: 'M',
+    quote: 'The project was well structured and offered practical work that helped me grow professionally.',
+    rating: 4,
+    category: 'Machine Learning'
   },
   {
     id: 3,
-    name: 'Vikramaditya Nair',
-    domain: 'Data Science & Machine Learning',
-    college: 'NIT Trichy',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    name: 'N Srujana',
+    role: 'App Development Intern',
+    initial: 'N',
+    quote: 'The internship helped me work on ideas and improve my application development skills.',
     rating: 5,
-    date: 'July 15, 2026',
-    verified: true,
-    project: 'Customer Churn Prediction Model',
-    quote: 'Working on actual machine learning datasets and deploying predictive models was an eye-opener. The feedback on task submissions was precise. Highly recommended for pre-final year engineering students!',
-    linkedin: 'https://linkedin.com'
+    category: 'App Development'
   },
   {
     id: 4,
-    name: 'Priya Sundaram',
-    domain: 'Cybersecurity Analyst',
-    college: 'SRM Institute of Technology',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    name: 'Shihab Sarar',
+    role: 'Machine Learning Intern',
+    initial: 'S',
+    quote: 'The projects were exciting, creative, and helped me gain practical experience.',
     rating: 5,
-    date: 'June 30, 2026',
-    verified: true,
-    project: 'Vulnerability Assessment & Penetration Report',
-    quote: 'I learned network scanning, Wireshark packet analysis, and ethical hacking concepts. The certificate verification feature is seamless when sharing on LinkedIn!',
-    linkedin: 'https://linkedin.com'
+    category: 'Machine Learning'
   },
   {
     id: 5,
-    name: 'Karthik Raja',
-    domain: 'UI/UX Design Track',
-    college: 'VIT Vellore',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+    name: 'Priyanka Dubakula',
+    role: 'Python Programming Intern',
+    initial: 'P',
+    quote: 'The way tasks were assigned helped me gain practical knowledge and improve my skills.',
     rating: 5,
-    date: 'June 18, 2026',
-    verified: true,
-    project: 'Fintech Mobile App Design System',
-    quote: 'The Figma wireframing and prototyping tasks allowed me to build a stunning design portfolio. ND Raise Technologies provided an amazing learning environment.',
-    linkedin: 'https://linkedin.com'
+    category: 'Python'
   },
   {
     id: 6,
-    name: 'Sneha Patel',
-    domain: 'Android & Mobile App Development',
-    college: 'Delhi Technological University',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+    name: 'Saqlain Hassan',
+    role: 'Frontend Development Intern',
+    initial: 'S',
+    quote: 'Working on real-time projects helped me understand concepts better and improve my development skills.',
     rating: 5,
-    date: 'June 05, 2026',
-    verified: true,
-    project: 'Cross-Platform React Native App',
-    quote: 'Building real mobile apps from scratch was challenging yet rewarding. The offer letter and LOR added genuine value during campus placements!',
-    linkedin: 'https://linkedin.com'
+    category: 'Frontend'
+  },
+  {
+    id: 7,
+    name: 'Rohan Verma',
+    role: 'Web Development Intern',
+    initial: 'R',
+    quote: 'The 4-week Web Development internship at ND RAISE Technologies gave me practical project experience that I could highlight on my resume.',
+    rating: 5,
+    category: 'Web Development'
+  },
+  {
+    id: 8,
+    name: 'Ananya Sharma',
+    role: 'Python Programming Intern',
+    initial: 'A',
+    quote: 'Awesome virtual internship platform! The structure of the weekly tasks forced me to write clean code and learn key libraries.',
+    rating: 5,
+    category: 'Python'
+  },
+  {
+    id: 9,
+    name: 'Vikramaditya Nair',
+    role: 'Machine Learning Intern',
+    initial: 'V',
+    quote: 'Working on actual machine learning datasets and deploying predictive models was an eye-opener. Highly recommended!',
+    rating: 5,
+    category: 'Machine Learning'
   }
 ];
 
-export default function StudentReviewsPage({ user }) {
+export default function StudentReviewsPage({ user, setCurrentView }) {
   const [reviews, setReviews] = useState(INITIAL_REVIEWS);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [showReviewForm, setShowReviewForm] = useState(false);
-
-  // New review state
-  const [newReview, setNewReview] = useState({
-    name: user ? user.name : '',
-    domain: 'Web Development Virtual Internship',
-    college: '',
-    rating: 5,
-    quote: '',
-    project: ''
-  });
+  
+  // Form State for "Share Your Story"
+  const [formName, setFormName] = useState(user ? user.name : '');
+  const [formRole, setFormRole] = useState('');
+  const [formFeedback, setFormFeedback] = useState('');
+  const [formRating, setFormRating] = useState(5);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [submittedSuccess, setSubmittedSuccess] = useState(false);
 
   const categories = [
     'All',
     'Web Development',
+    'Machine Learning',
+    'App Development',
     'Python',
-    'Data Science',
-    'Cybersecurity',
-    'UI/UX Design'
+    'Frontend'
   ];
 
   const filteredReviews = reviews.filter((r) => {
     const matchesSearch = 
       r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.domain.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.college.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.quote.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesCategory = 
       selectedCategory === 'All' || 
-      r.domain.toLowerCase().includes(selectedCategory.toLowerCase());
+      r.category.toLowerCase().includes(selectedCategory.toLowerCase()) ||
+      r.role.toLowerCase().includes(selectedCategory.toLowerCase());
 
     return matchesSearch && matchesCategory;
   });
 
-  const handleSubmitReview = (e) => {
+  const handleSubmitFeedback = (e) => {
     e.preventDefault();
-    if (!newReview.name || !newReview.quote) return;
+    if (!formName.trim() || !formFeedback.trim()) return;
 
-    const created = {
+    const newRev = {
       id: Date.now(),
-      name: newReview.name,
-      domain: newReview.domain,
-      college: newReview.college || 'Engineering Student',
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${newReview.name}`,
-      rating: Number(newReview.rating),
-      date: 'Just Now',
-      verified: true,
-      project: newReview.project || 'Virtual Internship Project',
-      quote: newReview.quote,
-      linkedin: '#'
+      name: formName.trim(),
+      role: formRole.trim() || 'Intern',
+      initial: formName.trim().charAt(0).toUpperCase(),
+      quote: formFeedback.trim(),
+      rating: formRating,
+      category: formRole.trim() || 'General'
     };
 
-    setReviews([created, ...reviews]);
-    setShowReviewForm(false);
-    setNewReview({ name: '', domain: 'Web Development Virtual Internship', college: '', rating: 5, quote: '', project: '' });
-    alert('Thank you! Your review has been published.');
+    setReviews([newRev, ...reviews]);
+    setSubmittedSuccess(true);
+    setFormFeedback('');
+    setFormRole('');
+
+    setTimeout(() => {
+      setSubmittedSuccess(false);
+    }, 5000);
+  };
+
+  const handleBackToHome = () => {
+    if (typeof setCurrentView === 'function') {
+      setCurrentView('home');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div className="reviews-page">
       <div className="reviews-container">
-        {/* Page Hero Header */}
+        
+        {/* Header Section */}
         <div className="reviews-hero">
-          <div className="reviews-badge">
-            <span className="badge-dot">•</span>
-            <span>50,000+ HAPPY INTERNS & ALUMNI</span>
+          <div className="community-voices-tag">
+            COMMUNITY VOICES
           </div>
 
           <h1 className="reviews-title">
-            Student Reviews & <span>Success Stories</span>
+            Student <span className="highlight-feedback">Feedback</span>
           </h1>
 
           <p className="reviews-subtitle">
-            Read real experiences, career transformations, and feedback from students who completed virtual internships at ND Raise Technologies.
+            See what our interns have to say about their journey with ND RAISE Technologies. Your experience matters to us.
           </p>
-
-          {/* Stats Bar */}
-          <div className="reviews-stats-strip glass-panel">
-            <div className="stat-box">
-              <div className="stat-val">4.9 / 5.0</div>
-              <div className="stat-stars">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} fill="#f59e0b" color="#f59e0b" />
-                ))}
-              </div>
-              <div className="stat-lbl">Average Rating</div>
-            </div>
-
-            <div className="stat-divider" />
-
-            <div className="stat-box">
-              <div className="stat-val">5,000+</div>
-              <div className="stat-lbl">Student Reviews</div>
-            </div>
-
-            <div className="stat-divider" />
-
-            <div className="stat-box">
-              <div className="stat-val">98%</div>
-              <div className="stat-lbl">Skill Growth Rate</div>
-            </div>
-
-            <div className="stat-divider" />
-
-            <div className="stat-box">
-              <div className="stat-val">15,000+</div>
-              <div className="stat-lbl">LinkedIn Endorsements</div>
-            </div>
-          </div>
         </div>
 
-        {/* Filter & Action Toolbar */}
-        <div className="reviews-toolbar glass-panel">
+        {/* Toolbar: Search and Category Filter Chips */}
+        <div className="reviews-toolbar">
           <div className="search-wrap">
             <Search size={18} className="search-icon" />
             <input 
               type="text" 
-              placeholder="Search reviews by name, domain, or college..."
+              placeholder="Search reviews by student name or role..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
@@ -223,141 +196,176 @@ export default function StudentReviewsPage({ user }) {
               </button>
             ))}
           </div>
-
-          <button 
-            className="btn-primary write-review-btn"
-            onClick={() => setShowReviewForm(true)}
-          >
-            <MessageSquare size={16} />
-            <span>Write a Review</span>
-          </button>
         </div>
 
-        {/* Reviews Card Grid */}
+        {/* Reviews Cards Grid */}
         <div className="reviews-grid">
           {filteredReviews.map((rev) => (
-            <div key={rev.id} className="review-card glass-panel">
-              <div className="card-header">
-                <img src={rev.avatar} alt={rev.name} className="reviewer-avatar" />
-                <div className="reviewer-info">
-                  <div className="name-row">
-                    <h3 className="reviewer-name">{rev.name}</h3>
-                    {rev.verified && (
-                      <span className="verified-badge" title="Verified Intern">
-                        <CheckCircle2 size={14} color="#34d399" />
-                        <span>Verified</span>
-                      </span>
-                    )}
-                  </div>
-                  <div className="reviewer-domain">{rev.domain}</div>
-                  <div className="reviewer-college">{rev.college}</div>
-                </div>
-
-                <a href={rev.linkedin} target="_blank" rel="noreferrer" className="linkedin-link" title="LinkedIn Profile">
-                  <Linkedin size={18} color="#0077b5" />
-                </a>
+            <div key={rev.id} className="review-card">
+              {/* Top Double Quote Symbol */}
+              <div className="quote-icon-wrap">
+                <Quote size={28} className="quote-icon" />
               </div>
 
-              <div className="rating-row">
-                <div className="stars">
-                  {[...Array(rev.rating)].map((_, i) => (
-                    <Star key={i} size={15} fill="#f59e0b" color="#f59e0b" />
-                  ))}
-                </div>
-                <span className="review-date">{rev.date}</span>
-              </div>
-
-              <div className="project-tag">
-                <Award size={14} color="#38bdf8" />
-                <span>Project: {rev.project}</span>
-              </div>
-
-              <p className="review-quote">
+              {/* Quote Text */}
+              <p className="review-quote-text">
                 "{rev.quote}"
               </p>
+
+              {/* Card Footer */}
+              <div className="review-card-footer">
+                {/* Author Info */}
+                <div className="reviewer-info">
+                  <div className="avatar-initial">
+                    {rev.initial}
+                  </div>
+                  <div className="reviewer-details">
+                    <h3 className="reviewer-name">{rev.name}</h3>
+                    <span className="reviewer-role">{rev.role}</span>
+                  </div>
+                </div>
+
+                {/* Rating Stars */}
+                <div className="rating-stars">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      size={14} 
+                      fill={i < rev.rating ? "#f59e0b" : "none"} 
+                      color={i < rev.rating ? "#f59e0b" : "#cbd5e1"} 
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* WRITE A REVIEW MODAL */}
-        {showReviewForm && (
-          <div className="modal-overlay animate-fade-in" onClick={() => setShowReviewForm(false)}>
-            <div className="modal-content glass-panel" style={{ maxWidth: '580px', background: '#0b1120', border: '1px solid var(--border-glow)' }} onClick={(e) => e.stopPropagation()}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2 style={{ fontSize: '1.4rem', fontWeight: '800', color: '#ffffff', margin: 0 }}>Write a Student Review</h2>
-                <button className="modal-close-btn" onClick={() => setShowReviewForm(false)}>✕</button>
-              </div>
-
-              <form onSubmit={handleSubmitReview} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#94a3b8', marginBottom: '0.4rem' }}>Your Full Name</label>
-                  <input 
-                    type="text" 
-                    required 
-                    className="form-input" 
-                    placeholder="Enter your name" 
-                    value={newReview.name} 
-                    onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#94a3b8', marginBottom: '0.4rem' }}>College / University</label>
-                  <input 
-                    type="text" 
-                    className="form-input" 
-                    placeholder="e.g. IIT Delhi, SRM Institute" 
-                    value={newReview.college} 
-                    onChange={(e) => setNewReview({ ...newReview, college: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#94a3b8', marginBottom: '0.4rem' }}>Internship Domain</label>
-                  <select 
-                    className="form-input" 
-                    value={newReview.domain} 
-                    onChange={(e) => setNewReview({ ...newReview, domain: e.target.value })}
-                  >
-                    <option value="Web Development Virtual Internship">Web Development Virtual Internship</option>
-                    <option value="Python Programming Track">Python Programming Track</option>
-                    <option value="Data Science & Machine Learning">Data Science & Machine Learning</option>
-                    <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
-                    <option value="UI/UX Design Track">UI/UX Design Track</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#94a3b8', marginBottom: '0.4rem' }}>Project Completed</label>
-                  <input 
-                    type="text" 
-                    className="form-input" 
-                    placeholder="e.g. E-Commerce Web App" 
-                    value={newReview.project} 
-                    onChange={(e) => setNewReview({ ...newReview, project: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#94a3b8', marginBottom: '0.4rem' }}>Your Review & Experience</label>
-                  <textarea 
-                    rows={4} 
-                    required 
-                    className="form-input" 
-                    placeholder="Share how the virtual internship helped your skills and career..." 
-                    value={newReview.quote} 
-                    onChange={(e) => setNewReview({ ...newReview, quote: e.target.value })}
-                  />
-                </div>
-
-                <button type="submit" className="btn-primary" style={{ marginTop: '0.5rem', width: '100%', padding: '0.85rem', justifyContent: 'center' }}>
-                  <Send size={16} />
-                  <span>Submit My Review</span>
-                </button>
-              </form>
-            </div>
+        {filteredReviews.length === 0 && (
+          <div className="no-reviews-msg">
+            <p>No reviews found matching your search.</p>
           </div>
         )}
+
+        {/* Share Your Story Section */}
+        <div className="share-story-section">
+          <div className="share-story-card">
+            {/* Top Gradient Accent Line */}
+            <div className="card-top-accent"></div>
+
+            <div className="share-story-content">
+              
+              {/* Left Column: Feedback Form */}
+              <div className="story-form-col">
+                <div className="story-header">
+                  <div className="plus-icon-circle">
+                    <PlusCircle size={22} color="#00acc1" />
+                  </div>
+                  <h2 className="story-title">Share Your Story</h2>
+                </div>
+
+                <p className="story-desc">
+                  Your feedback helps us improve and guides future students. If you had a positive experience, we'd love to hear it!
+                </p>
+
+                {submittedSuccess && (
+                  <div className="success-banner">
+                    <CheckCircle2 size={18} />
+                    <span>Thank you! Your feedback has been submitted successfully.</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmitFeedback} className="story-form">
+                  <div className="form-row-2col">
+                    <div className="form-group">
+                      <label className="form-label">Your Name</label>
+                      <input 
+                        type="text" 
+                        required 
+                        className="story-input" 
+                        placeholder="e.g. Rahul Sharma"
+                        value={formName}
+                        onChange={(e) => setFormName(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Your Role</label>
+                      <input 
+                        type="text" 
+                        className="story-input" 
+                        placeholder="e.g. Web Dev Intern"
+                        value={formRole}
+                        onChange={(e) => setFormRole(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">Your Feedback</label>
+                    <textarea 
+                      rows={4} 
+                      required 
+                      className="story-textarea" 
+                      placeholder="Share your thoughts..."
+                      value={formFeedback}
+                      onChange={(e) => setFormFeedback(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">Your Rating</label>
+                    <div className="interactive-stars">
+                      {[1, 2, 3, 4, 5].map((starVal) => (
+                        <button
+                          type="button"
+                          key={starVal}
+                          className="star-btn"
+                          onMouseEnter={() => setHoverRating(starVal)}
+                          onMouseLeave={() => setHoverRating(0)}
+                          onClick={() => setFormRating(starVal)}
+                        >
+                          <Star 
+                            size={22} 
+                            fill={(hoverRating || formRating) >= starVal ? "#f59e0b" : "none"} 
+                            color={(hoverRating || formRating) >= starVal ? "#f59e0b" : "#cbd5e1"} 
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button type="submit" className="story-submit-btn">
+                    <Send size={16} />
+                    <span>Submit Feedback</span>
+                  </button>
+                </form>
+              </div>
+
+              {/* Right Column: Thank You Box */}
+              <div className="thank-you-col">
+                <div className="thank-you-card">
+                  <div className="heart-icon-wrap">
+                    <Heart size={54} color="#f43f5e" strokeWidth={1.5} className="pink-heart-icon" />
+                  </div>
+
+                  <h3 className="thank-you-title">Thank you for your contribution!</h3>
+
+                  <p className="thank-you-desc">
+                    Join our community and help us build the future of tech education.
+                  </p>
+
+                  <button onClick={handleBackToHome} className="back-home-btn">
+                    <Home size={16} />
+                    <span>Back to Home</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
