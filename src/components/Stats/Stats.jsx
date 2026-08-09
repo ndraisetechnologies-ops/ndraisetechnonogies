@@ -1,6 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Users, Briefcase, RefreshCw, Award } from 'lucide-react';
 import './Stats.css';
+
+// Component for rolling numbers on page open/scroll and becoming static
+function RollingNumber({ targetStr, suffix = '+' }) {
+  const [count, setCount] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
+  const elementRef = useRef(null);
+
+  // Convert target string "12,540+" to numeric 12540
+  const targetNum = parseInt(targetStr.replace(/[^0-9]/g, ''), 10) || 0;
+
+  useEffect(() => {
+    let animationFrameId;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          let startTimestamp = null;
+          const duration = 2200; // 2.2s smooth rolling duration
+
+          const animateCount = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const elapsed = timestamp - startTimestamp;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Smooth cubic ease-out calculation
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
+            const currentVal = Math.floor(easeProgress * targetNum);
+
+            setCount(currentVal);
+
+            if (progress < 1) {
+              animationFrameId = window.requestAnimationFrame(animateCount);
+            } else {
+              setCount(targetNum);
+              setIsFinished(true); // Numbers become completely static
+            }
+          };
+
+          animationFrameId = window.requestAnimationFrame(animateCount);
+          observer.disconnect(); // Trigger once on open/scroll
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => {
+      if (animationFrameId) window.cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
+    };
+  }, [targetNum]);
+
+  return (
+    <span 
+      ref={elementRef} 
+      className={`stat-number ${isFinished ? 'is-static' : 'is-rolling'}`}
+    >
+      {count.toLocaleString()}
+      {suffix}
+    </span>
+  );
+}
 
 export default function Stats() {
   const stats = [
@@ -60,8 +125,8 @@ export default function Stats() {
                 <Icon size={24} />
               </div>
               <div className="stat-info">
-                <div className="stat-number">{stat.number}</div>
-                <div className="stat-label">{stat.label}</div>
+                <RollingNumber targetStr={stat.number} suffix="+" />
+                <span className="stat-label">{stat.label}</span>
               </div>
             </div>
           );
