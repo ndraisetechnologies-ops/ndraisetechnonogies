@@ -14,7 +14,7 @@
 .popular-title {
   font-size: 2.2rem;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-main);
 }
 
 .view-all-link {
@@ -30,7 +30,7 @@
 }
 
 .view-all-link:hover {
-  color: #818cf8;
+  color: var(--primary-hover);
   transform: translateX(3px);
 }
 
@@ -47,15 +47,16 @@
   border-radius: var(--radius-lg);
   background: var(--bg-card);
   border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-card);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
 
 .internship-card:hover {
   transform: translateY(-6px);
-  border-color: rgba(99, 102, 241, 0.5);
-  box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.25);
-  background: rgba(18, 26, 48, 0.85);
+  border-color: var(--border-glow);
+  box-shadow: var(--shadow-glow);
+  background: var(--bg-card-hover);
 }
 
 .card-icon-box {
@@ -66,14 +67,14 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-light);
 }
 
 .card-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-main);
   margin-bottom: 0.5rem;
 }
 
@@ -82,7 +83,7 @@
   align-items: center;
   gap: 0.75rem;
   font-size: 0.82rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-weight: 500;
   margin-bottom: 1rem;
 }
@@ -91,21 +92,21 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #475569;
+  background: var(--text-muted);
 }
 
 .card-desc {
   font-size: 0.9rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   line-height: 1.55;
   margin-bottom: 2rem;
   flex: 1;
 }
 
 .card-btn {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-glass);
   border: 1px solid var(--border-light);
-  color: #e2e8f0;
+  color: var(--text-main);
   padding: 0.65rem 1.25rem;
   border-radius: var(--radius-full);
   font-size: 0.88rem;
@@ -114,14 +115,14 @@
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition: all 0.25 ease;
+  transition: all 0.25s ease;
   width: 100%;
 }
 
 .internship-card:hover .card-btn {
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(59, 130, 246, 0.2));
-  border-color: rgba(99, 102, 241, 0.5);
-  color: #ffffff;
+  border-color: var(--border-glow);
+  color: var(--text-main);
 }
 
 @media (max-width: 1024px) {

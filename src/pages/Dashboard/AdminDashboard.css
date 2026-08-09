@@ -5,12 +5,13 @@
 }
 
 .admin-sidebar {
-  background: rgba(9, 13, 26, 0.95);
+  background: var(--bg-card);
   border-right: 1px solid var(--border-light);
   padding: 2rem 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  transition: all 0.3s ease;
 }
 
 .admin-main {
@@ -32,6 +33,9 @@
   align-items: center;
   gap: 1.25rem;
   border-radius: var(--radius-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-card);
 }
 
 .admin-card-icon {
@@ -53,6 +57,10 @@
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 }
 
 .chart-header {
@@ -65,7 +73,7 @@
 .chart-title {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-main);
 }
 
 /* SVG Chart Visuals */

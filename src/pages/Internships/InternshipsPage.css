@@ -10,15 +10,17 @@
   margin-bottom: 3.5rem;
   padding: 3.5rem 2rem;
   border-radius: var(--radius-xl);
-  background: radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.25) 0%, rgba(13, 19, 36, 0.8) 70%);
+  background: var(--bg-card);
   border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .internships-page-title {
   font-size: 3rem;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-main);
   margin-bottom: 1.5rem;
   letter-spacing: -0.02em;
 }
@@ -38,22 +40,22 @@
 .search-input-wrapper {
   display: flex;
   align-items: center;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: var(--bg-glass-heavy);
+  border: 1px solid var(--border-glow);
   border-radius: var(--radius-full);
   padding: 0.5rem 0.5rem 0.5rem 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(99, 102, 241, 0.2);
+  box-shadow: var(--shadow-card), 0 0 20px rgba(99, 102, 241, 0.15);
 }
 
 .search-icon {
-  color: #64748b;
+  color: var(--text-muted);
   margin-right: 0.75rem;
 }
 
 .search-input {
   background: transparent;
   border: none;
-  color: #ffffff;
+  color: var(--text-main);
   font-size: 1rem;
   font-family: var(--font-body);
   width: 100%;
@@ -61,7 +63,7 @@
 }
 
 .search-input::placeholder {
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .filters-bar {
@@ -73,9 +75,9 @@
 }
 
 .filter-select {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-card);
   border: 1px solid var(--border-light);
-  color: #cbd5e1;
+  color: var(--text-main);
   padding: 0.5rem 1.25rem;
   border-radius: var(--radius-full);
   font-size: 0.88rem;
@@ -85,8 +87,8 @@
 }
 
 .filter-select:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  border-color: var(--primary);
+  color: var(--text-main);
 }
 
 .catalog-layout {
@@ -101,12 +103,16 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
 }
 
 .category-item {
   padding: 0.75rem 1rem;
   border-radius: var(--radius-sm);
-  color: #94a3b8;
+  color: var(--text-muted);
   font-weight: 500;
   font-size: 0.92rem;
   cursor: pointer;
@@ -117,14 +123,14 @@
 }
 
 .category-item:hover {
-  background: rgba(255, 255, 255, 0.04);
-  color: #ffffff;
+  background: var(--bg-card-hover);
+  color: var(--text-main);
 }
 
 .category-item.active {
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(59, 130, 246, 0.25));
-  border: 1px solid rgba(99, 102, 241, 0.5);
-  color: #ffffff;
+  border: 1px solid var(--primary);
+  color: var(--text-main);
   font-weight: 600;
   box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
 }
@@ -133,6 +139,46 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
+}
+
+.virtual-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1rem;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  border-radius: var(--radius-full);
+  color: #34d399;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.card-tag-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.badge-4weeks {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 0.18rem 0.5rem;
+  border-radius: 4px;
+}
+
+.badge-tasks {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #c084fc;
+  background: rgba(192, 132, 252, 0.12);
+  border: 1px solid rgba(192, 132, 252, 0.25);
+  padding: 0.18rem 0.5rem;
+  border-radius: 4px;
 }
 
 @media (max-width: 1024px) {

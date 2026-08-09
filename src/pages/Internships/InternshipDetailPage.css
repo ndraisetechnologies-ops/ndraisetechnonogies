@@ -7,9 +7,9 @@
 .detail-header-banner {
   padding: 3.5rem;
   border-radius: var(--radius-xl);
-  background: linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(13, 19, 36, 0.95) 100%);
-  border: 1px solid rgba(99, 102, 241, 0.35);
-  box-shadow: 0 20px 50px -10px rgba(99, 102, 241, 0.25);
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  box-shadow: var(--shadow-card), 0 0 40px rgba(99, 102, 241, 0.15);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,6 +17,7 @@
   margin-bottom: 2.5rem;
   position: relative;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .detail-header-content {
@@ -26,7 +27,7 @@
 .detail-title {
   font-size: 2.8rem;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-main);
   margin-bottom: 1.25rem;
   line-height: 1.15;
 }
@@ -41,7 +42,7 @@
 
 .detail-header-desc {
   font-size: 1.05rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   line-height: 1.6;
   margin-bottom: 2rem;
 }
@@ -80,7 +81,7 @@
 .detail-tab-btn {
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 1rem;
   font-weight: 600;
   padding: 0.75rem 1.25rem;
@@ -91,12 +92,12 @@
 }
 
 .detail-tab-btn:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-main);
+  background: var(--bg-glass);
 }
 
 .detail-tab-btn.active {
-  color: #ffffff;
+  color: var(--text-main);
   background: rgba(99, 102, 241, 0.15);
   border-bottom: 2px solid var(--primary);
 }
@@ -115,17 +116,21 @@
 
 .detail-section-card {
   padding: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
 }
 
 .detail-section-title {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-main);
   margin-bottom: 1.25rem;
 }
 
 .detail-text-paragraph {
-  color: #94a3b8;
+  color: var(--text-muted);
   line-height: 1.7;
   font-size: 0.98rem;
   margin-bottom: 1rem;
@@ -142,7 +147,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #e2e8f0;
+  color: var(--text-main);
   font-weight: 500;
   font-size: 0.95rem;
 }
@@ -156,16 +161,16 @@
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--border-light);
   font-size: 0.9rem;
 }
 
 .info-label {
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .info-value {
-  color: #ffffff;
+  color: var(--text-main);
   font-weight: 600;
 }
 

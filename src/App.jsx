@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import Home from './pages/Home/Home';
@@ -8,7 +8,11 @@ import StudentDashboard from './pages/Dashboard/StudentDashboard';
 import AdminDashboard from './pages/Dashboard/AdminDashboard';
 import AuthModal from './components/Modals/AuthModal';
 import ApplyModal from './components/Modals/ApplyModal';
-import { Sparkles, Eye, CheckCircle2 } from 'lucide-react';
+import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
+import TaskSubmissionModal from './components/Modals/TaskSubmissionModal';
+import OfferLetterModal from './components/Modals/OfferLetterModal';
+import PolicyModal from './components/Modals/PolicyModal';
+import { CheckCircle2 } from 'lucide-react';
 import './App.css';
 
 export default function App() {
@@ -16,9 +20,28 @@ export default function App() {
   const [selectedInternship, setSelectedInternship] = useState(ALL_INTERNSHIPS[0]);
   const [user, setUser] = useState({ name: 'Nikhil Sharma', email: 'nikhil@example.com', role: 'student' });
   
+  // Theme management ('light' or 'dark')
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   // Modals
   const [authModal, setAuthModal] = useState({ isOpen: false, mode: 'login' });
   const [applyModalOpen, setApplyModalOpen] = useState(false);
+  const [taskSubmissionModalOpen, setTaskSubmissionModalOpen] = useState(false);
+  const [taskGuidelinesModalOpen, setTaskGuidelinesModalOpen] = useState(false);
+  const [offerLetterModalOpen, setOfferLetterModalOpen] = useState(false);
+  const [policyModal, setPolicyModal] = useState({ isOpen: false, type: 'terms' });
+  const [trackForTasks, setTrackForTasks] = useState(ALL_INTERNSHIPS[0]);
   
   // Toast
   const [toast, setToast] = useState(null);
@@ -41,6 +64,11 @@ export default function App() {
     setApplyModalOpen(true);
   };
 
+  const handleOpenTasksModal = (track) => {
+    setTrackForTasks(track || selectedInternship);
+    setTaskGuidelinesModalOpen(true);
+  };
+
   const handleAuthSuccess = (userData) => {
     setUser(userData);
     showToast(`Welcome ${userData.name}! Successfully signed in.`);
@@ -51,49 +79,18 @@ export default function App() {
     showToast(msg);
   };
 
+  const scrollToVerifier = () => {
+    if (currentView !== 'home') {
+      setCurrentView('home');
+    }
+    setTimeout(() => {
+      const el = document.getElementById('verify-certificate');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 150);
+  };
+
   return (
     <div className="app-container">
-      {/* Top View Switcher Toolbar (Allowing instant toggle between all 5 designs shown in user image) */}
-      <div className="view-switcher-bar">
-        <div className="view-switcher-title">
-          <Eye size={16} />
-          <span>Switch Preview View: <strong>{currentView.toUpperCase()}</strong></span>
-        </div>
-
-        <div className="view-buttons">
-          <button 
-            className={`view-btn ${currentView === 'home' ? 'active' : ''}`}
-            onClick={() => setCurrentView('home')}
-          >
-            1. Home Landing Page
-          </button>
-          <button 
-            className={`view-btn ${currentView === 'internships' ? 'active' : ''}`}
-            onClick={() => setCurrentView('internships')}
-          >
-            2. Internships Catalog
-          </button>
-          <button 
-            className={`view-btn ${currentView === 'detail' ? 'active' : ''}`}
-            onClick={() => setCurrentView('detail')}
-          >
-            3. Internship Details
-          </button>
-          <button 
-            className={`view-btn ${currentView === 'student-dashboard' ? 'active' : ''}`}
-            onClick={() => setCurrentView('student-dashboard')}
-          >
-            4. Student Dashboard
-          </button>
-          <button 
-            className={`view-btn ${currentView === 'admin-dashboard' ? 'active' : ''}`}
-            onClick={() => setCurrentView('admin-dashboard')}
-          >
-            5. Admin Dashboard
-          </button>
-        </div>
-      </div>
-
       {/* Main Navbar */}
       {currentView !== 'student-dashboard' && currentView !== 'admin-dashboard' && (
         <Navbar 
@@ -101,6 +98,13 @@ export default function App() {
           setCurrentView={setCurrentView}
           openAuthModal={(mode) => setAuthModal({ isOpen: true, mode })}
           user={user}
+          theme={theme}
+          toggleTheme={toggleTheme}
+          onVerifyClick={scrollToVerifier}
+          onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
+          onOfferLetterClick={() => setOfferLetterModalOpen(true)}
+          onCertificatesClick={scrollToVerifier}
+          onPolicyClick={(type) => setPolicyModal({ isOpen: true, type })}
         />
       )}
 
@@ -111,12 +115,16 @@ export default function App() {
             onSelectInternship={handleSelectInternship}
             onViewAllClick={() => setCurrentView('internships')}
             onGetStarted={() => setAuthModal({ isOpen: true, mode: 'register' })}
+            onVerifyClick={scrollToVerifier}
+            onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
+            onOpenTasksModal={handleOpenTasksModal}
           />
         )}
 
         {currentView === 'internships' && (
           <InternshipsPage 
             onSelectInternship={handleSelectInternship}
+            onOpenTasksModal={handleOpenTasksModal}
           />
         )}
 
@@ -166,6 +174,33 @@ export default function App() {
         internship={selectedInternship}
         onClose={() => setApplyModalOpen(false)}
         onSubmitSuccess={handleApplySuccess}
+      />
+
+      <TaskGuidelinesModal 
+        isOpen={taskGuidelinesModalOpen}
+        internship={trackForTasks}
+        onClose={() => setTaskGuidelinesModalOpen(false)}
+        onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
+      />
+
+      <TaskSubmissionModal 
+        isOpen={taskSubmissionModalOpen}
+        defaultDomain={trackForTasks}
+        onClose={() => setTaskSubmissionModalOpen(false)}
+        onSubmitSuccess={(msg) => showToast(msg)}
+      />
+
+      <OfferLetterModal 
+        isOpen={offerLetterModalOpen}
+        onClose={() => setOfferLetterModalOpen(false)}
+        user={user}
+        domainName="Web Development Virtual Internship"
+      />
+
+      <PolicyModal 
+        isOpen={policyModal.isOpen}
+        type={policyModal.type}
+        onClose={() => setPolicyModal({ isOpen: false, type: 'terms' })}
       />
 
       {/* Toast Notification */}

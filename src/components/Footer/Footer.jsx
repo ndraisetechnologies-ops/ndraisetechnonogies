@@ -15,7 +15,7 @@ export default function Footer({ setCurrentView }) {
               <div className="brand-title">
                 ND <span>TECHNOLOGIES</span>
               </div>
-              <div className="brand-tagline">LEARN • BUILD • GROW</div>
+              <div className="brand-tagline">LEARN • CODE • GROW</div>
             </div>
           </div>
           

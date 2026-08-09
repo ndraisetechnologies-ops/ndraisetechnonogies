@@ -1,9 +1,10 @@
 .footer {
-  background: #03050c;
+  background: var(--bg-glass-heavy);
   border-top: 1px solid var(--border-light);
   padding: 4rem 4rem 2rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-top: auto;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .footer-content {
@@ -24,14 +25,14 @@
 .footer-desc {
   font-size: 0.92rem;
   line-height: 1.6;
-  color: #64748b;
+  color: var(--text-muted);
   max-width: 360px;
 }
 
 .footer-heading {
   font-size: 1rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-main);
   margin-bottom: 1.25rem;
   font-family: var(--font-heading);
 }
@@ -44,7 +45,7 @@
 }
 
 .footer-links li a {
-  color: #94a3b8;
+  color: var(--text-muted);
   text-decoration: none;
   font-size: 0.9rem;
   transition: all 0.2s ease;
@@ -52,7 +53,7 @@
 }
 
 .footer-links li a:hover {
-  color: #ffffff;
+  color: var(--primary);
   transform: translateX(2px);
 }
 
@@ -66,20 +67,20 @@
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .social-icon-btn:hover {
-  background: rgba(99, 102, 241, 0.2);
-  border-color: rgba(99, 102, 241, 0.5);
-  color: #ffffff;
+  background: var(--bg-card-hover);
+  border-color: var(--primary);
+  color: var(--primary);
   transform: translateY(-2px);
 }
 
@@ -87,12 +88,12 @@
   max-width: 1400px;
   margin: 0 auto;
   padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-light);
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 @media (max-width: 1024px) {

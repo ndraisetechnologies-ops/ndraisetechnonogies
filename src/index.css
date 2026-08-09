@@ -1,10 +1,15 @@
-:root {
+:root, [data-theme="dark"] {
   --bg-dark: #050811;
-  --bg-card: rgba(13, 19, 36, 0.75);
-  --bg-card-hover: rgba(20, 29, 53, 0.85);
-  --bg-glass: rgba(255, 255, 255, 0.03);
-  --bg-glass-heavy: rgba(10, 14, 28, 0.85);
+  --bg-navbar: rgba(5, 8, 17, 0.85);
+  --bg-card: rgba(13, 19, 36, 0.85);
+  --bg-card-hover: rgba(20, 29, 53, 0.9);
+  --bg-glass: rgba(255, 255, 255, 0.04);
+  --bg-glass-heavy: rgba(10, 14, 28, 0.9);
   
+  --bg-pill: rgba(15, 23, 42, 0.85);
+  --border-pill: rgba(255, 255, 255, 0.12);
+  --shadow-pill: 0 8px 32px rgba(0, 0, 0, 0.4);
+
   --border-light: rgba(255, 255, 255, 0.08);
   --border-glow: rgba(99, 102, 241, 0.4);
   --border-active: rgba(59, 130, 246, 0.6);
@@ -23,6 +28,15 @@
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --text-dark: #64748b;
+  --nav-link-color: #cbd5e1;
+  --nav-link-hover: #ffffff;
+  --nav-link-active: #38bdf8;
+
+  --btn-join-bg: #0b132b;
+  --btn-join-text: #ffffff;
+  --dropdown-bg: #0d1324;
+  --dropdown-border: rgba(255, 255, 255, 0.12);
+  --dropdown-item-hover: rgba(99, 102, 241, 0.15);
 
   --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -36,6 +50,42 @@
   --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
   --shadow-cyan: 0 0 25px rgba(6, 182, 212, 0.25);
   --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] {
+  --bg-dark: #f1f5f9;
+  --bg-navbar: rgba(255, 255, 255, 0.92);
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-glass: rgba(0, 0, 0, 0.04);
+  --bg-glass-heavy: rgba(255, 255, 255, 0.96);
+
+  --bg-pill: #ffffff;
+  --border-pill: rgba(203, 213, 225, 0.9);
+  --shadow-pill: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+  --border-light: rgba(203, 213, 225, 0.8);
+  --border-glow: rgba(37, 99, 235, 0.35);
+  --border-active: rgba(37, 99, 235, 0.6);
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-glow: rgba(37, 99, 235, 0.25);
+
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-dark: #64748b;
+  --nav-link-color: #334155;
+  --nav-link-hover: #0f172a;
+  --nav-link-active: #0284c7;
+
+  --btn-join-bg: #0f172a;
+  --btn-join-text: #ffffff;
+  --dropdown-bg: #ffffff;
+  --dropdown-border: #cbd5e1;
+  --dropdown-item-hover: #f1f5f9;
+
+  --shadow-card: 0 10px 30px -10px rgba(15, 23, 42, 0.1);
 }
 
 * {
@@ -52,6 +102,7 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Typography Headings */
@@ -60,6 +111,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   color: var(--text-main);
   letter-spacing: -0.02em;
+  transition: color 0.3s ease;
 }
 
 /* Custom Scrollbar */

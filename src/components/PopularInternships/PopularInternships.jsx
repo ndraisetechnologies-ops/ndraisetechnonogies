@@ -1,66 +1,27 @@
 import React from 'react';
-import { ArrowRight, ChevronRight, Atom, Server, Terminal, BarChart2 } from 'lucide-react';
+import { ArrowRight, ChevronRight, Atom, Server, Terminal, BarChart2, Cpu, Shield, Smartphone } from 'lucide-react';
+import { ALL_INTERNSHIPS } from '../../pages/Internships/InternshipsPage';
 import './PopularInternships.css';
 
-export const POPULAR_INTERNSHIPS_DATA = [
-  {
-    id: 'react-dev',
-    title: 'React Development',
-    duration: '8 Weeks',
-    level: 'Beginner',
-    description: 'Learn React, Hooks, Context API, React Router and build real-world projects.',
-    icon: Atom,
-    iconColor: '#38bdf8',
-    glowColor: 'rgba(56, 189, 248, 0.15)',
-    skills: ['HTML/CSS/JS', 'React.js', 'Hooks & State', 'React Router', 'API Integration']
-  },
-  {
-    id: 'node-dev',
-    title: 'Node.js Development',
-    duration: '8 Weeks',
-    level: 'Beginner',
-    description: 'Learn Node.js, Express, REST APIs, MongoDB and build backend apps.',
-    icon: Server,
-    iconColor: '#22c55e',
-    glowColor: 'rgba(34, 197, 94, 0.15)',
-    skills: ['Node.js', 'Express', 'MongoDB', 'REST APIs', 'Auth']
-  },
-  {
-    id: 'python-dev',
-    title: 'Python Development',
-    duration: '8 Weeks',
-    level: 'Beginner',
-    description: 'Learn Python programming, OOPs, Flask, APIs and real-world projects.',
-    icon: Terminal,
-    iconColor: '#eab308',
-    glowColor: 'rgba(234, 179, 8, 0.15)',
-    skills: ['Python 3', 'OOPs', 'Flask', 'Data Structures', 'Git']
-  },
-  {
-    id: 'data-science',
-    title: 'Data Science',
-    duration: '10 Weeks',
-    level: 'Intermediate',
-    description: 'Learn Python, Statistics, ML, Data Analysis and Visualization.',
-    icon: BarChart2,
-    iconColor: '#c084fc',
-    glowColor: 'rgba(192, 132, 252, 0.15)',
-    skills: ['Pandas & NumPy', 'Scikit-learn', 'Statistics', 'Matplotlib', 'ML Models']
-  }
-];
+export default function PopularInternships({ onSelectInternship, onViewAllClick, onOpenTasksModal }) {
+  const featured = ALL_INTERNSHIPS.slice(0, 4);
 
-export default function PopularInternships({ onSelectInternship, onViewAllClick }) {
   return (
     <section className="popular-section">
       <div className="popular-header">
-        <h2 className="popular-title">Popular Internships</h2>
+        <div>
+          <div style={{ fontSize: '0.78rem', fontWeight: '700', color: 'var(--primary)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+            FEATURED VIRTUAL TRACKS
+          </div>
+          <h2 className="popular-title">Explore <span>Featured Domains</span></h2>
+        </div>
         <span className="view-all-link" onClick={onViewAllClick}>
-          View All Internships <ArrowRight size={16} />
+          <span>View All 8 Domains</span> <ArrowRight size={16} />
         </span>
       </div>
 
       <div className="internships-grid">
-        {POPULAR_INTERNSHIPS_DATA.map((item) => {
+        {featured.map((item) => {
           const Icon = item.icon;
           return (
             <div key={item.id} className="glass-panel internship-card">
@@ -74,20 +35,37 @@ export default function PopularInternships({ onSelectInternship, onViewAllClick 
                 <Icon size={32} />
               </div>
 
+              <div className="card-tag-row">
+                <span className="badge-4weeks">4-Week Track</span>
+                <span className="badge-tasks">3 Assigned Tasks</span>
+              </div>
+
               <h3 className="card-title">{item.title}</h3>
 
               <div className="card-meta">
-                <span>{item.duration}</span>
+                <span>⏱ {item.duration}</span>
                 <span className="meta-divider"></span>
-                <span>{item.level}</span>
+                <span>🎯 {item.level}</span>
               </div>
 
               <p className="card-desc">{item.description}</p>
 
-              <button className="card-btn" onClick={() => onSelectInternship(item)}>
-                <span>View Details</span>
-                <ChevronRight size={16} />
-              </button>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: 'auto' }}>
+                <button 
+                  className="btn-secondary" 
+                  style={{ justifyContent: 'center', fontSize: '0.8rem', padding: '0.5rem' }}
+                  onClick={() => onOpenTasksModal && onOpenTasksModal(item)}
+                >
+                  View Tasks
+                </button>
+                <button 
+                  className="btn-primary" 
+                  style={{ justifyContent: 'center', fontSize: '0.8rem', padding: '0.5rem' }}
+                  onClick={() => onSelectInternship(item)}
+                >
+                  Apply Now
+                </button>
+              </div>
             </div>
           );
         })}
