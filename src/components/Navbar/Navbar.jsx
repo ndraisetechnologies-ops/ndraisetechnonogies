@@ -46,7 +46,6 @@ export default function Navbar({
       options: [
         { label: 'Apply Now', actionType: 'apply-now' },
         { label: 'Verify Certificate', actionType: 'verify' },
-        { label: 'Download Offer Letter', actionType: 'offer-letter' },
         { label: 'My Certificates', actionType: 'certificates' }
       ]
     },
@@ -288,18 +287,6 @@ export default function Navbar({
                 >
                   <Award size={16} />
                   <span>My Certificates</span>
-                </button>
-
-                <button 
-                  type="button"
-                  className="user-dropdown-item" 
-                  onClick={() => {
-                    if (onOfferLetterClick) onOfferLetterClick();
-                    setUserMenuOpen(false);
-                  }}
-                >
-                  <FileText size={16} />
-                  <span>Download Offer Letter</span>
                 </button>
 
                 <div className="user-dropdown-divider" />
