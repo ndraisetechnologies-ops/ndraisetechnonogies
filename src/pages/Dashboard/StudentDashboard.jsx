@@ -22,16 +22,7 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
       <aside className="dashboard-sidebar">
         <div className="nav-brand" onClick={() => setCurrentView('home')}>
           <div className="brand-logo-badge">
-            <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
-              <path d="M6 26V6L22 26V6" stroke="url(#dash-logo-grad)" strokeWidth="4"/>
-              <path d="M12 20L26 6" stroke="#38bdf8" strokeWidth="3.5"/>
-              <defs>
-                <linearGradient id="dash-logo-grad" x1="6" y1="6" x2="22" y2="26">
-                  <stop stopColor="#818cf8"/>
-                  <stop offset="1" stopColor="#c084fc"/>
-                </linearGradient>
-              </defs>
-            </svg>
+            <img src="/logo.jpg" alt="ND Technologies Logo" className="brand-logo-img" />
           </div>
           <div className="brand-text">
             <div className="brand-title" style={{ fontSize: '1.1rem' }}>ND <span>TECH</span></div>

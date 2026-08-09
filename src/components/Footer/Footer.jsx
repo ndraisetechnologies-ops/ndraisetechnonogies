@@ -9,17 +9,7 @@ export default function Footer({ setCurrentView }) {
         <div className="footer-brand">
           <div className="nav-brand" onClick={() => setCurrentView('home')}>
             <div className="brand-logo-badge">
-              <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 26V6L22 26V6" stroke="url(#foot-logo-grad)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 20L26 6" stroke="#38bdf8" strokeWidth="3.5" strokeLinecap="round"/>
-                <path d="M22 6H26V10" stroke="#38bdf8" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <defs>
-                  <linearGradient id="foot-logo-grad" x1="6" y1="6" x2="22" y2="26" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#818cf8"/>
-                    <stop offset="1" stopColor="#c084fc"/>
-                  </linearGradient>
-                </defs>
-              </svg>
+              <img src="/logo.jpg" alt="ND Technologies Logo" className="brand-logo-img" />
             </div>
             <div className="brand-text">
               <div className="brand-title">

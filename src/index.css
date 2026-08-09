@@ -256,3 +256,33 @@ h1, h2, h3, h4, h5, h6 {
 .animate-pulse-glow {
   animation: pulse-glow 6s ease-in-out infinite;
 }
+
+/* Brand Logo Badge & Image Styles */
+.brand-logo-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1.5px solid rgba(99, 102, 241, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.35);
+  overflow: hidden;
+  padding: 2px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.brand-logo-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+}
+
+.brand-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+

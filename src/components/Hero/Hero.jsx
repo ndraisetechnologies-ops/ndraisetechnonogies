@@ -59,8 +59,10 @@ export default function Hero({ onExploreClick, onHowItWorksClick }) {
             <circle cx="195" cy="122" r="4" fill="#10B981"/>
             
             {/* Brand Logo on Laptop Screen */}
-            <rect x="250" y="150" width="100" height="30" rx="8" fill="rgba(99, 102, 241, 0.2)" stroke="#6366F1"/>
-            <text x="300" y="170" fill="#F8FAFC" fontSize="12" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">ND TECH</text>
+            <g transform="translate(240, 145)">
+              <rect x="0" y="0" width="120" height="42" rx="8" fill="#FFFFFF" stroke="#6366F1" strokeWidth="1.5"/>
+              <image href="/logo.jpg" x="2" y="2" width="116" height="38" preserveAspectRatio="xMidYMid meet"/>
+            </g>
             
             {/* Code Lines Visual */}
             <line x1="165" y1="200" x2="260" y2="200" stroke="#38BDF8" strokeWidth="4" strokeLinecap="round"/>
