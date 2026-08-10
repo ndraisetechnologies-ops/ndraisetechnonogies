@@ -1,290 +1,374 @@
 import React, { useState } from 'react';
-import { Search, Filter, Atom, Server, Terminal, BarChart2, Smartphone, Cloud, Cpu, Shield, Layout, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Search, Users, Clock, ArrowRight, Code, Server, Terminal, BarChart2, Cpu, Shield, Layout, Smartphone, Atom, Cloud } from 'lucide-react';
 import './InternshipsPage.css';
 
 export const ALL_INTERNSHIPS = [
   {
-    id: 'web-dev',
-    title: 'Web Development Virtual Internship',
-    category: 'Web Development',
+    id: 'frontend-dev',
+    title: 'Frontend Development',
+    category: 'Development',
     duration: '4 Weeks',
+    applicants: '23.9K',
     level: 'Beginner to Intermediate',
-    mode: 'Virtual / Self-Paced',
+    icon: Code,
+    iconColor: '#38bdf8',
+    glowColor: 'rgba(56, 189, 248, 0.15)',
+    bannerTag: 'Development • Frontend Development',
+    image: '/banner_frontend.png',
     tasksCount: 3,
-    description: 'Build real-world web applications including personal portfolio, interactive JavaScript tools, and dynamic web apps to earn your verifiable certificate.',
+    description: 'Build responsive web apps, interactive React dashboards, and modern UI components.',
+    skills: ['HTML5', 'CSS3', 'JavaScript ES6+', 'React.js', 'Responsive Design', 'Git'],
+    tasks: [
+      { id: 1, title: 'Task 1: Personal Portfolio Website', difficulty: 'Easy', desc: 'Design and build a responsive personal developer portfolio website showcasing your skills, bio, project gallery, and contact form.' },
+      { id: 2, title: 'Task 2: Interactive Web Application', difficulty: 'Medium', desc: 'Create a fully functional interactive web app using DOM manipulation or React hooks with clean UI and smooth state persistence.' },
+      { id: 3, title: 'Task 3: Dynamic E-Commerce Store UI', difficulty: 'Hard', desc: 'Develop a modern multi-page e-commerce product catalog with search filter and cart functionality.' }
+    ]
+  },
+  {
+    id: 'backend-dev',
+    title: 'Backend Development',
+    category: 'Development',
+    duration: '4 Weeks',
+    applicants: '21.9K',
+    level: 'Intermediate',
+    icon: Server,
+    iconColor: '#6366f1',
+    glowColor: 'rgba(99, 102, 241, 0.15)',
+    bannerTag: 'Development • Backend Development',
+    image: '/banner_backend.png',
+    tasksCount: 3,
+    description: 'Architect REST APIs, database schemas, authentication systems, and server logic.',
+    skills: ['Node.js', 'Express', 'Python', 'MongoDB', 'SQL', 'REST API'],
+    tasks: [
+      { id: 1, title: 'Task 1: User Auth & Registration API', difficulty: 'Easy', desc: 'Build secure authentication APIs with JWT tokens and password hashing.' },
+      { id: 2, title: 'Task 2: CRUD RESTful Service for E-Commerce', difficulty: 'Medium', desc: 'Develop API endpoints connecting to database with request validation and error handling.' },
+      { id: 3, title: 'Task 3: Microservice Architecture & API Gateway', difficulty: 'Hard', desc: 'Deploy multi-service backend with database relationships and documentation.' }
+    ]
+  },
+  {
+    id: 'fullstack-dev',
+    title: 'Full Stack Development',
+    category: 'Development',
+    duration: '4 Weeks',
+    applicants: '91.5K',
+    level: 'Intermediate to Advanced',
     icon: Atom,
     iconColor: '#38bdf8',
     glowColor: 'rgba(56, 189, 248, 0.15)',
-    skills: ['HTML5', 'CSS3', 'JavaScript ES6+', 'React.js', 'Responsive Design', 'Git & GitHub', 'REST API'],
+    bannerTag: 'Development • Full Stack Development',
+    image: '/banner_fullstack.png',
+    tasksCount: 3,
+    description: 'Master end-to-end web applications combining dynamic frontends and robust backends.',
+    skills: ['React.js', 'Node.js', 'Express', 'MongoDB', 'REST API', 'Full Stack Architecture'],
     tasks: [
-      { id: 1, title: 'Task 1: Personal Portfolio Website', difficulty: 'Easy', desc: 'Design and build a responsive personal developer portfolio website showcasing your skills, bio, project gallery, and contact form.' },
-      { id: 2, title: 'Task 2: Interactive Web Application (Calculator / To-Do App)', difficulty: 'Medium', desc: 'Create a fully functional interactive web app using DOM manipulation or React hooks with clean UI and smooth state persistence.' },
-      { id: 3, title: 'Task 3: Dynamic E-Commerce Store or Dashboard UI', difficulty: 'Hard', desc: 'Develop a modern multi-page e-commerce product catalog or dashboard with search filter, cart functionality, and responsive grid layout.' }
+      { id: 1, title: 'Task 1: Full Stack Task Manager App', difficulty: 'Easy', desc: 'Build React UI connected to Node/Express backend database.' },
+      { id: 2, title: 'Task 2: Real-time Collaboration Platform', difficulty: 'Medium', desc: 'Create live real-time messaging application with WebSockets.' },
+      { id: 3, title: 'Task 3: Full Stack E-Commerce Platform', difficulty: 'Hard', desc: 'Develop full e-commerce system with payment gateway and admin dashboard.' }
     ]
   },
   {
     id: 'python-dev',
-    title: 'Python Programming Virtual Internship',
-    category: 'Python',
+    title: 'Python Programming',
+    category: 'Development',
     duration: '4 Weeks',
+    applicants: '45.2K',
     level: 'Beginner to Intermediate',
-    mode: 'Virtual / Self-Paced',
-    tasksCount: 3,
-    description: 'Master Python fundamentals, OOP, file handling, web scraping, and GUI development through practical project tasks.',
     icon: Terminal,
     iconColor: '#3b82f6',
     glowColor: 'rgba(59, 130, 246, 0.15)',
-    skills: ['Python 3', 'OOP Concepts', 'File I/O', 'Web Scraping (BeautifulSoup)', 'GUI (Tkinter/PyQt)', 'Automation'],
+    bannerTag: 'Development • Python Programming',
+    image: '/banner_python.png',
+    tasksCount: 3,
+    description: 'Master Python fundamentals, object-oriented programming, data scraping, and automation tools.',
+    skills: ['Python 3', 'OOP Concepts', 'File I/O', 'Web Scraping', 'GUI', 'Automation'],
     tasks: [
-      { id: 1, title: 'Task 1: Command-Line Music Player or Quiz Game', difficulty: 'Easy', desc: 'Build an interactive CLI tool with object-oriented structure, scoring system, and input validation.' },
-      { id: 2, title: 'Task 2: Real-time Weather App or Currency Converter', difficulty: 'Medium', desc: 'Fetch live data using OpenWeatherMap/Exchange REST API and display formatted results with error handling.' },
-      { id: 3, title: 'Task 3: Automated Web Scraper or Task Automation Script', difficulty: 'Hard', desc: 'Create a Python script using BeautifulSoup or Selenium to extract structural data from websites into CSV/JSON format.' }
+      { id: 1, title: 'Task 1: CLI Quiz Game or Music Player', difficulty: 'Easy', desc: 'Build OOP interactive command-line app with scoring and validation.' },
+      { id: 2, title: 'Task 2: Real-time Weather App', difficulty: 'Medium', desc: 'Fetch live weather API data and present formatted CLI/GUI report.' },
+      { id: 3, title: 'Task 3: Automated Web Scraper', difficulty: 'Hard', desc: 'Extract structured web data into CSV/JSON format.' }
     ]
   },
   {
     id: 'data-science',
-    title: 'Data Science & Analytics Virtual Internship',
-    category: 'Data Science',
+    title: 'Data Science & Analytics',
+    category: 'AI & Data Science',
     duration: '4 Weeks',
+    applicants: '38.4K',
     level: 'Intermediate',
-    mode: 'Virtual / Self-Paced',
-    tasksCount: 3,
-    description: 'Analyze real datasets, perform exploratory data analysis (EDA), data cleaning, and build predictive machine learning models.',
     icon: BarChart2,
     iconColor: '#06b6d4',
     glowColor: 'rgba(6, 182, 212, 0.15)',
-    skills: ['Python Pandas', 'NumPy', 'Matplotlib & Seaborn', 'SQL', 'Scikit-Learn', 'EDA', 'Data Cleaning'],
+    bannerTag: 'AI & Data Science • Analytics',
+    image: '/banner_datascience.png',
+    tasksCount: 3,
+    description: 'Clean real-world datasets, perform exploratory analysis, build statistical charts and predictive models.',
+    skills: ['Pandas', 'NumPy', 'Matplotlib', 'Seaborn', 'SQL', 'Predictive Modeling'],
     tasks: [
-      { id: 1, title: 'Task 1: Exploratory Data Analysis (EDA) on Dataset', difficulty: 'Easy', desc: 'Clean, filter, and visualize statistical insights and correlations using Pandas and Seaborn.' },
-      { id: 2, title: 'Task 2: Iris Flower Classification or Customer Segmentation Model', difficulty: 'Medium', desc: 'Train supervised machine learning classification algorithms and evaluate model accuracy with confusion matrix.' },
-      { id: 3, title: 'Task 3: Predictive Sales Forecasting or Sentiment Analysis', difficulty: 'Hard', desc: 'Build an end-to-end regression or NLP pipeline to forecast future trends and output visual reports.' }
+      { id: 1, title: 'Task 1: Exploratory Data Analysis (EDA)', difficulty: 'Easy', desc: 'Clean, filter, and visualize statistical insights from real datasets.' },
+      { id: 2, title: 'Task 2: Customer Segmentation Model', difficulty: 'Medium', desc: 'Train classification machine learning models and evaluate accuracy.' },
+      { id: 3, title: 'Task 3: Sales Forecasting Pipeline', difficulty: 'Hard', desc: 'Build regression pipeline to forecast future trends.' }
     ]
   },
   {
     id: 'ai-ml',
-    title: 'Artificial Intelligence & ML Virtual Internship',
-    category: 'AI & ML',
+    title: 'AI & Machine Learning',
+    category: 'AI & Data Science',
     duration: '4 Weeks',
+    applicants: '52.1K',
     level: 'Intermediate to Advanced',
-    mode: 'Virtual / Self-Paced',
-    tasksCount: 3,
-    description: 'Train neural networks, deep learning models, computer vision tasks, and natural language processing pipelines.',
     icon: Cpu,
     iconColor: '#a855f7',
     glowColor: 'rgba(168, 85, 247, 0.15)',
-    skills: ['Python', 'TensorFlow', 'PyTorch', 'OpenCV', 'Deep Learning', 'Neural Networks', 'NLP'],
+    bannerTag: 'AI & Data Science • Machine Learning',
+    image: '/banner_aiml.png',
+    tasksCount: 3,
+    description: 'Train deep neural networks, computer vision algorithms, and natural language processing pipelines.',
+    skills: ['Python', 'TensorFlow', 'PyTorch', 'OpenCV', 'Neural Networks', 'NLP'],
     tasks: [
-      { id: 1, title: 'Task 1: Handwritten Digit Recognition (MNIST CNN)', difficulty: 'Easy', desc: 'Build a Convolutional Neural Network (CNN) to recognize digits with >98% test accuracy.' },
-      { id: 2, title: 'Task 2: Face & Object Detection System (OpenCV)', difficulty: 'Medium', desc: 'Implement real-time bounding box detection using pre-trained YOLO/Haar cascades.' },
-      { id: 3, title: 'Task 3: Generative AI Chatbot UI or Text Summarizer', difficulty: 'Hard', desc: 'Deploy an AI model using Hugging Face Transformers or OpenAI API with an interactive web UI.' }
+      { id: 1, title: 'Task 1: Handwritten Digit Recognition (MNIST)', difficulty: 'Easy', desc: 'Build CNN model with high accuracy test predictions.' },
+      { id: 2, title: 'Task 2: Object Detection System (OpenCV)', difficulty: 'Medium', desc: 'Implement real-time object detection cascades.' },
+      { id: 3, title: 'Task 3: Generative AI Chatbot UI', difficulty: 'Hard', desc: 'Deploy AI transformer model with interactive web UI.' }
     ]
   },
   {
-    id: 'app-dev',
-    title: 'Mobile App Development Virtual Internship',
-    category: 'Mobile Development',
+    id: 'ui-ux',
+    title: 'UI/UX Design',
+    category: 'Design',
     duration: '4 Weeks',
+    applicants: '18.7K',
     level: 'Beginner to Intermediate',
-    mode: 'Virtual / Self-Paced',
+    icon: Layout,
+    iconColor: '#ec4899',
+    glowColor: 'rgba(236, 72, 153, 0.15)',
+    bannerTag: 'Design • UI/UX Design',
+    image: '/banner_uiux.svg',
     tasksCount: 3,
-    description: 'Build native & cross-platform Android/iOS mobile applications using Flutter or React Native with Firebase integration.',
+    description: 'Design user flows, wireframes, interactive Figma prototypes, and cohesive design systems.',
+    skills: ['Figma', 'Wireframing', 'Interactive Prototyping', 'Design Systems', 'User Research'],
+    tasks: [
+      { id: 1, title: 'Task 1: Mobile App Redesign Wireframe', difficulty: 'Easy', desc: 'Create low-fidelity wireframes and user flow diagram.' },
+      { id: 2, title: 'Task 2: High-Fidelity Interactive Figma Prototype', difficulty: 'Medium', desc: 'Design full interactive screens with auto-layout.' },
+      { id: 3, title: 'Task 3: Comprehensive Design System & Case Study', difficulty: 'Hard', desc: 'Build component design system and document Behance case study.' }
+    ]
+  },
+  {
+    id: 'mobile-dev',
+    title: 'Mobile App Development',
+    category: 'Development',
+    duration: '4 Weeks',
+    applicants: '27.3K',
+    level: 'Beginner to Intermediate',
     icon: Smartphone,
     iconColor: '#10b981',
     glowColor: 'rgba(16, 185, 129, 0.15)',
-    skills: ['Flutter', 'Dart', 'React Native', 'Mobile UI Components', 'Firebase Auth', 'REST APIs'],
+    bannerTag: 'Development • Mobile Development',
+    image: '/banner_mobile.svg',
+    tasksCount: 3,
+    description: 'Build cross-platform mobile apps for Android & iOS using Flutter or React Native.',
+    skills: ['Flutter', 'Dart', 'React Native', 'Firebase Auth', 'Mobile UI'],
     tasks: [
-      { id: 1, title: 'Task 1: Flashcard / Quiz App UI', difficulty: 'Easy', desc: 'Create a smooth animated mobile quiz app with score tracking and custom theme toggle.' },
-      { id: 2, title: 'Task 2: Personal Expense Tracker & Analytics App', difficulty: 'Medium', desc: 'Build an app that tracks daily expenses with visual charts, local storage, and category filters.' },
-      { id: 3, title: 'Task 3: Real-time Fitness / E-Commerce Mobile App', difficulty: 'Hard', desc: 'Develop a full mobile UI connected to Firebase backend with user auth, live data, and shopping cart.' }
+      { id: 1, title: 'Task 1: Mobile Quiz & Flashcard App', difficulty: 'Easy', desc: 'Create animated mobile quiz app with score tracking.' },
+      { id: 2, title: 'Task 2: Personal Expense Tracker App', difficulty: 'Medium', desc: 'Build expense tracker app with visual charts and local storage.' },
+      { id: 3, title: 'Task 3: Real-time Fitness Mobile App', difficulty: 'Hard', desc: 'Develop full mobile UI connected to Firebase backend.' }
     ]
   },
   {
     id: 'cyber-security',
-    title: 'Cyber Security Virtual Internship',
-    category: 'Cybersecurity',
+    title: 'Cyber Security',
+    category: 'Emerging Tech',
     duration: '4 Weeks',
+    applicants: '15.8K',
     level: 'Intermediate',
-    mode: 'Virtual / Self-Paced',
-    tasksCount: 3,
-    description: 'Learn ethical hacking fundamentals, network vulnerability assessment, packet analysis, and security auditing.',
     icon: Shield,
     iconColor: '#f59e0b',
     glowColor: 'rgba(245, 158, 11, 0.15)',
-    skills: ['Ethical Hacking', 'Network Security', 'Wireshark', 'Python Security Scripts', 'Vulnerability Assessment', 'Penetration Testing'],
+    bannerTag: 'Emerging Tech • Cyber Security',
+    image: '/banner_backend.png',
+    tasksCount: 3,
+    description: 'Learn network security analysis, packet inspection, port scanning, and vulnerability auditing.',
+    skills: ['Ethical Hacking', 'Network Security', 'Wireshark', 'Vulnerability Scan'],
     tasks: [
-      { id: 1, title: 'Task 1: Python Port Scanner Tool', difficulty: 'Easy', desc: 'Develop a multi-threaded Python CLI port scanner that identifies open network ports and services.' },
-      { id: 2, title: 'Task 2: Wireshark Network Packet Inspection Report', difficulty: 'Medium', desc: 'Analyze packet capture (pcap) logs to detect suspicious traffic, HTTP plain text credentials, and ARP spoofing.' },
-      { id: 3, title: 'Task 3: Vulnerability Assessment & Security Audit Report', difficulty: 'Hard', desc: 'Perform a simulated vulnerability scan on OWASP Juice Shop and write a remediation report.' }
+      { id: 1, title: 'Task 1: Python Port Scanner Tool', difficulty: 'Easy', desc: 'Build multi-threaded port scanner CLI tool.' },
+      { id: 2, title: 'Task 2: Wireshark Packet Inspection Report', difficulty: 'Medium', desc: 'Analyze pcap logs for suspicious network activity.' },
+      { id: 3, title: 'Task 3: Security Audit & Vulnerability Report', difficulty: 'Hard', desc: 'Perform vulnerability audit and write remediation report.' }
     ]
   },
   {
-    id: 'ui-ux-design',
-    title: 'UI/UX Design Virtual Internship',
-    category: 'UI/UX Design',
+    id: 'cloud-devops',
+    title: 'Cloud & DevOps Engineering',
+    category: 'Engineering',
     duration: '4 Weeks',
-    level: 'Beginner to Intermediate',
-    mode: 'Virtual / Self-Paced',
+    applicants: '19.4K',
+    level: 'Intermediate to Advanced',
+    icon: Cloud,
+    iconColor: '#0284c7',
+    glowColor: 'rgba(2, 132, 199, 0.15)',
+    bannerTag: 'Engineering • Cloud & DevOps',
+    image: '/banner_cloud.png',
     tasksCount: 3,
-    description: 'Design user journeys, wireframes, interactive Figma prototypes, micro-interactions, and design systems.',
-    icon: Layout,
-    iconColor: '#ec4899',
-    glowColor: 'rgba(236, 72, 153, 0.15)',
-    skills: ['Figma', 'Wireframing', 'Prototyping', 'Design Systems', 'Micro-animations', 'User Persona'],
+    description: 'Master cloud infrastructure, containerization with Docker, and automated CI/CD deployment pipelines.',
+    skills: ['AWS Essentials', 'Docker', 'Kubernetes', 'CI/CD Pipelines', 'Linux Shell'],
     tasks: [
-      { id: 1, title: 'Task 1: Mobile App Redesign (Food Delivery / EdTech)', difficulty: 'Easy', desc: 'Create low-fidelity wireframes and user flow diagram for improving a popular app UI.' },
-      { id: 2, title: 'Task 2: High-Fidelity Interactive Figma Prototype', difficulty: 'Medium', desc: 'Design full high-fidelity screens with auto-layout, interactive component states, and dark mode variant.' },
-      { id: 3, title: 'Task 3: Comprehensive Design System & Case Study', difficulty: 'Hard', desc: 'Build a reusable design system (typography, color tokens, buttons, cards) and write a Behance/Medium case study.' }
+      { id: 1, title: 'Task 1: Containerize App with Docker', difficulty: 'Easy', desc: 'Create Dockerfiles and compose multi-container environment.' },
+      { id: 2, title: 'Task 2: Automated GitHub Actions CI/CD Pipeline', difficulty: 'Medium', desc: 'Set up automated build, test, and deployment workflow.' },
+      { id: 3, title: 'Task 3: AWS Cloud Architecture Deployment', difficulty: 'Hard', desc: 'Deploy web app on AWS EC2 with load balancer and SSL.' }
     ]
   },
   {
     id: 'java-dev',
-    title: 'Java Development Virtual Internship',
-    category: 'Java',
+    title: 'Java Development',
+    category: 'Development',
     duration: '4 Weeks',
+    applicants: '32.6K',
     level: 'Beginner to Intermediate',
-    mode: 'Virtual / Self-Paced',
-    tasksCount: 3,
-    description: 'Master Core Java, Object-Oriented Programming (OOP), Data Structures, and Spring Boot backend APIs.',
     icon: Server,
     iconColor: '#6366f1',
     glowColor: 'rgba(99, 102, 241, 0.15)',
-    skills: ['Java 17+', 'OOP Principles', 'Collections Framework', 'Multithreading', 'Spring Boot Basics', 'JDBC/Hibernate'],
+    bannerTag: 'Development • Java Development',
+    image: '/banner_java.png',
+    tasksCount: 3,
+    description: 'Master Core Java, Object-Oriented principles, Data Structures, and Spring Boot REST APIs.',
+    skills: ['Java 17+', 'OOP Principles', 'Spring Boot', 'JPA/Hibernate', 'SQL'],
     tasks: [
-      { id: 1, title: 'Task 1: Bank Management System (Console / GUI)', difficulty: 'Easy', desc: 'Build a Java OOP application managing bank accounts, deposits, withdrawals, and transaction history.' },
-      { id: 2, title: 'Task 2: Student Course Registration System', difficulty: 'Medium', desc: 'Develop a Java system with file persistence/database connecting students, courses, and grade calculation.' },
-      { id: 3, title: 'Task 3: Spring Boot REST API for E-Commerce / LMS', difficulty: 'Hard', desc: 'Create CRUD REST APIs using Spring Boot, JPA, and H2/MySQL database with Swagger documentation.' }
+      { id: 1, title: 'Task 1: Bank Management System', difficulty: 'Easy', desc: 'Build Java OOP console app for account operations.' },
+      { id: 2, title: 'Task 2: Student Course Registration System', difficulty: 'Medium', desc: 'Develop system managing student course enrollments.' },
+      { id: 3, title: 'Task 3: Spring Boot REST API for E-Commerce', difficulty: 'Hard', desc: 'Create CRUD REST APIs using Spring Boot and H2/MySQL.' }
+    ]
+  },
+  {
+    id: 'business-analytics',
+    title: 'Business Analytics',
+    category: 'Business',
+    duration: '4 Weeks',
+    applicants: '14.1K',
+    level: 'Beginner to Intermediate',
+    icon: BarChart2,
+    iconColor: '#06b6d4',
+    glowColor: 'rgba(6, 182, 212, 0.15)',
+    bannerTag: 'Business • Business Analytics',
+    image: '/banner_datascience.png',
+    tasksCount: 3,
+    description: 'Transform raw enterprise data into interactive Power BI dashboards and strategic business insights.',
+    skills: ['Power BI', 'Advanced Excel', 'SQL Queries', 'Tableau', 'KPI Reporting'],
+    tasks: [
+      { id: 1, title: 'Task 1: Executive Sales Performance Dashboard', difficulty: 'Easy', desc: 'Build interactive Excel/Power BI dashboard with KPIs.' },
+      { id: 2, title: 'Task 2: Market Funnel & Conversion Analysis', difficulty: 'Medium', desc: 'Analyze user acquisition metrics and retention trends.' },
+      { id: 3, title: 'Task 3: Strategic Business Intelligence Report', difficulty: 'Hard', desc: 'Generate executive BI deck with actionable insights.' }
     ]
   }
 ];
 
-export default function InternshipsPage({ onSelectInternship, onOpenTasksModal }) {
+export default function InternshipsPage({ onSelectInternship }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All Categories');
+  const [selectedCategory, setSelectedCategory] = useState('All Programs');
 
   const categories = [
-    'All Categories',
-    'Web Development',
-    'Python',
-    'Data Science',
-    'AI & ML',
-    'Mobile Development',
-    'Cybersecurity',
-    'UI/UX Design',
-    'Java'
+    'All Programs',
+    'Development',
+    'AI & Data Science',
+    'Design',
+    'Business',
+    'Engineering',
+    'Emerging Tech'
   ];
 
   const filteredInternships = ALL_INTERNSHIPS.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           item.skills.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesCategory = selectedCategory === 'All Categories' || item.category === selectedCategory;
-    
+    const matchesCategory = selectedCategory === 'All Programs' || item.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   return (
-    <div className="internships-page">
-      <div className="internships-hero-banner">
-        <h1 className="internships-page-title">
-          Explore Virtual <span>Internship Domains</span>
+    <div className="internships-domains-page">
+      {/* 1. Header Banner */}
+      <div className="domains-header-container">
+        <h1 className="domains-main-title">
+          Available <span className="blue-highlight-text">Internships</span>
         </h1>
-        <p style={{ color: 'var(--text-muted)', maxWidth: '640px', margin: '0.5rem auto 1.5rem', fontSize: '0.95rem' }}>
-          Select your domain, receive an official offer letter within 24 hours, complete 3 hands-on tasks, and earn your verifiable certificate & Letter of Recommendation.
+        <p className="domains-sub-title">
+          Choose from a wide range of technical and non-technical domains. Gain hands-on experience and get certified.
         </p>
 
-        <div className="search-box-container">
-          <div className="search-input-wrapper">
-            <Search className="search-icon" size={20} />
+        {/* 2. Search Input */}
+        <div className="domains-search-wrapper">
+          <div className="domains-search-box">
+            <Search className="domains-search-icon" size={20} />
             <input 
               type="text"
-              className="search-input"
-              placeholder="Search domain by title, Python, React, Data Science, Figma..."
+              className="domains-search-input"
+              placeholder="Search domains..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
-      </div>
 
-      <div className="catalog-layout">
-        {/* Left Sidebar */}
-        <div className="glass-panel sidebar-categories">
-          <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', marginBottom: '0.75rem', paddingLeft: '0.5rem' }}>
-            Domain Categories
-          </div>
+        {/* 3. Category Filter Pills */}
+        <div className="domains-category-pills">
           {categories.map(cat => (
-            <div 
+            <button 
               key={cat}
-              className={`category-item ${selectedCategory === cat ? 'active' : ''}`}
+              className={`domain-pill-btn ${selectedCategory === cat ? 'active' : ''}`}
               onClick={() => setSelectedCategory(cat)}
             >
-              <span>{cat}</span>
-            </div>
+              {cat}
+            </button>
           ))}
         </div>
+      </div>
 
-        {/* Right Cards Grid */}
-        <div className="catalog-grid">
-          {filteredInternships.map(item => {
-            const Icon = item.icon;
-            return (
-              <div key={item.id} className="glass-panel internship-card">
-                <div 
-                  className="card-icon-box"
-                  style={{ background: item.glowColor, color: item.iconColor }}
-                >
-                  <Icon size={32} />
-                </div>
-
-                <div className="card-tag-row">
-                  <span className="badge-4weeks">4-Week Track</span>
-                  <span className="badge-tasks">{item.tasksCount} Assigned Tasks</span>
-                </div>
-
-                <h3 className="card-title">{item.title}</h3>
-
-                <div className="card-meta">
-                  <span>⏱ {item.duration}</span>
-                  <span className="meta-divider"></span>
-                  <span>🎯 {item.level}</span>
-                  <span className="meta-divider"></span>
-                  <span>🌐 {item.mode}</span>
-                </div>
-
-                <p className="card-desc">{item.description}</p>
-
-                <div className="skills-chip-wrapper" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '1.25rem' }}>
-                  {item.skills.slice(0, 4).map(skill => (
-                    <span key={skill} style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border-light)', padding: '0.2rem 0.5rem', borderRadius: '4px', color: 'var(--text-muted)' }}>
-                      {skill}
-                    </span>
-                  ))}
-                  {item.skills.length > 4 && (
-                    <span style={{ fontSize: '0.72rem', color: 'var(--primary)' }}>+{item.skills.length - 4} more</span>
-                  )}
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-                  <button 
-                    className="btn-secondary" 
-                    style={{ justifyContent: 'center', fontSize: '0.8rem', padding: '0.6rem 0.5rem' }}
-                    onClick={() => onOpenTasksModal && onOpenTasksModal(item)}
-                  >
-                    View Tasks
-                  </button>
-                  <button 
-                    className="btn-primary" 
-                    style={{ justifyContent: 'center', fontSize: '0.8rem', padding: '0.6rem 0.5rem' }}
-                    onClick={() => onSelectInternship(item)}
-                  >
-                    Apply Now
-                  </button>
+      {/* 4. Domains Cards Grid */}
+      <div className="domains-grid-container">
+        {filteredInternships.length > 0 ? (
+          filteredInternships.map(item => (
+            <div key={item.id} className="domain-card-item">
+              
+              {/* Image Banner Top */}
+              <div className="domain-card-banner">
+                <img src={item.image} alt={item.title} className="domain-banner-img" />
+                <div className="banner-tag-badge">
+                  <span>{item.bannerTag}</span>
                 </div>
               </div>
-            );
-          })}
-        </div>
+
+              {/* Card Body */}
+              <div className="domain-card-body">
+                <h3 className="domain-card-title">{item.title}</h3>
+
+                {/* Metadata Row: Enrolled count + Duration */}
+                <div className="domain-meta-row">
+                  <div className="domain-meta-item">
+                    <Users size={16} className="meta-icon" />
+                    <span>{item.applicants}</span>
+                  </div>
+                  <div className="domain-meta-item">
+                    <Clock size={16} className="meta-icon" />
+                    <span>{item.duration}</span>
+                  </div>
+                </div>
+
+                {/* Apply Button */}
+                <button 
+                  className="btn-domain-apply"
+                  onClick={() => onSelectInternship && onSelectInternship(item)}
+                >
+                  <span>Apply Now</span>
+                  <ArrowRight size={16} className="apply-arrow-icon" />
+                </button>
+              </div>
+
+            </div>
+          ))
+        ) : (
+          <div className="domains-empty-state">
+            <Search size={48} color="#94a3b8" style={{ marginBottom: '1rem' }} />
+            <h3>No internship domains found</h3>
+            <p>Try searching for keywords like "Frontend", "Python", "Data", or select another category.</p>
+          </div>
+        )}
       </div>
+
     </div>
   );
 }

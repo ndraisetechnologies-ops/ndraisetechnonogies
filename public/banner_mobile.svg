@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bg-mobile-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#022c22" />
+      <stop offset="50%" stop-color="#064e3b" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+
+    <!-- Mobile Screen Glow -->
+    <linearGradient id="screen-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+
+    <linearGradient id="widget-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <filter id="mobile-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="400" fill="url(#bg-mobile-grad)"/>
+
+  <!-- Ambient Light Orbs -->
+  <circle cx="200" cy="100" r="160" fill="#10b981" opacity="0.25" filter="blur(40px)"/>
+  <circle cx="650" cy="300" r="140" fill="#06b6d4" opacity="0.2" filter="blur(40px)"/>
+
+  <!-- Tech Grid Background Pattern -->
+  <g stroke="#ffffff" stroke-opacity="0.05" stroke-width="1.5">
+    <line x1="0" y1="100" x2="800" y2="100"/>
+    <line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="0" y1="300" x2="800" y2="300"/>
+    <line x1="200" y1="0" x2="200" y2="400"/>
+    <line x1="400" y1="0" x2="400" y2="400"/>
+    <line x1="600" y1="0" x2="600" y2="400"/>
+  </g>
+
+  <!-- Smartphone Mockup 1 (Primary Android / iOS Device) -->
+  <g filter="url(#mobile-shadow)" transform="translate(240, 45)">
+    <!-- Phone Bezel -->
+    <rect width="180" height="330" rx="28" fill="#0f172a" stroke="#34d399" stroke-width="2.5"/>
+    <!-- Camera Notch -->
+    <rect x="65" y="10" width="50" height="12" rx="6" fill="#1e293b"/>
+    <circle cx="100" cy="16" r="3" fill="#10b981"/>
+
+    <!-- Screen Content -->
+    <rect x="10" y="32" width="160" height="286" rx="20" fill="#022c22"/>
+
+    <!-- App Header -->
+    <rect x="25" y="50" width="85" height="14" rx="4" fill="#34d399"/>
+    <circle cx="145" cy="57" r="10" fill="#06b6d4"/>
+
+    <!-- Card Widget 1 -->
+    <rect x="25" y="80" width="130" height="75" rx="14" fill="url(#screen-glow)"/>
+    <circle cx="45" cy="102" r="12" fill="#ffffff" opacity="0.9"/>
+    <rect x="65" y="98" width="70" height="8" rx="3" fill="#ffffff"/>
+    <rect x="65" y="112" width="50" height="6" rx="2" fill="#e0f2fe"/>
+
+    <!-- App Grid Icons -->
+    <rect x="25" y="170" width="36" height="36" rx="10" fill="#047857"/>
+    <rect x="72" y="170" width="36" height="36" rx="10" fill="#0284c7"/>
+    <rect x="119" y="170" width="36" height="36" rx="10" fill="#8b5cf6"/>
+
+    <rect x="25" y="218" width="130" height="40" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+    <circle cx="45" cy="238" r="8" fill="#34d399"/>
+    <rect x="62" y="234" width="75" height="8" rx="3" fill="#94a3b8"/>
+  </g>
+
+  <!-- Smartphone Mockup 2 (Secondary Tilted Device) -->
+  <g filter="url(#mobile-shadow)" transform="translate(460, 65)">
+    <rect width="170" height="300" rx="26" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+    <rect x="60" y="8" width="50" height="10" rx="5" fill="#1e293b"/>
+
+    <rect x="10" y="28" width="150" height="260" rx="18" fill="#0f172a"/>
+
+    <!-- Code / Flutter App View -->
+    <rect x="20" y="45" width="130" height="100" rx="12" fill="#1e293b"/>
+    <text x="32" y="75" fill="#38bdf8" font-family="monospace" font-size="12" font-weight="bold">import 'flutter'</text>
+    <text x="32" y="95" fill="#34d399" font-family="monospace" font-size="11">Widget build() {</text>
+    <text x="44" y="115" fill="#f43f5e" font-family="monospace" font-size="11">return App();</text>
+    <text x="32" y="130" fill="#34d399" font-family="monospace" font-size="11">}</text>
+
+    <!-- Interactive Navigation Bar -->
+    <rect x="20" y="160" width="130" height="50" rx="12" fill="url(#widget-grad)"/>
+    <text x="36" y="190" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="bold">React Native UI</text>
+
+    <rect x="20" y="225" width="130" height="36" rx="18" fill="#3b82f6"/>
+    <text x="48" y="248" fill="#ffffff" font-family="sans-serif" font-size="11" font-weight="bold">Build Mobile</text>
+  </g>
+
+  <!-- Floating Tech Badges -->
+  <!-- Flutter Badge -->
+  <g filter="url(#mobile-shadow)" transform="translate(100, 110)">
+    <rect width="110" height="42" rx="12" fill="#0f172a" stroke="#0284c7" stroke-width="1.5"/>
+    <path d="M 22 21 L 34 9 L 42 17 L 30 29 Z" fill="#0284c7"/>
+    <path d="M 30 29 L 34 33 L 42 25 L 34 17 Z" fill="#38bdf8"/>
+    <text x="48" y="26" fill="#ffffff" font-family="sans-serif" font-size="13" font-weight="bold">Flutter</text>
+  </g>
+
+  <!-- React Native Badge -->
+  <g filter="url(#mobile-shadow)" transform="translate(620, 180)">
+    <rect width="130" height="42" rx="12" fill="#0f172a" stroke="#61dafb" stroke-width="1.5"/>
+    <circle cx="30" cy="21" r="5" fill="#61dafb"/>
+    <ellipse cx="30" cy="21" rx="12" ry="5" fill="none" stroke="#61dafb" stroke-width="1.5"/>
+    <text x="48" y="26" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="bold">React Native</text>
+  </g>
+
+  <!-- Android / iOS Badge -->
+  <g filter="url(#mobile-shadow)" transform="translate(110, 240)">
+    <rect width="120" height="42" rx="12" fill="#0f172a" stroke="#34d399" stroke-width="1.5"/>
+    <circle cx="28" cy="21" r="6" fill="#34d399"/>
+    <text x="44" y="26" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="bold">iOS &amp; Android</text>
+  </g>
+
+  <!-- Title Overlay Badge -->
+  <g transform="translate(40, 40)">
+    <rect width="250" height="36" rx="18" fill="rgba(2, 44, 34, 0.9)" stroke="#34d399" stroke-width="1.5"/>
+    <text x="20" y="23" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="bold">DEVELOPMENT • MOBILE APP DEV</text>
+  </g>
+</svg>

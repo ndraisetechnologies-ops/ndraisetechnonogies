@@ -13,31 +13,21 @@
   transition: all 0.3s ease;
 }
 
-/* Strict Image Safety Constraint */
-.navbar-container img,
-.navbar-logo img,
-.logo-img,
-.brand-logo-img {
-  max-height: 44px;
-  max-width: 44px;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-}
-
 /* 1. Left Brand Logo */
-.nav-brand {
+.nav-brand, .navbar-logo {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  cursor: default;
+  cursor: pointer;
   user-select: none;
   flex-shrink: 0;
 }
 
-.brand-logo-badge {
+.brand-logo-badge, .logo-badge {
   width: 44px;
   height: 44px;
+  max-width: 44px;
+  max-height: 44px;
   border-radius: 12px;
   background: #ffffff;
   border: 1.5px solid rgba(99, 102, 241, 0.4);
@@ -51,24 +41,26 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.brand-logo-badge:hover {
+.brand-logo-badge:hover, .logo-badge:hover {
   transform: scale(1.05);
   box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
 }
 
-.brand-logo-img {
-  width: 100%;
-  height: 100%;
+.brand-logo-img, .logo-img, .navbar-logo img, .nav-brand img {
+  width: 44px;
+  height: 44px;
+  max-width: 44px;
+  max-height: 44px;
   object-fit: contain;
   border-radius: 8px;
 }
 
-.brand-text {
+.brand-text, .logo-text-group {
   display: flex;
   flex-direction: column;
 }
 
-.brand-title {
+.brand-title, .logo-title {
   font-family: var(--font-heading);
   font-size: 1.3rem;
   font-weight: 800;
@@ -81,11 +73,11 @@
   white-space: nowrap;
 }
 
-.brand-title span {
+.brand-title span, .logo-title span {
   color: var(--primary);
 }
 
-.brand-tagline {
+.brand-tagline, .logo-subtitle {
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -95,12 +87,12 @@
 }
 
 /* 2. Center Floating Pill Navigation */
-.nav-pill-wrapper {
+.nav-pill-wrapper, .nav-menu {
   display: flex;
   align-items: center;
 }
 
-.nav-pill-list {
+.nav-pill-list, .nav-list {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -113,13 +105,15 @@
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   transition: all 0.3s ease;
+  margin: 0;
 }
 
-.nav-pill-item {
+.nav-pill-item, .nav-item {
   position: relative;
+  list-style: none;
 }
 
-.nav-pill-link {
+.nav-pill-link, .nav-link {
   background: transparent;
   border: none;
   color: var(--nav-link-color);
@@ -137,11 +131,11 @@
   white-space: nowrap;
 }
 
-.nav-pill-link:hover {
+.nav-pill-link:hover, .nav-link:hover {
   color: var(--nav-link-hover);
 }
 
-.nav-pill-link.active {
+.nav-pill-link.active, .nav-link.active {
   color: var(--nav-link-active);
   font-weight: 600;
 }
@@ -157,7 +151,7 @@
 }
 
 /* Dropdown Menu */
-.nav-dropdown-menu {
+.nav-dropdown-menu, .dropdown-menu {
   position: absolute;
   top: calc(100% + 8px);
   left: 50%;
@@ -176,7 +170,7 @@
 }
 
 /* Invisible hover bridge to prevent sudden closing on mouse move */
-.nav-dropdown-menu::before {
+.nav-dropdown-menu::before, .dropdown-menu::before {
   content: '';
   position: absolute;
   top: -14px;
@@ -185,7 +179,7 @@
   height: 14px;
 }
 
-.nav-dropdown-menu.open {
+.nav-dropdown-menu.open, .dropdown-menu.open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
