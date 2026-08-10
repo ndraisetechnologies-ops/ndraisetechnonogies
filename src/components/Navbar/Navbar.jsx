@@ -88,15 +88,11 @@ export default function Navbar({
     } else if (item.actionType === 'browse-courses') {
       setCurrentView('browse-courses');
     } else if (item.actionType === 'ats-score') {
-      if (onSubmitTaskClick) {
-        onSubmitTaskClick();
-      } else {
-        alert('🎯 Check ATS Score: Upload your resume to calculate score compatibility!');
-      }
+      setCurrentView('ats-score');
     } else if (item.actionType === 'email-builder') {
-      alert('✉️ Job Email Builder: Generate HR cold emails & cover letters!');
+      setCurrentView('job-email-builder');
     } else if (item.actionType === 'interview-prep') {
-      alert('🧠 Interview Preparation: Technical questions & behavioral drills!');
+      setCurrentView('interview-preparation');
     } else if (item.actionType === 'submit-task') {
       if (onSubmitTaskClick) onSubmitTaskClick();
     } else if (item.actionType === 'apply-now') {
@@ -123,11 +119,8 @@ export default function Navbar({
         setCurrentView('reviews');
       }
     } else if (item.actionType === 'contact' || item.actionType === 'terms' || item.actionType === 'privacy' || item.actionType === 'cookies') {
-      if (onPolicyClick) {
-        onPolicyClick(item.actionType);
-      } else {
-        setCurrentView(item.actionType);
-      }
+      setCurrentView(item.actionType);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (item.id === 'skill-courses') {
       setCurrentView('browse-courses');
     } else if (item.id === 'internships' || item.id === 'virtual-domains') {
@@ -148,7 +141,7 @@ export default function Navbar({
   return (
     <header className="navbar-container">
       {/* 1. Logo */}
-      <div className="nav-brand navbar-logo" onClick={() => setCurrentView('home')}>
+      <div className="nav-brand navbar-logo">
         <div className="brand-logo-badge logo-badge">
           <img src="/logo.jpg" alt="ND Raise Technologies Logo" className="brand-logo-img logo-img" />
         </div>
@@ -324,21 +317,8 @@ export default function Navbar({
             <button className="btn-secondary nav-login-btn" onClick={() => openAuthModal('login')}>
               Sign In
             </button>
-            <button className="btn-primary nav-register-btn" onClick={() => openAuthModal('register')}>
-              <span>Get Started</span>
-              <ArrowRight size={16} />
-            </button>
           </div>
         )}
-
-        {/* Mobile Hamburger Toggle */}
-        <button 
-          className="mobile-hamburger-btn"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle Mobile Menu"
-        >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
       </div>
     </header>
   );

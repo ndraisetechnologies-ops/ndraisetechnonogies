@@ -22,7 +22,7 @@ export default function AdminDashboard({ setCurrentView }) {
     <div className="admin-layout">
       {/* Sidebar */}
       <aside className="admin-sidebar">
-        <div className="nav-brand" onClick={() => setCurrentView('home')}>
+        <div className="nav-brand">
           <div className="brand-logo-badge">
             <img src="/logo.jpg" alt="ND Technologies Logo" className="brand-logo-img" />
           </div>

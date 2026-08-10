@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Home, BookOpen, Code, FileText, CheckSquare, Award, User, Settings, LogOut, Clock, Calendar, CheckCircle2, AlertCircle, Download, ExternalLink, Send } from 'lucide-react';
+import { 
+  LayoutDashboard, Home, BookOpen, Code, FileText, CheckSquare, Award, User, 
+  Settings, LogOut, Clock, Calendar, CheckCircle2, AlertCircle, Download, 
+  ExternalLink, Send, Target, Mail, Brain, ArrowRight, TrendingUp, Sparkles, 
+  ChevronRight, Briefcase, FileCheck, Star, ShieldAlert 
+} from 'lucide-react';
+import { studentDashboardData } from '../../data/studentDashboardData';
 import OfferLetterModal from '../../components/Modals/OfferLetterModal';
 import TaskSubmissionModal from '../../components/Modals/TaskSubmissionModal';
 import './StudentDashboard.css';
@@ -9,21 +15,78 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
 
-  const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'home', label: 'Home Page', icon: Home },
-    { id: 'my-internships', label: 'My Virtual Tracks', icon: BookOpen },
-    { id: 'tasks', label: 'Assigned Tasks (3/3)', icon: Code },
-    { id: 'offer-letter', label: 'Offer Letter', icon: FileText },
-    { id: 'certificates', label: 'Verifiable Certificate', icon: Award },
-    { id: 'profile', label: 'Profile', icon: User },
+  const data = studentDashboardData;
+
+  // Sidebar Menu Categories Structure
+  const sidebarGroups = [
+    {
+      group: 'MAIN',
+      items: [
+        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'home', label: 'Home Page', icon: Home },
+        { id: 'my-internships', label: 'My Virtual Tracks', icon: BookOpen },
+        { id: 'applications', label: 'Applications', icon: Briefcase },
+        { id: 'tasks', label: 'Assigned Tasks (3/3)', icon: Code },
+      ]
+    },
+    {
+      group: 'CAREER TOOLS',
+      items: [
+        { id: 'ats-score', label: '⭐ Check ATS Score', icon: Target },
+        { id: 'job-email-builder', label: '✉ Job Email Builder', icon: Mail },
+        { id: 'interview-prep', label: '🎯 Interview Preparation', icon: Brain },
+      ]
+    },
+    {
+      group: 'LEARNING',
+      items: [
+        { id: 'tests', label: 'Tests', icon: FileCheck },
+        { id: 'projects', label: 'Projects', icon: Code },
+        { id: 'certificates', label: 'Certificates', icon: Award },
+      ]
+    },
+    {
+      group: 'ACCOUNT',
+      items: [
+        { id: 'profile', label: 'Profile', icon: User },
+        { id: 'settings', label: 'Settings', icon: Settings },
+      ]
+    }
   ];
+
+  const handleMenuClick = (itemId) => {
+    if (itemId === 'home') {
+      if (setCurrentView) setCurrentView('home');
+    } else if (itemId === 'ats-score') {
+      if (setCurrentView) setCurrentView('ats-score');
+    } else if (itemId === 'job-email-builder') {
+      if (setCurrentView) setCurrentView('job-email-builder');
+    } else if (itemId === 'interview-prep') {
+      if (setCurrentView) setCurrentView('interview-preparation');
+    } else {
+      setActiveMenu(itemId);
+      if (itemId === 'offer-letter') setOfferModalOpen(true);
+      if (itemId === 'tasks') setSubmitModalOpen(true);
+    }
+  };
+
+  const getStatusBadgeClass = (status) => {
+    switch (status.toLowerCase()) {
+      case 'shortlisted': return 'badge-shortlisted';
+      case 'under review': return 'badge-review';
+      case 'selected': return 'badge-selected';
+      case 'rejected': return 'badge-rejected';
+      default: return 'badge-default';
+    }
+  };
 
   return (
     <div className="dashboard-layout">
+      
       {/* Sidebar */}
       <aside className="dashboard-sidebar">
-        {/* Brand Header (No onClick handler so title does NOT redirect to home) */}
+        
+        {/* Brand Header */}
         <div className="nav-brand">
           <div className="brand-logo-badge">
             <img src="/logo.jpg" alt="ND Technologies Logo" className="brand-logo-img" />
@@ -36,170 +99,506 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
           </div>
         </div>
 
-        <ul className="dashboard-menu">
-          {menuItems.map(item => {
-            const Icon = item.icon;
-            return (
-              <li
-                key={item.id}
-                className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
-                onClick={() => {
-                  if (item.id === 'home') {
-                    if (setCurrentView) setCurrentView('home');
-                  } else {
-                    setActiveMenu(item.id);
-                    if (item.id === 'offer-letter') setOfferModalOpen(true);
-                    if (item.id === 'tasks') setSubmitModalOpen(true);
-                  }
-                }}
-              >
-                <Icon size={18} />
-                <span>{item.label}</span>
-              </li>
-            );
-          })}
-        </ul>
+        {/* Categorized Sidebar Menu */}
+        <div className="sidebar-groups-wrapper">
+          {sidebarGroups.map((grp) => (
+            <div key={grp.group} className="sidebar-group-box">
+              <div className="sidebar-group-title">{grp.group}</div>
+              <ul className="dashboard-menu">
+                {grp.items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li
+                      key={item.id}
+                      className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
+                      onClick={() => handleMenuClick(item.id)}
+                    >
+                      <Icon size={18} />
+                      <span>{item.label}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
 
-        <div style={{ marginTop: 'auto' }}>
-          <div className="menu-item" style={{ color: '#ef4444' }} onClick={onLogout}>
+        <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
+          <div className="menu-item logout-menu-item" onClick={onLogout}>
             <LogOut size={18} />
             <span>Logout</span>
           </div>
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* Main Content View */}
       <main className="dashboard-main">
-        {/* Header */}
-        <div className="dashboard-header">
+        
+        {/* 1. Welcome Header */}
+        <div className="dashboard-header glass-panel">
           <div className="welcome-text">
-            <h1>Welcome back, {user?.name || 'Nikhil Sharma'} 👋</h1>
-            <p>ND Raise Virtual Internship Track • Batch August 2026</p>
+            <h1>Welcome back, {user?.name || data.welcome.name} 👋</h1>
+            <p>Here's your career progress at NDRise.</p>
+            <div className="header-meta-pills">
+              <span className="meta-pill">Current Track: <strong>{data.welcome.currentTrack}</strong></span>
+              <span className="meta-pill">Batch: <strong>{data.welcome.batch}</strong></span>
+            </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <button 
-              className="btn-secondary" 
-              onClick={() => setCurrentView && setCurrentView('home')} 
-              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.65rem 1.1rem', borderRadius: '8px', fontSize: '0.85rem', cursor: 'pointer', background: 'var(--bg-pill)', border: '1px solid var(--border-pill)', color: 'var(--text-main)', fontWeight: '600' }}
-            >
-              <Home size={16} />
-              <span>Back to Home</span>
-            </button>
-
-            <div className="current-course-badge">
-              <div>
-                <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: '700', textTransform: 'uppercase' }}>ENROLLED TRACK</div>
-                <div style={{ fontSize: '1rem', fontWeight: '700', color: '#ffffff' }}>Web Development (4-Week)</div>
-              </div>
-
-              <div className="progress-ring">
-                <div className="progress-ring-inner">
-                  66%
-                </div>
-              </div>
+          <div className="header-readiness-box">
+            <div className="readiness-top-row">
+              <span className="readiness-label">Overall Career Readiness</span>
+              <span className="readiness-percent">{data.welcome.overallReadiness}%</span>
+            </div>
+            <div className="readiness-track">
+              <div className="readiness-fill" style={{ width: `${data.welcome.overallReadiness}%` }}></div>
             </div>
           </div>
         </div>
 
-        {/* Quick Actions Strip */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
-          <button className="glass-panel" style={{ padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', textAlign: 'left' }} onClick={() => setOfferModalOpen(true)}>
-            <FileText size={28} color="#38bdf8" />
-            <div>
-              <div style={{ fontWeight: '700', color: '#fff', fontSize: '0.95rem' }}>View Offer Letter</div>
-              <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Download PDF & Details</div>
+        {/* 2. Career Overview Summary Cards Row */}
+        <div className="career-overview-grid">
+          
+          <div className="summary-card glass-panel" onClick={() => handleMenuClick('applications')}>
+            <div className="summary-icon icon-blue"><Briefcase size={22} /></div>
+            <div className="summary-body">
+              <span className="summary-title">INTERNSHIPS APPLIED</span>
+              <div className="summary-num">{data.overview.applied}</div>
+              <span className="summary-subtext">↑ {data.overview.appliedThisMonth} this month</span>
             </div>
-          </button>
-
-          <button className="glass-panel" style={{ padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', textAlign: 'left' }} onClick={() => setSubmitModalOpen(true)}>
-            <Send size={28} color="#c084fc" />
-            <div>
-              <div style={{ fontWeight: '700', color: '#fff', fontSize: '0.95rem' }}>Submit Task Links</div>
-              <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>GitHub & LinkedIn Post</div>
-            </div>
-          </button>
-
-          <button className="glass-panel" style={{ padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', textAlign: 'left' }} onClick={() => alert('Certificate will be unlocked upon 100% task evaluation.')}>
-            <Award size={28} color="#34d399" />
-            <div>
-              <div style={{ fontWeight: '700', color: '#fff', fontSize: '0.95rem' }}>Get Verified Certificate</div>
-              <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>2/3 Tasks Approved</div>
-            </div>
-          </button>
-        </div>
-
-        {/* Dashboard Grid */}
-        <div className="dashboard-grid">
-          {/* Main Tasks List */}
-          <div className="dashboard-card main-card">
-            <h3 style={{ fontSize: '1.15rem', fontWeight: '700', color: '#fff', marginBottom: '1rem' }}>
-              Your 4-Week Assigned Tasks
-            </h3>
-
-            <div className="task-list">
-              <div className="task-item completed">
-                <CheckCircle2 size={20} color="#34d399" />
-                <div style={{ flex: 1 }}>
-                  <div className="task-title">Task 1: Personal Portfolio Website</div>
-                  <div className="task-desc">Build a modern responsive developer portfolio using React & CSS.</div>
-                </div>
-                <div className="task-status status-approved">Approved</div>
-              </div>
-
-              <div className="task-item completed">
-                <CheckCircle2 size={20} color="#34d399" />
-                <div style={{ flex: 1 }}>
-                  <div className="task-title">Task 2: E-Commerce Web Application</div>
-                  <div className="task-desc">Create product catalog with shopping cart and dynamic filters.</div>
-                </div>
-                <div className="task-status status-approved">Approved</div>
-              </div>
-
-              <div className="task-item">
-                <AlertCircle size={20} color="#fbbf24" />
-                <div style={{ flex: 1 }}>
-                  <div className="task-title">Task 3: Full-Stack Task Management App</div>
-                  <div className="task-desc">Implement CRUD operations with user login & local persistence.</div>
-                </div>
-                <button className="task-status status-pending" onClick={() => setSubmitModalOpen(true)}>Submit Now</button>
-              </div>
-            </div>
+            <div className="summary-link">View Applications →</div>
           </div>
 
-          {/* Side Info Panel */}
-          <div className="dashboard-card side-card">
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#fff', marginBottom: '1rem' }}>
-              Internship Timeline
-            </h3>
+          <div className="summary-card glass-panel" onClick={() => handleMenuClick('my-internships')}>
+            <div className="summary-icon icon-emerald"><CheckCircle2 size={22} /></div>
+            <div className="summary-body">
+              <span className="summary-title">INTERNSHIPS COMPLETED</span>
+              <div className="summary-num">{data.overview.completed}</div>
+              <span className="summary-subtext">{data.overview.active} currently active</span>
+            </div>
+            <div className="summary-link">View Journey →</div>
+          </div>
 
-            <div className="timeline-list">
-              <div className="timeline-item">
-                <Clock size={16} color="#38bdf8" />
-                <div>
-                  <div style={{ fontWeight: '600', fontSize: '0.88rem', color: '#fff' }}>Batch Start Date</div>
-                  <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>August 01, 2026</div>
-                </div>
+          <div className="summary-card glass-panel" onClick={() => handleMenuClick('tests')}>
+            <div className="summary-icon icon-purple"><FileCheck size={22} /></div>
+            <div className="summary-body">
+              <span className="summary-title">TESTS ATTENDED</span>
+              <div className="summary-num">{data.overview.testsAttended}</div>
+              <span className="summary-subtext">Average Score: {data.overview.averageTestScore}%</span>
+            </div>
+            <div className="summary-link">View Test Results →</div>
+          </div>
+
+          <div className="summary-card glass-panel" onClick={() => handleMenuClick('projects')}>
+            <div className="summary-icon icon-amber"><Code size={22} /></div>
+            <div className="summary-body">
+              <span className="summary-title">PROJECTS COMPLETED</span>
+              <div className="summary-num">{data.overview.projectsCompleted}</div>
+              <span className="summary-subtext">{data.overview.projectsInProgress} in progress</span>
+            </div>
+            <div className="summary-link">View Projects →</div>
+          </div>
+
+          <div className="summary-card glass-panel" onClick={() => handleMenuClick('certificates')}>
+            <div className="summary-icon icon-teal"><Award size={22} /></div>
+            <div className="summary-body">
+              <span className="summary-title">CERTIFICATES</span>
+              <div className="summary-num">{data.overview.totalCertificates}</div>
+              <span className="summary-subtext">{data.overview.internshipCertificates} internship • {data.overview.courseCertificates} course</span>
+            </div>
+            <div className="summary-link">View Certificates →</div>
+          </div>
+
+          <div className="summary-card glass-panel" onClick={() => handleMenuClick('ats-score')}>
+            <div className="summary-icon icon-sky"><Target size={22} /></div>
+            <div className="summary-body">
+              <span className="summary-title">ATS SCORE</span>
+              <div className="summary-num">{data.overview.atsScore} <small style={{ fontSize: '0.9rem', color: '#94a3b8' }}>/ 100</small></div>
+              <span className="summary-subtext">Grade: {data.overview.atsGrade}</span>
+            </div>
+            <div className="summary-link">Improve ATS →</div>
+          </div>
+
+        </div>
+
+        {/* Main Command Center Layout Grid */}
+        <div className="command-center-grid">
+          
+          {/* LEFT COLUMN: Journey, Applications, Tests, ATS, Projects, Certificates */}
+          <div className="center-left-column">
+            
+            {/* 3. Internship Journey & Progress */}
+            <div className="command-card glass-panel">
+              <h3 className="section-card-heading">My Internship Journey</h3>
+              
+              {/* Funnel Pipeline */}
+              <div className="funnel-pipeline-bar">
+                <div className="funnel-step"><span className="step-num">{data.overview.applied}</span><span className="step-lbl">Applied</span></div>
+                <div className="funnel-arrow">→</div>
+                <div className="funnel-step"><span className="step-num">{data.overview.underReview}</span><span className="step-lbl">Under Review</span></div>
+                <div className="funnel-arrow">→</div>
+                <div className="funnel-step"><span className="step-num">{data.overview.shortlisted}</span><span className="step-lbl">Shortlisted</span></div>
+                <div className="funnel-arrow">→</div>
+                <div className="funnel-step"><span className="step-num">{data.overview.selected}</span><span className="step-lbl">Selected</span></div>
+                <div className="funnel-arrow">→</div>
+                <div className="funnel-step active"><span className="step-num">{data.overview.active}</span><span className="step-lbl">In Progress</span></div>
+                <div className="funnel-arrow">→</div>
+                <div className="funnel-step completed"><span className="step-num">{data.overview.completed}</span><span className="step-lbl">Completed</span></div>
               </div>
 
-              <div className="timeline-item">
-                <Calendar size={16} color="#c084fc" />
-                <div>
-                  <div style={{ fontWeight: '600', fontSize: '0.88rem', color: '#fff' }}>Submission Deadline</div>
-                  <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>August 28, 2026</div>
+              {/* Active Internship Box */}
+              <div className="active-internship-box">
+                <div className="active-box-header">
+                  <div>
+                    <span className="active-badge">CURRENT INTERNSHIP</span>
+                    <h4 className="active-internship-title">{data.currentInternship.title}</h4>
+                    <span className="active-company">{data.currentInternship.company}</span>
+                  </div>
+
+                  <div className="active-progress-ring">
+                    <span>{data.currentInternship.progressPercent}%</span>
+                  </div>
+                </div>
+
+                <div className="active-bar-track">
+                  <div className="active-bar-fill" style={{ width: `${data.currentInternship.progressPercent}%` }}></div>
+                </div>
+
+                <div className="active-box-footer">
+                  <span>Current Stage: <strong>{data.currentInternship.currentStage}</strong></span>
+                  <span>Next Action: <strong>{data.currentInternship.nextAction}</strong></span>
+                  <button 
+                    type="button" 
+                    className="btn-primary btn-continue-internship"
+                    onClick={() => setSubmitModalOpen(true)}
+                  >
+                    <span>Continue Internship →</span>
+                  </button>
                 </div>
               </div>
             </div>
 
-            <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1rem', marginTop: '1.5rem' }}>
-              <div style={{ fontWeight: '700', fontSize: '0.9rem', color: '#fff', marginBottom: '0.5rem' }}>Need Help?</div>
-              <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.75rem' }}>Join our active intern Discord channel for mentor guidance.</p>
-              <button className="btn-secondary" style={{ width: '100%', padding: '0.5rem', fontSize: '0.8rem' }} onClick={() => window.open('https://discord.gg', '_blank')}>
-                Join Discord Support
+            {/* 4. Your Applications Table */}
+            <div className="command-card glass-panel">
+              <div className="card-header-flex">
+                <h3 className="section-card-heading">Your Applications</h3>
+                <span className="count-pill">{data.applicationsList.length} Total</span>
+              </div>
+
+              <div className="applications-table-wrapper">
+                <table className="applications-table">
+                  <thead>
+                    <tr>
+                      <th>ROLE & COMPANY</th>
+                      <th>APPLIED DATE</th>
+                      <th>STATUS</th>
+                      <th>ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.applicationsList.map((app) => (
+                      <tr key={app.id}>
+                        <td>
+                          <div className="app-role-name">{app.title}</div>
+                          <div className="app-company-name">{app.company} • {app.type}</div>
+                        </td>
+                        <td>{app.appliedDate}</td>
+                        <td>
+                          <span className={`status-badge ${getStatusBadgeClass(app.status)}`}>
+                            ● {app.status}
+                          </span>
+                        </td>
+                        <td>
+                          <button type="button" className="btn-table-action" onClick={() => alert(`Viewing details for ${app.title}`)}>
+                            View →
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* 5. Test Performance Section */}
+            <div className="command-card glass-panel">
+              <h3 className="section-card-heading">Test Performance</h3>
+              
+              <div className="test-stats-row">
+                <div className="test-stat-pill"><span>Attended:</span> <strong>{data.testPerformance.attended}</strong></div>
+                <div className="test-stat-pill"><span>Passed:</span> <strong>{data.testPerformance.passed}</strong></div>
+                <div className="test-stat-pill"><span>Average Score:</span> <strong>{data.testPerformance.averageScore}%</strong></div>
+                <div className="test-stat-pill"><span>Highest Score:</span> <strong>{data.testPerformance.highestScore}%</strong></div>
+              </div>
+
+              {/* Lightweight SVG Bar Chart */}
+              <div className="test-chart-container">
+                <div className="chart-title">Recent Test Scores</div>
+                <div className="chart-bars-flex">
+                  {data.testPerformance.recentScores.map((item) => (
+                    <div key={item.id} className="bar-item">
+                      <span className="bar-val">{item.score}%</span>
+                      <div className="bar-track">
+                        <div className="bar-fill" style={{ height: `${item.score}%` }}></div>
+                      </div>
+                      <span className="bar-name">{item.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 6. Resume & ATS Score Section */}
+            <div className="command-card glass-panel">
+              <h3 className="section-card-heading">Resume & ATS Score</h3>
+
+              <div className="ats-widget-row">
+                <div className="ats-score-display">
+                  <div className="ats-num-badge">{data.ats?.score || data.overview?.atsScore || 78}</div>
+                  <div className="ats-grade-text">
+                    <strong>{data.ats?.grade || data.overview?.atsGrade || 'Good'}</strong>
+                    <span>Your resume is performing well</span>
+                  </div>
+                </div>
+
+                <div className="ats-breakdown-column">
+                  {(data.atsBreakdown || []).map((item, idx) => (
+                    <div key={idx} className="ats-item-row">
+                      <span className="ats-item-name">{item.name}</span>
+                      <div className="ats-item-track">
+                        <div className="ats-item-fill" style={{ width: `${item.score}%` }}></div>
+                      </div>
+                      <span className="ats-item-val">{item.score}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="ats-rec-box">
+                <Target size={18} color="#38bdf8" />
+                <span>
+                  <strong>Top Recommendation:</strong> Add relevant skills and keywords from internships you are genuinely qualified for.
+                </span>
+                <button 
+                  type="button" 
+                  className="btn-secondary btn-ats-cta"
+                  onClick={() => setCurrentView && setCurrentView('ats-score')}
+                >
+                  <span>Improve ATS Score →</span>
+                </button>
+              </div>
+            </div>
+
+            {/* 7. Project Progress */}
+            <div className="command-card glass-panel">
+              <h3 className="section-card-heading">Project Progress</h3>
+
+              <div className="project-overview-bar">
+                <span>Completed: <strong>{data.projects?.completed || data.overview?.projectsCompleted || 8}</strong></span>
+                <span>In Progress: <strong>{data.projects?.inProgress || data.overview?.projectsInProgress || 2}</strong></span>
+                <span>Overall Progress: <strong>{data.projects?.progressPercent || data.overview?.projectProgressPercent || 80}%</strong></span>
+              </div>
+
+              <div className="projects-grid">
+                {(data.projectsList || []).map((proj) => (
+                  <div key={proj.id} className="project-mini-card">
+                    <div className="proj-card-top">
+                      <h4 className="proj-title">{proj.title}</h4>
+                      <span className={`proj-status ${proj.status === 'Completed' ? 'status-comp' : 'status-prog'}`}>
+                        {proj.status}
+                      </span>
+                    </div>
+                    <span className="proj-tech">{proj.techStack}</span>
+                    <div className="proj-bar-track">
+                      <div className="proj-bar-fill" style={{ width: `${proj.progress}%` }}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 8. Certificates & Achievements */}
+            <div className="command-card glass-panel">
+              <h3 className="section-card-heading">Certificates & Achievements</h3>
+
+              <div className="certs-overview-bar">
+                <span>Total: <strong>{data.certificates?.total || data.overview?.totalCertificates || 5}</strong></span>
+                <span>Internship: <strong>{data.certificates?.internship || data.overview?.internshipCertificates || 3}</strong></span>
+                <span>Course: <strong>{data.certificates?.course || data.overview?.courseCertificates || 2}</strong></span>
+              </div>
+
+              <div className="certs-grid">
+                {data.certificatesList.map((cert) => (
+                  <div key={cert.id} className="cert-card">
+                    <Award size={24} color="#34d399" />
+                    <div>
+                      <h4 className="cert-title">{cert.title}</h4>
+                      <span className="cert-meta">{cert.company} • {cert.date}</span>
+                    </div>
+                    <button type="button" className="btn-table-action" onClick={() => alert(`Viewing certificate: ${cert.title}`)}>
+                      View
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="next-cert-box">
+                <Sparkles size={18} color="#f59e0b" />
+                <div>
+                  <strong>Next Certificate:</strong> Complete your current internship to unlock your next certificate ({data.certificates?.nextUnlockProgress || data.currentInternship?.progressPercent || 66}% completed).
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* RIGHT COLUMN: Next Action, Career Readiness, Roadmap, Activity, Deadlines */}
+          <div className="center-right-column">
+            
+            {/* 13. Highly Visible Next Best Action */}
+            <div className="command-card glass-panel next-action-card">
+              <div className="next-action-badge">
+                <Target size={16} />
+                <span>RECOMMENDED NEXT STEP</span>
+              </div>
+
+              <h3 className="next-action-title">{data.nextBestAction?.title}</h3>
+              <p className="next-action-desc">{data.nextBestAction?.desc}</p>
+
+              <button 
+                type="button" 
+                className="btn-primary btn-next-action"
+                onClick={() => setCurrentView && setCurrentView(data.nextBestAction?.targetView)}
+              >
+                <span>{data.nextBestAction?.ctaText}</span>
               </button>
             </div>
+
+            {/* 9. Career Readiness Breakdown Card */}
+            <div className="command-card glass-panel readiness-breakdown-card">
+              <h3 className="section-card-heading">Career Readiness</h3>
+              
+              <div className="readiness-big-score">
+                <span className="big-num">{data.careerReadiness?.overall || 78}%</span>
+                <span className="big-lbl">Overall Readiness</span>
+              </div>
+
+              <div className="readiness-list">
+                {(data.careerReadiness?.breakdown || []).map((item, idx) => (
+                  <div key={idx} className="readiness-item">
+                    <div className="readiness-item-label">
+                      <span>{item.name}</span>
+                      <strong>{item.score}%</strong>
+                    </div>
+                    <div className="readiness-item-track">
+                      <div className="readiness-item-fill" style={{ width: `${item.score}%` }}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="readiness-insights">
+                <div className="insight-pill insight-strong">
+                  <span>Strongest:</span> <strong>{data.careerReadiness?.strongestArea}</strong>
+                </div>
+                <div className="insight-pill insight-improve">
+                  <span>Focus Area:</span> <strong>{data.careerReadiness?.recommendedImprovement}</strong>
+                </div>
+              </div>
+
+              <button 
+                type="button" 
+                className="btn-secondary btn-full-width"
+                onClick={() => setCurrentView && setCurrentView('interview-preparation')}
+              >
+                <span>Improve Interview Skills →</span>
+              </button>
+            </div>
+
+            {/* 10. Career Journey Milestone Roadmap */}
+            <div className="command-card glass-panel roadmap-card">
+              <h3 className="section-card-heading">Career Journey Milestone</h3>
+
+              <div className="journey-roadmap-list">
+                {(data.careerJourney || []).map((stepObj, i) => (
+                  <div key={i} className={`journey-step ${stepObj.status}`}>
+                    <span className="journey-icon">
+                      {stepObj.status === 'completed' ? '✓' : stepObj.status === 'active' ? '●' : '○'}
+                    </span>
+                    <span className="journey-name">{stepObj.stage}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 12. Upcoming Deadlines Widget */}
+            <div className="command-card glass-panel deadlines-card">
+              <h3 className="section-card-heading">Upcoming Deadlines</h3>
+
+              <div className="deadlines-list">
+                {(data.upcomingDeadlines || []).map((dl) => (
+                  <div key={dl.id} className={`deadline-item urgency-${dl.urgency}`}>
+                    <div className="dl-top">
+                      <h4 className="dl-title">{dl.title}</h4>
+                      <span className="dl-badge">{dl.daysRemaining} days left</span>
+                    </div>
+                    <span className="dl-sub">{dl.subtitle} • Due: {dl.dueDate}</span>
+                    <button 
+                      type="button" 
+                      className="btn-table-action dl-btn"
+                      onClick={() => setSubmitModalOpen(true)}
+                    >
+                      Continue Task →
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 11. Recent Activity Feed */}
+            <div className="command-card glass-panel activity-card">
+              <h3 className="section-card-heading">Recent Activity</h3>
+
+              <div className="activity-list">
+                {(data.recentActivity || []).map((act) => (
+                  <div key={act.id} className="activity-item">
+                    <div className="act-bullet">●</div>
+                    <div className="act-content">
+                      <div className="act-text">{act.text}</div>
+                      <span className="act-time">{act.time}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 14. Recommended Internships Compact Section */}
+            <div className="command-card glass-panel recommended-internships-card">
+              <h3 className="section-card-heading">Recommended For You</h3>
+
+              <div className="recommended-list">
+                {(data.recommendedInternships || []).map((rec) => (
+                  <div key={rec.id} className="recommended-item">
+                    <div>
+                      <h4 className="rec-title">{rec.title}</h4>
+                      <span className="rec-details">{rec.details}</span>
+                    </div>
+                    <button 
+                      type="button" 
+                      className="btn-table-action"
+                      onClick={() => setCurrentView && setCurrentView('internships')}
+                    >
+                      View →
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
           </div>
+
         </div>
+
       </main>
 
       {/* Modals */}
@@ -216,6 +615,7 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
         onClose={() => setSubmitModalOpen(false)}
         onSubmitSuccess={(msg) => alert(msg)}
       />
+
     </div>
   );
 }

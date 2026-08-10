@@ -15,6 +15,9 @@ import TermsAndConditionsPage from './pages/TermsAndConditions/TermsAndCondition
 import PrivacyPolicyPage from './pages/PrivacyPolicy/PrivacyPolicyPage';
 import CookiesPolicyPage from './pages/CookiesPolicy/CookiesPolicyPage';
 import BrowseCoursesPage from './pages/BrowseCourses/BrowseCoursesPage';
+import AtsScorePage from './pages/AtsScore/AtsScorePage';
+import JobEmailBuilderPage from './pages/JobEmailBuilder/JobEmailBuilderPage';
+import InterviewPrepPage from './pages/InterviewPrep/InterviewPrepPage';
 import AuthModal from './components/Modals/AuthModal';
 import ApplyModal from './components/Modals/ApplyModal';
 import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
@@ -129,7 +132,6 @@ export default function App() {
           onOfferLetterClick={openOfferLetterPage}
           onCertificatesClick={openMyCertificatesPage}
           onReviewsClick={openReviewsPage}
-          onPolicyClick={(type) => setPolicyModal({ isOpen: true, type })}
           showToast={showToast}
         />
       )}
@@ -159,6 +161,27 @@ export default function App() {
             onSelectCourse={(course) => {
               showToast(`Selected course: ${course.title}`);
             }}
+          />
+        )}
+
+        {currentView === 'ats-score' && (
+          <AtsScorePage 
+            setCurrentView={setCurrentView}
+            user={user}
+          />
+        )}
+
+        {currentView === 'job-email-builder' && (
+          <JobEmailBuilderPage 
+            setCurrentView={setCurrentView}
+            user={user}
+          />
+        )}
+
+        {currentView === 'interview-preparation' && (
+          <InterviewPrepPage 
+            setCurrentView={setCurrentView}
+            user={user}
           />
         )}
 

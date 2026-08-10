@@ -25,7 +25,7 @@ export default function Footer({ setCurrentView, user, onAuthClick }) {
       
       {/* Top Footer Brand Row */}
       <div className="footer-top-brand">
-        <div className="nav-brand" onClick={() => handleNavigate('home')}>
+        <div className="nav-brand">
           <div className="brand-logo-badge">
             <img src="/logo.jpg" alt="ND Technologies Logo" className="brand-logo-img" />
           </div>
