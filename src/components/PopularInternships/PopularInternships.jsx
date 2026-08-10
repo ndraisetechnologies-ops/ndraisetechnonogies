@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, ChevronRight, Atom, Server, Terminal, BarChart2, Cpu, Shield, Smartphone } from 'lucide-react';
+import { ArrowRight, ChevronRight, Atom, Server, Terminal, BarChart2, Cpu, Shield, Smartphone, Code } from 'lucide-react';
 import { ALL_INTERNSHIPS } from '../../pages/Internships/InternshipsPage';
 import './PopularInternships.css';
 
@@ -22,14 +22,17 @@ export default function PopularInternships({ onSelectInternship, onViewAllClick,
 
       <div className="internships-grid">
         {featured.map((item) => {
-          const Icon = item.icon;
+          const Icon = item.icon || Code;
+          const glowColor = item.glowColor || 'rgba(59, 130, 246, 0.15)';
+          const iconColor = item.iconColor || '#3b82f6';
+          const level = item.level || 'Intermediate';
           return (
             <div key={item.id} className="glass-panel internship-card">
               <div 
                 className="card-icon-box"
                 style={{ 
-                  background: item.glowColor, 
-                  color: item.iconColor 
+                  background: glowColor, 
+                  color: iconColor 
                 }}
               >
                 <Icon size={32} />

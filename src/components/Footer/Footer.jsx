@@ -62,7 +62,7 @@ export default function Footer({ setCurrentView, user, onAuthClick }) {
                 Skill Course Dashboard
               </a>
             </li>
-            <li><a onClick={() => handleNavigate('internships')}>Skill Courses</a></li>
+            <li><a onClick={() => handleNavigate('browse-courses')}>Skill Courses</a></li>
             <li><a onClick={() => handleNavigate('verify')}>Skill Certificate Verification</a></li>
             <li><a onClick={() => handleNavigate('internships')}>Internship Registration</a></li>
             <li><a onClick={() => handleNavigate('verify')}>Internship Certificate Verification</a></li>

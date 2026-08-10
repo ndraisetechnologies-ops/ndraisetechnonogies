@@ -87,7 +87,7 @@ export default function Navbar({
     if (item.isSpecialAction && item.actionFn) {
       item.actionFn();
     } else if (item.actionType === 'browse-courses') {
-      setCurrentView('internships');
+      setCurrentView('browse-courses');
     } else if (item.actionType === 'ats-score') {
       if (onSubmitTaskClick) {
         onSubmitTaskClick();
@@ -123,15 +123,11 @@ export default function Navbar({
       } else {
         setCurrentView('reviews');
       }
-    } else if (item.actionType === 'contact') {
-      setCurrentView('contact');
-    } else if (item.actionType === 'terms') {
-      setCurrentView('terms');
-    } else if (item.actionType === 'privacy') {
-      setCurrentView('privacy');
-    } else if (item.actionType === 'cookies') {
-      setCurrentView('cookies');
-    } else if (item.id === 'internships' || item.id === 'skill-courses' || item.id === 'virtual-domains') {
+    } else if (item.actionType === 'contact' || item.actionType === 'terms' || item.actionType === 'privacy' || item.actionType === 'cookies') {
+      if (onPolicyClick) onPolicyClick(item.actionType);
+    } else if (item.id === 'skill-courses') {
+      setCurrentView('browse-courses');
+    } else if (item.id === 'internships' || item.id === 'virtual-domains') {
       setCurrentView('internships');
     } else {
       setCurrentView('home');
@@ -149,32 +145,33 @@ export default function Navbar({
   return (
     <header className="navbar-container">
       {/* 1. Logo */}
-      <div className="nav-brand" onClick={() => setCurrentView('home')}>
-        <div className="brand-logo-badge">
-          <img src="/logo.jpg" alt="ND Raise Technologies Logo" className="brand-logo-img" />
+      <div className="nav-brand navbar-logo" onClick={() => setCurrentView('home')}>
+        <div className="brand-logo-badge logo-badge">
+          <img src="/logo.jpg" alt="ND Raise Technologies Logo" className="brand-logo-img logo-img" />
         </div>
-        <div className="brand-text">
-          <span className="brand-title">ND Raise <span>Technologies</span></span>
-          <span className="brand-tagline">ISO 9001:2015 CERTIFIED</span>
+        <div className="brand-text logo-text-group">
+          <div className="brand-title logo-title">
+            ND <span>Raise</span> Technologies
+          </div>
+          <div className="brand-tagline logo-subtitle">ISO 9001:2015 CERTIFIED PLATFORM</div>
         </div>
       </div>
 
-      {/* 2. Desktop Navigation Menu */}
-      <nav className={`nav-pill-wrapper ${mobileOpen ? 'mobile-open' : ''}`}>
-        <ul className="nav-pill-list">
+      {/* 2. Center Navigation Menu */}
+      <nav className={`nav-pill-wrapper nav-menu ${mobileOpen ? 'mobile-open open' : ''}`}>
+        <ul className="nav-pill-list nav-list">
           {menuItems.map((item) => {
             const isActive = currentView === item.id;
-            const isOpen = activeDropdown === item.id;
             return (
               <li 
                 key={item.id} 
-                className="nav-pill-item"
+                className={`nav-pill-item nav-item ${item.hasDropdown ? 'has-dropdown' : ''}`}
                 onMouseEnter={() => item.hasDropdown && setActiveDropdown(item.id)}
                 onMouseLeave={() => item.hasDropdown && setActiveDropdown(null)}
               >
                 <a 
                   href={`#${item.id}`}
-                  className={`nav-pill-link ${isActive ? 'active' : ''}`}
+                  className={`nav-pill-link nav-link ${isActive ? 'active' : ''}`}
                   onClick={(e) => {
                     e.preventDefault();
                     if (!item.hasDropdown) {
@@ -183,17 +180,12 @@ export default function Navbar({
                   }}
                 >
                   <span>{item.label}</span>
-                  {item.hasDropdown && (
-                    <ChevronDown 
-                      size={14} 
-                      className={`chevron-icon ${isOpen ? 'rotate' : ''}`} 
-                    />
-                  )}
+                  {item.hasDropdown && <ChevronDown size={14} className={`chevron-icon dropdown-chevron ${activeDropdown === item.id ? 'rotate' : ''}`} />}
                 </a>
 
                 {/* Dropdown Menu */}
                 {item.hasDropdown && (
-                  <div className={`nav-dropdown-menu ${isOpen ? 'open' : ''}`}>
+                  <div className={`nav-dropdown-menu dropdown-menu ${activeDropdown === item.id ? 'open' : ''}`}>
                     {item.options.map((opt, idx) => (
                       <a 
                         key={idx}
@@ -339,7 +331,7 @@ export default function Navbar({
 
         {/* Mobile Hamburger Toggle */}
         <button 
-          className="mobile-toggle"
+          className="mobile-hamburger-btn"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle Mobile Menu"
         >

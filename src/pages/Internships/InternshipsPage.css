@@ -1,194 +1,281 @@
-.internships-page {
-  max-width: 1400px;
+/* Available Internships Domains Page CSS */
+.internships-domains-page {
+  padding: 3.5rem 1.5rem 6rem;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 3rem 4rem 6rem;
+  min-height: 80vh;
 }
 
-.internships-hero-banner {
+/* Header Container */
+.domains-header-container {
   text-align: center;
-  position: relative;
-  margin-bottom: 3.5rem;
-  padding: 3.5rem 2rem;
-  border-radius: var(--radius-xl);
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-  transition: all 0.3s ease;
+  margin-bottom: 3rem;
 }
 
-.internships-page-title {
-  font-size: 3rem;
-  font-weight: 800;
+.domains-main-title {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 2.85rem;
+  font-weight: 700;
   color: var(--text-main);
-  margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
-}
-
-.internships-page-title span {
-  background: linear-gradient(135deg, #38bdf8, #818cf8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.search-box-container {
-  max-width: 680px;
-  margin: 0 auto 2rem;
-  position: relative;
-}
-
-.search-input-wrapper {
-  display: flex;
-  align-items: center;
-  background: var(--bg-glass-heavy);
-  border: 1px solid var(--border-glow);
-  border-radius: var(--radius-full);
-  padding: 0.5rem 0.5rem 0.5rem 1.5rem;
-  box-shadow: var(--shadow-card), 0 0 20px rgba(99, 102, 241, 0.15);
-}
-
-.search-icon {
-  color: var(--text-muted);
-  margin-right: 0.75rem;
-}
-
-.search-input {
-  background: transparent;
-  border: none;
-  color: var(--text-main);
-  font-size: 1rem;
-  font-family: var(--font-body);
-  width: 100%;
-  outline: none;
-}
-
-.search-input::placeholder {
-  color: var(--text-muted);
-}
-
-.filters-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.filter-select {
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  color: var(--text-main);
-  padding: 0.5rem 1.25rem;
-  border-radius: var(--radius-full);
-  font-size: 0.88rem;
-  outline: none;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-}
-
-.filter-select:hover {
-  border-color: var(--primary);
-  color: var(--text-main);
-}
-
-.catalog-layout {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 2rem;
-  align-items: start;
-}
-
-.sidebar-categories {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-}
-
-.category-item {
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  color: var(--text-muted);
-  font-weight: 500;
-  font-size: 0.92rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: all 0.2s ease;
-}
-
-.category-item:hover {
-  background: var(--bg-card-hover);
-  color: var(--text-main);
-}
-
-.category-item.active {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(59, 130, 246, 0.25));
-  border: 1px solid var(--primary);
-  color: var(--text-main);
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
-}
-
-.catalog-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-}
-
-.virtual-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 1rem;
-  background: rgba(52, 211, 153, 0.1);
-  border: 1px solid rgba(52, 211, 153, 0.3);
-  border-radius: var(--radius-full);
-  color: #34d399;
-  font-size: 0.78rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.card-tag-row {
-  display: flex;
-  gap: 0.4rem;
+  line-height: 1.2;
   margin-bottom: 0.75rem;
 }
 
-.badge-4weeks {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  padding: 0.18rem 0.5rem;
-  border-radius: 4px;
+.blue-highlight-text {
+  color: #2563eb;
+  font-family: inherit;
 }
 
-.badge-tasks {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #c084fc;
-  background: rgba(192, 132, 252, 0.12);
-  border: 1px solid rgba(192, 132, 252, 0.25);
-  padding: 0.18rem 0.5rem;
-  border-radius: 4px;
+.domains-sub-title {
+  font-size: 1.05rem;
+  color: #64748b;
+  max-width: 620px;
+  margin: 0.75rem auto 2.25rem;
+  line-height: 1.6;
 }
 
-@media (max-width: 1024px) {
-  .internships-page {
-    padding: 2rem 1.5rem;
+/* Search Box */
+.domains-search-wrapper {
+  max-width: 680px;
+  margin: 0 auto 1.75rem;
+}
+
+.domains-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.domains-search-box:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 6px 24px rgba(37, 99, 235, 0.15);
+}
+
+.domains-search-icon {
+  position: absolute;
+  left: 1.25rem;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.domains-search-input {
+  width: 100%;
+  padding: 1rem 1.25rem 1rem 3.4rem;
+  font-size: 1rem;
+  color: var(--text-main);
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+}
+
+.domains-search-input::placeholder {
+  color: #94a3b8;
+}
+
+/* Category Filter Pills */
+.domains-category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.domain-pill-btn {
+  padding: 0.55rem 1.35rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid var(--border-light);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.domain-pill-btn:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.domain-pill-btn.active {
+  background: #0b132b;
+  color: #ffffff;
+  border-color: #0b132b;
+  box-shadow: 0 4px 14px rgba(11, 19, 43, 0.2);
+}
+
+[data-theme="dark"] .domain-pill-btn.active {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+/* Domains Grid */
+.domains-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.85rem;
+  margin-top: 2.75rem;
+}
+
+/* Domain Card Item */
+.domain-card-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.domain-card-item:hover {
+  transform: translateY(-5px);
+  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+}
+
+/* Image Banner Top */
+.domain-card-banner {
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.domain-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.domain-card-item:hover .domain-banner-img {
+  transform: scale(1.05);
+}
+
+.banner-tag-badge {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+}
+
+/* Card Body */
+.domain-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.domain-card-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+/* Meta Row (Applicants & Duration) */
+.domain-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.domain-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.meta-icon {
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+/* Apply Button */
+.btn-domain-apply {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  background: #0b132b;
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 14px rgba(11, 19, 43, 0.15);
+  transition: all 0.25s ease;
+}
+
+.btn-domain-apply:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(11, 19, 43, 0.25);
+}
+
+.btn-domain-apply .apply-arrow-icon {
+  transition: transform 0.25s ease;
+}
+
+.btn-domain-apply:hover .apply-arrow-icon {
+  transform: translateX(4px);
+}
+
+/* Empty State */
+.domains-empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 1px dashed var(--border-light);
+}
+
+/* Responsive Styles */
+@media (max-width: 1100px) {
+  .domains-grid-container {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .catalog-layout {
-    grid-template-columns: 1fr;
+}
+
+@media (max-width: 640px) {
+  .internships-domains-page {
+    padding: 2rem 1rem 4rem;
   }
-  .catalog-grid {
+  .domains-main-title {
+    font-size: 2rem;
+  }
+  .domains-grid-container {
     grid-template-columns: 1fr;
   }
 }

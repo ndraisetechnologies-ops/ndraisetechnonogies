@@ -14,6 +14,7 @@ import ContactUsPage from './pages/ContactUs/ContactUsPage';
 import TermsAndConditionsPage from './pages/TermsAndConditions/TermsAndConditionsPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicy/PrivacyPolicyPage';
 import CookiesPolicyPage from './pages/CookiesPolicy/CookiesPolicyPage';
+import BrowseCoursesPage from './pages/BrowseCourses/BrowseCoursesPage';
 import AuthModal from './components/Modals/AuthModal';
 import ApplyModal from './components/Modals/ApplyModal';
 import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
@@ -150,6 +151,14 @@ export default function App() {
           <InternshipsPage 
             onSelectInternship={handleSelectInternship}
             onOpenTasksModal={handleOpenTasksModal}
+          />
+        )}
+
+        {currentView === 'browse-courses' && (
+          <BrowseCoursesPage 
+            onSelectCourse={(course) => {
+              showToast(`Selected course: ${course.title}`);
+            }}
           />
         )}
 

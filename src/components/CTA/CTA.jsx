@@ -8,7 +8,7 @@ export default function CTA({ onGetStarted }) {
       <div className="cta-card">
         <div className="cta-left">
           <div className="cta-icon-box">
-            <GraduationCap size={32} />
+            <GraduationCap size={36} />
           </div>
 
           <div className="cta-text-content">
@@ -18,9 +18,9 @@ export default function CTA({ onGetStarted }) {
         </div>
 
         <div className="cta-button">
-          <button className="btn-primary" style={{ padding: '0.85rem 2rem', fontSize: '1rem' }} onClick={onGetStarted}>
+          <button className="btn-cta-start" onClick={onGetStarted}>
             <span>Get Started Now</span>
-            <ArrowRight size={20} />
+            <ArrowRight size={20} className="cta-arrow-icon" />
           </button>
         </div>
       </div>
