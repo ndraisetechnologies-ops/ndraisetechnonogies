@@ -9,6 +9,11 @@ import AdminDashboard from './pages/Dashboard/AdminDashboard';
 import VerifyCertificatePage from './pages/VerifyCertificate/VerifyCertificatePage';
 import OfferLetterPage from './pages/OfferLetter/OfferLetterPage';
 import MyCertificatesPage from './pages/MyCertificates/MyCertificatesPage';
+import StudentReviewsPage from './pages/StudentReviews/StudentReviewsPage';
+import ContactUsPage from './pages/ContactUs/ContactUsPage';
+import TermsAndConditionsPage from './pages/TermsAndConditions/TermsAndConditionsPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicy/PrivacyPolicyPage';
+import CookiesPolicyPage from './pages/CookiesPolicy/CookiesPolicyPage';
 import AuthModal from './components/Modals/AuthModal';
 import ApplyModal from './components/Modals/ApplyModal';
 import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
@@ -97,6 +102,11 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const openReviewsPage = () => {
+    setCurrentView('reviews');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="app-container">
       {/* Main Navbar */}
@@ -117,6 +127,7 @@ export default function App() {
           onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
           onOfferLetterClick={openOfferLetterPage}
           onCertificatesClick={openMyCertificatesPage}
+          onReviewsClick={openReviewsPage}
           onPolicyClick={(type) => setPolicyModal({ isOpen: true, type })}
           showToast={showToast}
         />
@@ -167,6 +178,26 @@ export default function App() {
           />
         )}
 
+        {currentView === 'reviews' && (
+          <StudentReviewsPage user={user} setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'contact' && (
+          <ContactUsPage user={user} setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'terms' && (
+          <TermsAndConditionsPage setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'privacy' && (
+          <PrivacyPolicyPage setCurrentView={setCurrentView} />
+        )}
+
+        {currentView === 'cookies' && (
+          <CookiesPolicyPage setCurrentView={setCurrentView} />
+        )}
+
         {currentView === 'student-dashboard' && (
           <StudentDashboard 
             user={user}
@@ -188,7 +219,11 @@ export default function App() {
 
       {/* Main Footer */}
       {currentView !== 'student-dashboard' && currentView !== 'admin-dashboard' && (
-        <Footer setCurrentView={setCurrentView} />
+        <Footer 
+          setCurrentView={setCurrentView} 
+          user={user}
+          onAuthClick={(mode) => setAuthModal({ isOpen: true, mode })}
+        />
       )}
 
       {/* Modals */}
