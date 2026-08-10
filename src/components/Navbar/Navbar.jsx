@@ -285,8 +285,6 @@ export default function Navbar({
                   <span>My Certificates</span>
                 </button>
 
-<<<<<<< HEAD
-=======
                 <button 
                   type="button"
                   className="user-dropdown-item" 
@@ -311,8 +309,6 @@ export default function Navbar({
                   <Star size={16} color="#f59e0b" />
                   <span>Student Reviews</span>
                 </button>
-
->>>>>>> c142b98f6b01f0a27324d1d74e374441f58c4248
                 <div className="user-dropdown-divider" />
 
                 <button 
