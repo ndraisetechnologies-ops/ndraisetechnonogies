@@ -168,6 +168,7 @@ export default function App() {
             onBack={() => setCurrentView('internships')}
             onApplyClick={handleApplyClick}
             onShareClick={() => showToast('Internship link copied to clipboard!')}
+            onOpenTasksModal={handleOpenTasksModal}
           />
         )}
 
