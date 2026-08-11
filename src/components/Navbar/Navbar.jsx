@@ -85,7 +85,7 @@ export default function Navbar({
   const handleNavClick = (item) => {
     if (item.isSpecialAction && item.actionFn) {
       item.actionFn();
-    } else if (item.actionType === 'browse-courses') {
+    } else if (item.actionType === 'browse-courses' || item.id === 'skill-courses') {
       setCurrentView('browse-courses');
     } else if (item.actionType === 'ats-score') {
       setCurrentView('ats-score');
@@ -93,6 +93,8 @@ export default function Navbar({
       setCurrentView('job-email-builder');
     } else if (item.actionType === 'interview-prep') {
       setCurrentView('interview-preparation');
+    } else if (item.id === 'career-tools') {
+      setCurrentView('ats-score');
     } else if (item.actionType === 'submit-task') {
       if (onSubmitTaskClick) onSubmitTaskClick();
     } else if (item.actionType === 'apply-now') {
@@ -121,8 +123,6 @@ export default function Navbar({
     } else if (item.actionType === 'contact' || item.actionType === 'terms' || item.actionType === 'privacy' || item.actionType === 'cookies') {
       setCurrentView(item.actionType);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (item.id === 'skill-courses') {
-      setCurrentView('browse-courses');
     } else if (item.id === 'internships' || item.id === 'virtual-domains') {
       setCurrentView('internships');
     } else {
@@ -259,7 +259,7 @@ export default function Navbar({
                   <span>Student Dashboard</span>
                 </button>
 
-                <button 
+                {/* <button 
                   type="button"
                   className="user-dropdown-item" 
                   onClick={() => {
@@ -270,9 +270,9 @@ export default function Navbar({
                 >
                   <Award size={16} />
                   <span>My Certificates</span>
-                </button>
+                </button> */}
 
-                <button 
+                {/* <button 
                   type="button"
                   className="user-dropdown-item" 
                   onClick={() => {
@@ -282,9 +282,9 @@ export default function Navbar({
                 >
                   <FileText size={16} />
                   <span>Download Offer Letter</span>
-                </button>
+                </button> */}
 
-                <button 
+                {/* <button 
                   type="button"
                   className="user-dropdown-item" 
                   onClick={() => {
@@ -295,7 +295,7 @@ export default function Navbar({
                 >
                   <Star size={16} color="#f59e0b" />
                   <span>Student Reviews</span>
-                </button>
+                </button> */}
                 <div className="user-dropdown-divider" />
 
                 <button 

@@ -31,7 +31,15 @@ import './App.css';
 export default function App() {
   const [currentView, setCurrentView] = useState('home');
   const [selectedInternship, setSelectedInternship] = useState(ALL_INTERNSHIPS[0]);
-  const [user, setUser] = useState({ name: 'Nikhil Sharma', email: 'nikhil@example.com', role: 'student' });
+  const [user, setUser] = useState(null);
+
+  // Protect student dashboard view only (guests can view internships, details, courses, and tools)
+  useEffect(() => {
+    if (currentView === 'student-dashboard' && !user) {
+      setCurrentView('home');
+      setAuthModal({ isOpen: true, mode: 'login' });
+    }
+  }, [currentView, user]);
   
   // Theme management ('light' or 'dark')
   const [theme, setTheme] = useState(() => {
@@ -88,7 +96,11 @@ export default function App() {
   };
 
   const handleApplyClick = (internship) => {
-    setSelectedInternship(internship);
+    if (!user) {
+      setAuthModal({ isOpen: true, mode: 'login' });
+      return;
+    }
+    if (internship) setSelectedInternship(internship);
     setApplyModalOpen(true);
   };
 
@@ -103,7 +115,8 @@ export default function App() {
   const handleAuthSuccess = (userData) => {
     setUser(userData);
     showToast(`Welcome ${userData.name}! Successfully signed in.`);
-    setCurrentView('student-dashboard');
+    setCurrentView('home');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleApplySuccess = (msg) => {
@@ -160,6 +173,7 @@ export default function App() {
         {currentView === 'home' && (
           <Home 
             onSelectInternship={handleSelectInternship}
+            onApplyClick={handleApplyClick}
             onViewAllClick={() => setCurrentView('internships')}
             onGetStarted={() => setAuthModal({ isOpen: true, mode: 'register' })}
             onVerifyClick={scrollToVerifier}
@@ -171,12 +185,15 @@ export default function App() {
         {currentView === 'internships' && (
           <InternshipsPage 
             onSelectInternship={handleSelectInternship}
+            onApplyClick={handleApplyClick}
             onOpenTasksModal={handleOpenTasksModal}
           />
         )}
 
         {currentView === 'browse-courses' && (
           <BrowseCoursesPage 
+            user={user}
+            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'login' })}
             onSelectCourse={(course) => {
               showToast(`Selected course: ${course.title}`);
             }}
@@ -187,6 +204,7 @@ export default function App() {
           <AtsScorePage 
             setCurrentView={setCurrentView}
             user={user}
+            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'login' })}
           />
         )}
 
@@ -194,6 +212,7 @@ export default function App() {
           <JobEmailBuilderPage 
             setCurrentView={setCurrentView}
             user={user}
+            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'login' })}
           />
         )}
 
@@ -201,6 +220,7 @@ export default function App() {
           <InterviewPrepPage 
             setCurrentView={setCurrentView}
             user={user}
+            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'login' })}
           />
         )}
 

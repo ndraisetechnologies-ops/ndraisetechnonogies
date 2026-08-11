@@ -1528,7 +1528,7 @@ export const ALL_COURSES = [
   }
 ];
 
-export default function BrowseCoursesPage({ onSelectCourse }) {
+export default function BrowseCoursesPage({ onSelectCourse, user, onRequireAuth }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   
@@ -1569,6 +1569,10 @@ export default function BrowseCoursesPage({ onSelectCourse }) {
   };
 
   const handleStartTest = (course) => {
+    if (!user) {
+      if (onRequireAuth) onRequireAuth();
+      return;
+    }
     setActiveTestCourse(course);
     setCurrentQIndex(0);
     setUserAnswers({});
