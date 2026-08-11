@@ -271,3 +271,21 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 480px) {
+  .contact-page {
+    padding: 1.75rem 0.85rem 3.5rem;
+  }
+
+  .contact-title {
+    font-size: 1.75rem;
+  }
+
+  .form-card-body {
+    padding: 1.25rem 1rem;
+  }
+
+  .info-card {
+    padding: 1.15rem;
+  }
+}

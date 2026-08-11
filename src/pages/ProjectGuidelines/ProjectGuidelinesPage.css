@@ -604,3 +604,22 @@
     justify-content: center;
   }
 }
+
+@media (max-width: 480px) {
+  .guidelines-header-banner {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .guidelines-container {
+    padding: 0 0.85rem;
+  }
+
+  .guidelines-main-title {
+    font-size: 1.45rem;
+  }
+
+  .tab-btn {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.82rem;
+  }
+}

@@ -509,6 +509,40 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
+/* Mobile Top Bar & Drawer Navigation */
+.dashboard-mobile-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.dashboard-menu-toggle {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 5, 12, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 101;
+}
+
 /* Responsive Media Queries */
 @media (max-width: 1024px) {
   .side-by-side-grid {
@@ -517,8 +551,28 @@
 }
 
 @media (max-width: 900px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .dashboard-mobile-bar {
+    display: flex;
+  }
+
   .dashboard-sidebar {
-    display: none;
+    position: fixed;
+    top: 0;
+    left: -280px;
+    bottom: 0;
+    width: 270px;
+    height: 100vh;
+    z-index: 102;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .dashboard-sidebar.mobile-open {
+    transform: translateX(280px);
   }
 
   .dashboard-main {
@@ -535,15 +589,23 @@
 }
 
 @media (max-width: 640px) {
+  .dashboard-main {
+    padding: 1.25rem 0.85rem;
+  }
+
   .career-overview-grid {
     grid-template-columns: 1fr;
   }
 
   .dashboard-header {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
 
   .header-readiness-box {
     width: 100%;
+  }
+
+  .welcome-text h1 {
+    font-size: 1.45rem;
   }
 }

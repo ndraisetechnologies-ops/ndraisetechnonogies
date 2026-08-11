@@ -249,16 +249,26 @@
 }
 
 /* Responsive */
+@media (max-width: 1400px) {
+  .popular-section {
+    padding: 0 2.5rem;
+  }
+}
+
 @media (max-width: 1200px) {
   .internships-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
   }
 }
 
 @media (max-width: 1024px) {
   .popular-section {
     padding: 0 1.5rem;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
+  }
+  .internships-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -268,8 +278,24 @@
     align-items: flex-start;
     gap: 1rem;
   }
+  .popular-title {
+    font-size: 1.85rem;
+  }
   .internships-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .popular-section {
+    padding: 0 0.85rem;
+    margin-bottom: 2.5rem;
+  }
+  .internship-card {
+    padding: 1.25rem;
+  }
+  .popular-title {
+    font-size: 1.6rem;
   }
 }
 

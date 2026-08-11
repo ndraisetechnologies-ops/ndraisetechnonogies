@@ -150,3 +150,39 @@
 .modal-switch-action:hover {
   text-decoration: underline;
 }
+
+/* Responsive Modal Styling */
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 0.85rem;
+  }
+
+  .modal-content {
+    padding: 1.75rem 1.25rem;
+    max-width: 95vw;
+    border-radius: var(--radius-lg);
+  }
+
+  .modal-title {
+    font-size: 1.45rem;
+  }
+
+  .modal-close {
+    top: 0.85rem;
+    right: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+
+  .modal-content {
+    padding: 1.35rem 1rem;
+  }
+
+  .modal-title {
+    font-size: 1.3rem;
+  }
+}

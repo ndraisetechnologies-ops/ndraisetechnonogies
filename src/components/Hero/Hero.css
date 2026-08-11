@@ -42,7 +42,7 @@
 
 /* 2. Main 3-Line Headline Title */
 .hero-title {
-  font-size: 3.8rem;
+  font-size: clamp(2rem, 5.5vw, 3.8rem);
   line-height: 1.12;
   font-weight: 800;
   margin-bottom: 1.5rem;
@@ -504,20 +504,23 @@
 }
 
 /* Responsive adjustments */
+@media (max-width: 1280px) {
+  .hero-section {
+    padding: 3.5rem 2.5rem 5rem;
+    gap: 2.5rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .hero-section {
     grid-template-columns: 1fr;
-    padding: 3rem 2rem;
+    padding: 3rem 2rem 4rem;
     gap: 3rem;
   }
   
-  .hero-title {
-    font-size: 3rem;
-  }
-
   .hero-visual-3d-stage {
     max-width: 100%;
-    height: 400px;
+    height: 380px;
   }
 
   .hero-3d-card-wrapper {
@@ -532,11 +535,7 @@
 
 @media (max-width: 640px) {
   .hero-section {
-    padding: 2rem 1.25rem;
-  }
-
-  .hero-title {
-    font-size: 2.25rem;
+    padding: 2rem 1rem 3.5rem;
   }
 
   .hero-buttons {
@@ -551,6 +550,31 @@
 
   .hero-3d-micro-chip {
     display: none;
+  }
+
+  .hero-visual-3d-stage {
+    height: 320px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 1.5rem 0.85rem 3rem;
+  }
+
+  .hero-badge-tag {
+    font-size: 0.72rem;
+    padding: 0.35rem 0.85rem;
+  }
+
+  .hero-description {
+    font-size: 0.95rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .hero-pill-badge-3d {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.85rem;
   }
 }
 

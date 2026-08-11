@@ -134,3 +134,31 @@
   background: rgba(56, 189, 248, 0.08);
   border: 1px solid rgba(56, 189, 248, 0.25);
 }
+
+@media (max-width: 640px) {
+  .faq-section {
+    padding: 3rem 1.25rem;
+  }
+  .faq-title {
+    font-size: 1.85rem;
+  }
+  .faq-question {
+    font-size: 0.98rem;
+  }
+  .faq-contact-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .faq-section {
+    padding: 2.5rem 0.85rem;
+  }
+  .faq-title {
+    font-size: 1.6rem;
+  }
+  .faq-item {
+    padding: 1rem 1.15rem;
+  }
+}

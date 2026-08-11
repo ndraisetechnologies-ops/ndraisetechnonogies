@@ -558,3 +558,23 @@
   }
 }
 
+@media (max-width: 480px) {
+  .detail-page {
+    padding: 1.25rem 0.85rem 3rem;
+  }
+  .detail-header-banner {
+    padding: 1.25rem;
+  }
+  .detail-title {
+    font-size: 1.75rem;
+  }
+  .detail-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .detail-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

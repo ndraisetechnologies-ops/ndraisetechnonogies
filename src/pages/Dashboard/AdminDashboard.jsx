@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Users, Briefcase, GraduationCap, Award, DollarSign, FileSpreadsheet, Settings, LogOut, BarChart3, PieChart, TrendingUp, Layers } from 'lucide-react';
+import { LayoutDashboard, Users, Briefcase, GraduationCap, Award, DollarSign, FileSpreadsheet, Settings, LogOut, BarChart3, PieChart, TrendingUp, Layers, Menu, X } from 'lucide-react';
 import './AdminDashboard.css';
 
 export default function AdminDashboard({ setCurrentView }) {
   const [activeMenu, setActiveMenu] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -20,8 +21,33 @@ export default function AdminDashboard({ setCurrentView }) {
 
   return (
     <div className="admin-layout">
+      {/* Mobile Top Navigation Header */}
+      <div className="admin-mobile-bar">
+        <div className="nav-brand">
+          <div className="brand-logo-badge" style={{ width: '36px', height: '36px' }}>
+            <img src="/logo.jpg" alt="ND Technologies Logo" className="brand-logo-img" />
+          </div>
+          <div className="brand-title" style={{ fontSize: '1rem' }}>ND <span>ADMIN</span></div>
+        </div>
+        <button 
+          className="admin-menu-toggle"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label="Toggle Admin Menu"
+        >
+          {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
+
+      {/* Overlay Backdrop for Mobile Drawer */}
+      {sidebarOpen && (
+        <div 
+          className="admin-sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="admin-sidebar">
+      <aside className={`admin-sidebar ${sidebarOpen ? 'mobile-open' : ''}`}>
         <div className="nav-brand">
           <div className="brand-logo-badge">
             <img src="/logo.jpg" alt="ND Technologies Logo" className="brand-logo-img" />
@@ -38,7 +64,10 @@ export default function AdminDashboard({ setCurrentView }) {
               <li
                 key={item.id}
                 className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
-                onClick={() => setActiveMenu(item.id)}
+                onClick={() => {
+                  setActiveMenu(item.id);
+                  setSidebarOpen(false);
+                }}
               >
                 <Icon size={18} />
                 <span>{item.label}</span>

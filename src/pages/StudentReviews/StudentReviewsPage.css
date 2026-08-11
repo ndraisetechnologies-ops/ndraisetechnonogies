@@ -487,3 +487,21 @@
     min-width: unset;
   }
 }
+
+@media (max-width: 480px) {
+  .reviews-page {
+    padding: 1.75rem 0.85rem 3.5rem;
+  }
+
+  .reviews-title {
+    font-size: 1.75rem;
+  }
+
+  .review-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .story-form-col {
+    padding: 1.25rem;
+  }
+}

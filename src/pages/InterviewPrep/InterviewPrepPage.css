@@ -780,3 +780,21 @@
     justify-content: center;
   }
 }
+
+@media (max-width: 480px) {
+  .interview-prep-page {
+    padding: 1.5rem 0.85rem 3rem;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .section-card {
+    padding: 1.15rem;
+  }
+
+  .stats-row {
+    flex-direction: column;
+  }
+}

@@ -342,5 +342,42 @@
 
   .printable-paper-card {
     padding: 1.5rem 1.25rem;
+    overflow-x: auto;
+  }
+
+  .result-top-bar {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .action-buttons-group {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .action-buttons-group button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .offer-letter-page {
+    padding: 2rem 0.85rem 4rem;
+  }
+
+  .offer-page-title {
+    font-size: 1.65rem;
+  }
+
+  .offer-form-card {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .offer-download-btn {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    justify-content: center;
   }
 }

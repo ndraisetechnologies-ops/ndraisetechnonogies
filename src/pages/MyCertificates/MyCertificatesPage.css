@@ -291,3 +291,29 @@
     padding: 3rem 1.5rem;
   }
 }
+
+@media (max-width: 480px) {
+  .my-certificates-page {
+    padding: 2rem 0.85rem 4rem;
+  }
+
+  .my-certs-title {
+    font-size: 1.65rem;
+  }
+
+  .empty-certificates-card {
+    padding: 2rem 1rem;
+  }
+
+  .empty-title {
+    font-size: 1.5rem;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .flex-btn, .icon-only {
+    width: 100%;
+  }
+}

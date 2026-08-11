@@ -341,7 +341,19 @@
   border-top: 1px solid var(--border-light);
 }
 
+@media (max-width: 1024px) {
+  .verifier-section {
+    padding: 4rem 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .verifier-section {
+    padding: 3rem 1.25rem;
+  }
+  .verifier-title {
+    font-size: 2rem;
+  }
   .cert-body-grid {
     grid-template-columns: 1fr;
   }
@@ -353,5 +365,31 @@
   }
   .verifier-search-btn {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .verifier-section {
+    padding: 2.5rem 0.85rem;
+  }
+  .verifier-title {
+    font-size: 1.65rem;
+  }
+  .verifier-box-wrapper {
+    padding: 1.15rem;
+  }
+  .cert-result-card {
+    padding: 1.15rem;
+  }
+  .student-name {
+    font-size: 1.4rem;
+  }
+  .cert-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .cert-actions button {
+    width: 100%;
+    justify-content: center;
   }
 }

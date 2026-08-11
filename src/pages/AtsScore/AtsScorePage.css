@@ -661,3 +661,21 @@
     justify-content: center;
   }
 }
+
+@media (max-width: 480px) {
+  .ats-score-page {
+    padding: 1.5rem 0.85rem 3rem;
+  }
+
+  .ats-main-title {
+    font-size: 1.75rem;
+  }
+
+  .ats-card {
+    padding: 1.15rem;
+  }
+
+  .upload-dropzone {
+    padding: 2rem 1rem;
+  }
+}

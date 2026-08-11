@@ -161,3 +161,21 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 480px) {
+  .verify-hero {
+    padding: 2.5rem 0.85rem 1.5rem;
+  }
+
+  .verify-hero-title {
+    font-size: 1.65rem;
+  }
+
+  .verify-content-container {
+    padding: 0 0.85rem;
+  }
+
+  .trust-card {
+    padding: 1.25rem;
+  }
+}

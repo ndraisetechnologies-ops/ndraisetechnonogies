@@ -468,3 +468,22 @@
     align-items: flex-start;
   }
 }
+
+@media (max-width: 480px) {
+  .policy-page {
+    padding: 1.75rem 0.85rem 3.5rem;
+  }
+
+  .document-title {
+    font-size: 1.65rem;
+  }
+
+  .policy-document-header,
+  .policy-body {
+    padding: 1.25rem 1rem;
+  }
+
+  .policy-section-title {
+    font-size: 1.2rem;
+  }
+}

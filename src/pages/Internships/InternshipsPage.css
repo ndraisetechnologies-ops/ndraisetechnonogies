@@ -279,3 +279,16 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 480px) {
+  .internships-domains-page {
+    padding: 1.5rem 0.85rem 3rem;
+  }
+  .domains-main-title {
+    font-size: 1.65rem;
+  }
+  .domain-pill-btn {
+    padding: 0.45rem 1rem;
+    font-size: 0.78rem;
+  }
+}

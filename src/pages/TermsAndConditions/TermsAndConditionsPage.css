@@ -563,3 +563,22 @@
     align-items: flex-start;
   }
 }
+
+@media (max-width: 480px) {
+  .terms-page {
+    padding: 1.75rem 0.85rem 3.5rem;
+  }
+
+  .document-title {
+    font-size: 1.65rem;
+  }
+
+  .terms-document-header,
+  .terms-body {
+    padding: 1.25rem 1rem;
+  }
+
+  .terms-section-title {
+    font-size: 1.2rem;
+  }
+}

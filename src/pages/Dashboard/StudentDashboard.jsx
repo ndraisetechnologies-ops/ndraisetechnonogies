@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   LayoutDashboard, Home, Code, Award, User, Settings, LogOut, CheckCircle2, 
-  Target, Mail, Brain, Briefcase, FileCheck 
+  Target, Mail, Brain, Briefcase, FileCheck, Menu, X 
 } from 'lucide-react';
 import { studentDashboardData } from '../../data/studentDashboardData';
 import OfferLetterModal from '../../components/Modals/OfferLetterModal';
@@ -10,6 +10,7 @@ import './StudentDashboard.css';
 
 export default function StudentDashboard({ user, onLogout, setCurrentView }) {
   const [activeMenu, setActiveMenu] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
   const [selectedTaskForSubmission, setSelectedTaskForSubmission] = useState(null);
@@ -51,6 +52,7 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
   ];
 
   const handleMenuClick = (itemId) => {
+    setSidebarOpen(false);
     if (itemId === 'home') {
       if (setCurrentView) setCurrentView('home');
     } else if (itemId === 'ats-score') {
@@ -71,8 +73,35 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
   return (
     <div className="dashboard-layout">
       
+      {/* Mobile Top Navigation Header */}
+      <div className="dashboard-mobile-bar">
+        <div className="nav-brand">
+          <div className="brand-logo-badge" style={{ width: '36px', height: '36px' }}>
+            <img src="/logo.jpg" alt="ND Technologies Logo" className="brand-logo-img" />
+          </div>
+          <div className="brand-title" style={{ fontSize: '1rem' }}>
+            ND <span>TECHNOLOGIES</span>
+          </div>
+        </div>
+        <button 
+          className="dashboard-menu-toggle"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label="Toggle Dashboard Menu"
+        >
+          {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
+
+      {/* Overlay Backdrop for Mobile Drawer */}
+      {sidebarOpen && (
+        <div 
+          className="dashboard-sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="dashboard-sidebar">
+      <aside className={`dashboard-sidebar ${sidebarOpen ? 'mobile-open' : ''}`}>
         
         {/* Brand Header */}
         <div className="nav-brand">
