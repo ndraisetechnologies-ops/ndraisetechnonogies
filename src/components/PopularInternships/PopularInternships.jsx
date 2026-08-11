@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, ChevronRight, Atom, Server, Terminal, BarChart2, Cpu, Shield, Smartphone, Code } from 'lucide-react';
+import { ArrowRight, Clock, Target, Layers, Code, Sparkles } from 'lucide-react';
 import { ALL_INTERNSHIPS } from '../../pages/Internships/InternshipsPage';
 import './PopularInternships.css';
 
@@ -10,8 +10,8 @@ export default function PopularInternships({ onSelectInternship, onViewAllClick,
     <section className="popular-section">
       <div className="popular-header">
         <div>
-          <div style={{ fontSize: '0.78rem', fontWeight: '700', color: 'var(--primary)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
-            FEATURED VIRTUAL TRACKS
+          <div className="popular-subtitle-tag">
+            <Sparkles size={14} /> FEATURED VIRTUAL TRACKS
           </div>
           <h2 className="popular-title">Explore <span>Featured Domains</span></h2>
         </div>
@@ -23,52 +23,64 @@ export default function PopularInternships({ onSelectInternship, onViewAllClick,
       <div className="internships-grid">
         {featured.map((item) => {
           const Icon = item.icon || Code;
-          const glowColor = item.glowColor || 'rgba(59, 130, 246, 0.15)';
           const iconColor = item.iconColor || '#3b82f6';
-          const level = item.level || 'Intermediate';
+          const glowColor = item.glowColor || 'rgba(59, 130, 246, 0.15)';
+
           return (
-            <div key={item.id} className="glass-panel internship-card">
-              <div 
-                className="card-icon-box"
-                style={{ 
-                  background: glowColor, 
-                  color: iconColor 
-                }}
-              >
-                <Icon size={32} />
+            <div 
+              key={item.id} 
+              className="internship-card"
+              style={{
+                '--accent-color': iconColor,
+                '--glow-color': glowColor,
+              }}
+            >
+              {/* Top Header: Icon + Badges */}
+              <div className="card-header-row">
+                <div 
+                  className="card-icon-box"
+                  style={{ 
+                    background: glowColor, 
+                    color: iconColor 
+                  }}
+                >
+                  <Icon size={26} />
+                </div>
+
+                <div className="card-badge-column">
+                  <span className="badge-4weeks">
+                    <Clock size={11} /> 4-Week Track
+                  </span>
+                  <span className="badge-tasks">
+                    <Layers size={11} /> {item.tasksCount || 3} Tasks
+                  </span>
+                </div>
               </div>
 
-              <div className="card-tag-row">
-                <span className="badge-4weeks">4-Week Track</span>
-                <span className="badge-tasks">3 Assigned Tasks</span>
-              </div>
-
+              {/* Card Title */}
               <h3 className="card-title">{item.title}</h3>
 
-              <div className="card-meta">
-                <span>⏱ {item.duration}</span>
-                <span className="meta-divider"></span>
-                <span>🎯 {item.level}</span>
+              {/* Meta Chips */}
+              <div className="card-meta-chips">
+                <span className="meta-chip">
+                  <Clock size={12} className="meta-icon" /> {item.duration}
+                </span>
+                <span className="meta-chip">
+                  <Target size={12} className="meta-icon" /> {item.level}
+                </span>
               </div>
 
+              {/* Description */}
               <p className="card-desc">{item.description}</p>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: 'auto' }}>
-                <button 
-                  className="btn-secondary" 
-                  style={{ justifyContent: 'center', fontSize: '0.8rem', padding: '0.5rem' }}
-                  onClick={() => onOpenTasksModal && onOpenTasksModal(item)}
-                >
-                  View Tasks
-                </button>
-                <button 
-                  className="btn-primary" 
-                  style={{ justifyContent: 'center', fontSize: '0.8rem', padding: '0.5rem' }}
-                  onClick={() => onSelectInternship(item)}
-                >
-                  Apply Now
-                </button>
-              </div>
+              {/* Action Button */}
+              <button 
+                className="btn-card-primary"
+                onClick={() => onSelectInternship && onSelectInternship(item)}
+              >
+                <span>Apply Now</span>
+                <ArrowRight size={16} className="btn-arrow" />
+              </button>
             </div>
           );
         })}
@@ -76,3 +88,4 @@ export default function PopularInternships({ onSelectInternship, onViewAllClick,
     </section>
   );
 }
+

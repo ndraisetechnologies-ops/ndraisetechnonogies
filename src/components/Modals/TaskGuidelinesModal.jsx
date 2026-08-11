@@ -2,7 +2,7 @@ import React from 'react';
 import { X, CheckCircle2, FileText, ArrowRight, ExternalLink, Code2, AlertCircle } from 'lucide-react';
 import './Modals.css';
 
-export default function TaskGuidelinesModal({ isOpen, internship, onClose, onSubmitTaskClick }) {
+export default function TaskGuidelinesModal({ isOpen, internship, onClose, onSubmitTaskClick, onOpenFullGuidelines }) {
   if (!isOpen || !internship) return null;
 
   return (
@@ -41,9 +41,9 @@ export default function TaskGuidelinesModal({ isOpen, internship, onClose, onSub
         {/* Task Cards List */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
           {internship.tasks ? internship.tasks.map((t) => (
-            <div 
-              key={t.id} 
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-lg)', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+            <div
+              key={t.id}
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-lg)', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--text-main)' }}>
@@ -53,9 +53,21 @@ export default function TaskGuidelinesModal({ isOpen, internship, onClose, onSub
                   {t.difficulty}
                 </span>
               </div>
-              <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+              <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: '1.5', margin: 0 }}>
                 {t.desc}
               </p>
+
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ alignSelf: 'flex-start', marginTop: '0.25rem', padding: '0.4rem 0.85rem', fontSize: '0.78rem' }}
+                onClick={() => {
+                  onClose();
+                  if (onOpenFullGuidelines) onOpenFullGuidelines({ ...t, trackTitle: internship.title });
+                }}
+              >
+                <span>View Guidelines →</span>
+              </button>
             </div>
           )) : (
             <p style={{ color: 'var(--text-muted)' }}>Task guidelines loading for this track...</p>
@@ -63,20 +75,32 @@ export default function TaskGuidelinesModal({ isOpen, internship, onClose, onSub
         </div>
 
         {/* Footer Actions */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', borderTop: '1px solid var(--border-light)', paddingTop: '1.25rem' }}>
-          <button className="btn-secondary" onClick={onClose}>
-            Close
-          </button>
-          <button 
-            className="btn-primary" 
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', borderTop: '1px solid var(--border-light)', paddingTop: '1.25rem' }}>
+          <button
+            className="btn-secondary"
             onClick={() => {
               onClose();
-              if (onSubmitTaskClick) onSubmitTaskClick(internship);
+              if (onOpenFullGuidelines) onOpenFullGuidelines(internship);
             }}
           >
-            <span>Submit Task Solutions</span>
-            <ArrowRight size={16} />
+            <span>Open Full Guidelines Page 🚀</span>
           </button>
+
+          <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <button className="btn-secondary" onClick={onClose}>
+              Close
+            </button>
+            <button
+              className="btn-primary"
+              onClick={() => {
+                onClose();
+                if (onSubmitTaskClick) onSubmitTaskClick(internship);
+              }}
+            >
+              <span>Submit Task Solutions</span>
+              <ArrowRight size={16} />
+            </button>
+          </div>
         </div>
       </div>
     </div>

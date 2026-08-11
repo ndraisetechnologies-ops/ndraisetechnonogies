@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { 
   FileText, UploadCloud, CheckCircle2, AlertTriangle, ArrowRight, 
-  RefreshCw, Download, Sparkles, Check, AlertCircle, File, X, ShieldAlert, Target, Award, Layers 
+  RefreshCw, Download, Sparkles, Check, AlertCircle, File, X, ShieldAlert, Award, Layers 
 } from 'lucide-react';
-import { TARGET_INTERNSHIP_OPTIONS, getATSAnalysisResult } from './atsMockData';
+import { getATSAnalysisResult } from './atsMockData';
 import './AtsScorePage.css';
 
 export default function AtsScorePage({ setCurrentView }) {
@@ -211,25 +211,6 @@ export default function AtsScorePage({ setCurrentView }) {
               </div>
             )}
 
-            {/* Target Internship Dropdown Selector */}
-            <div className="target-select-group">
-              <label className="select-label">
-                <Target size={16} color="#818cf8" />
-                <span>Analyze against an internship (Optional)</span>
-              </label>
-              
-              <select 
-                className="target-select-input"
-                value={targetInternship}
-                onChange={(e) => setTargetInternship(e.target.value)}
-              >
-                {TARGET_INTERNSHIP_OPTIONS.map(opt => (
-                  <option key={opt.id} value={opt.id}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
 
             {/* Analyze Action Button */}
             <button 

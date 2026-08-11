@@ -18,6 +18,7 @@ import BrowseCoursesPage from './pages/BrowseCourses/BrowseCoursesPage';
 import AtsScorePage from './pages/AtsScore/AtsScorePage';
 import JobEmailBuilderPage from './pages/JobEmailBuilder/JobEmailBuilderPage';
 import InterviewPrepPage from './pages/InterviewPrep/InterviewPrepPage';
+import ProjectGuidelinesPage from './pages/ProjectGuidelines/ProjectGuidelinesPage';
 import AuthModal from './components/Modals/AuthModal';
 import ApplyModal from './components/Modals/ApplyModal';
 import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
@@ -54,6 +55,21 @@ export default function App() {
   const [offerLetterModalOpen, setOfferLetterModalOpen] = useState(false);
   const [policyModal, setPolicyModal] = useState({ isOpen: false, type: 'terms' });
   const [trackForTasks, setTrackForTasks] = useState(ALL_INTERNSHIPS[0]);
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  // Lock background body scroll when any modal is active
+  const isAnyModalOpen = authModal.isOpen || applyModalOpen || taskSubmissionModalOpen || taskGuidelinesModalOpen || offerLetterModalOpen || policyModal.isOpen;
+
+  useEffect(() => {
+    if (isAnyModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isAnyModalOpen]);
   
   // Toast
   const [toast, setToast] = useState(null);
@@ -76,9 +92,12 @@ export default function App() {
     setApplyModalOpen(true);
   };
 
-  const handleOpenTasksModal = (track) => {
-    setTrackForTasks(track || selectedInternship);
-    setTaskGuidelinesModalOpen(true);
+  const handleOpenTasksModal = (track, task) => {
+    const activeTrack = track || selectedInternship;
+    setTrackForTasks(activeTrack);
+    setSelectedProject(task || { title: activeTrack?.title, domain: activeTrack?.title, desc: activeTrack?.description });
+    setCurrentView('project-guidelines');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleAuthSuccess = (userData) => {
@@ -185,6 +204,15 @@ export default function App() {
           />
         )}
 
+        {currentView === 'project-guidelines' && (
+          <ProjectGuidelinesPage 
+            project={selectedProject}
+            onBack={() => setCurrentView('student-dashboard')}
+            onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
+            setCurrentView={setCurrentView}
+          />
+        )}
+
         {currentView === 'detail' && (
           <InternshipDetailPage 
             internship={selectedInternship}
@@ -279,6 +307,7 @@ export default function App() {
         internship={trackForTasks}
         onClose={() => setTaskGuidelinesModalOpen(false)}
         onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
+        onOpenFullGuidelines={(task) => handleOpenTasksModal(trackForTasks, task)}
       />
 
       <TaskSubmissionModal 

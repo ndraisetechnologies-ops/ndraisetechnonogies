@@ -14,6 +14,7 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
+  const [selectedTaskForSubmission, setSelectedTaskForSubmission] = useState(null);
 
   const data = studentDashboardData;
 
@@ -24,9 +25,6 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
       items: [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { id: 'home', label: 'Home Page', icon: Home },
-        { id: 'my-internships', label: 'My Virtual Tracks', icon: BookOpen },
-        { id: 'applications', label: 'Applications', icon: Briefcase },
-        { id: 'tasks', label: 'Assigned Tasks (3/3)', icon: Code },
       ]
     },
     {
@@ -63,6 +61,8 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
       if (setCurrentView) setCurrentView('job-email-builder');
     } else if (itemId === 'interview-prep') {
       if (setCurrentView) setCurrentView('interview-preparation');
+    } else if (itemId === 'projects') {
+      if (setCurrentView) setCurrentView('project-guidelines');
     } else {
       setActiveMenu(itemId);
       if (itemId === 'offer-letter') setOfferModalOpen(true);
@@ -221,104 +221,89 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
 
         </div>
 
-        {/* Main Command Center Layout Grid */}
-        <div className="command-center-grid">
-          
-          {/* LEFT COLUMN: Journey, Applications, Tests, ATS, Projects, Certificates */}
-          <div className="center-left-column">
-            
-            {/* 3. Internship Journey & Progress */}
-            <div className="command-card glass-panel">
-              <h3 className="section-card-heading">My Internship Journey</h3>
-              
-              {/* Funnel Pipeline */}
-              <div className="funnel-pipeline-bar">
-                <div className="funnel-step"><span className="step-num">{data.overview.applied}</span><span className="step-lbl">Applied</span></div>
-                <div className="funnel-arrow">→</div>
-                <div className="funnel-step"><span className="step-num">{data.overview.underReview}</span><span className="step-lbl">Under Review</span></div>
-                <div className="funnel-arrow">→</div>
-                <div className="funnel-step"><span className="step-num">{data.overview.shortlisted}</span><span className="step-lbl">Shortlisted</span></div>
-                <div className="funnel-arrow">→</div>
-                <div className="funnel-step"><span className="step-num">{data.overview.selected}</span><span className="step-lbl">Selected</span></div>
-                <div className="funnel-arrow">→</div>
-                <div className="funnel-step active"><span className="step-num">{data.overview.active}</span><span className="step-lbl">In Progress</span></div>
-                <div className="funnel-arrow">→</div>
-                <div className="funnel-step completed"><span className="step-num">{data.overview.completed}</span><span className="step-lbl">Completed</span></div>
+        {/* Full-Width Assigned Projects Section at Top */}
+        <div className="command-card glass-panel" style={{ border: '1.5px solid var(--primary, #2563eb)', marginBottom: '1.75rem' }}>
+          <div className="card-header-flex" style={{ alignItems: 'flex-start' }}>
+            <div>
+              <h3 className="section-card-heading" style={{ marginBottom: '0.25rem', fontSize: '1.4rem' }}>Assigned Projects</h3>
+              <div style={{ fontSize: '0.88rem', fontWeight: '600', color: 'var(--primary, #2563eb)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Code size={18} />
+                <span>Selected Track: <strong>{data.welcome?.currentTrack || data.currentInternship?.title || 'Frontend Development Internship'}</strong></span>
               </div>
+            </div>
 
-              {/* Active Internship Box */}
-              <div className="active-internship-box">
-                <div className="active-box-header">
-                  <div>
-                    <span className="active-badge">CURRENT INTERNSHIP</span>
-                    <h4 className="active-internship-title">{data.currentInternship.title}</h4>
-                    <span className="active-company">{data.currentInternship.company}</span>
-                  </div>
+            <button 
+              type="button" 
+              className="btn-table-action"
+              style={{ fontSize: '0.85rem' }}
+              onClick={() => setCurrentView && setCurrentView('project-guidelines')}
+            >
+              View All Guidelines →
+            </button>
+          </div>
 
-                  <div className="active-progress-ring">
-                    <span>{data.currentInternship.progressPercent}%</span>
-                  </div>
+          <div className="project-overview-bar" style={{ marginTop: '1rem', marginBottom: '1.25rem' }}>
+            <span>Completed: <strong>{data.projects?.completed || data.overview?.projectsCompleted || 8}</strong></span>
+            <span>In Progress: <strong>{data.projects?.inProgress || data.overview?.projectsInProgress || 2}</strong></span>
+            <span>Overall Progress: <strong>{data.projects?.progressPercent || data.overview?.projectProgressPercent || 80}%</strong></span>
+          </div>
+
+          <div className="projects-grid">
+            {(data.projectsList || []).map((proj) => (
+              <div key={proj.id} className="project-mini-card">
+                <div className="proj-card-top">
+                  <h4 className="proj-title" style={{ fontSize: '1.05rem' }}>{proj.title}</h4>
+                  <span className={`proj-status ${proj.status === 'Completed' ? 'status-comp' : 'status-prog'}`}>
+                    {proj.status}
+                  </span>
                 </div>
 
-                <div className="active-bar-track">
-                  <div className="active-bar-fill" style={{ width: `${data.currentInternship.progressPercent}%` }}></div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted, #64748b)', margin: '0.25rem 0 0.5rem' }}>
+                  Domain: <strong>{proj.domain || data.welcome?.currentTrack || 'Frontend Development Internship'}</strong>
                 </div>
 
-                <div className="active-box-footer">
-                  <span>Current Stage: <strong>{data.currentInternship.currentStage}</strong></span>
-                  <span>Next Action: <strong>{data.currentInternship.nextAction}</strong></span>
+                <span className="proj-tech" style={{ display: 'block', marginBottom: '0.6rem' }}>{proj.techStack}</span>
+                
+                <div className="proj-bar-track" style={{ marginBottom: '1rem' }}>
+                  <div className="proj-bar-fill" style={{ width: `${proj.progress}%` }}></div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.65rem', marginTop: '0.75rem' }}>
                   <button 
-                    type="button" 
-                    className="btn-primary btn-continue-internship"
-                    onClick={() => setSubmitModalOpen(true)}
+                    type="button"
+                    className="btn-secondary"
+                    style={{ flex: 1, padding: '0.55rem 0.65rem', fontSize: '0.82rem', justifyContent: 'center' }}
+                    onClick={() => setCurrentView && setCurrentView('project-guidelines', proj)}
                   >
-                    <span>Continue Internship →</span>
+                    <span>View Guidelines</span>
+                  </button>
+
+                  <button 
+                    type="button"
+                    className="btn-primary"
+                    style={{ flex: 1, padding: '0.55rem 0.65rem', fontSize: '0.82rem', justifyContent: 'center' }}
+                    onClick={() => {
+                      setSelectedTaskForSubmission(proj);
+                      setSubmitModalOpen(true);
+                    }}
+                  >
+                    <span>Submit Task 🚀</span>
                   </button>
                 </div>
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
 
-            {/* 4. Your Applications Table */}
-            <div className="command-card glass-panel">
-              <div className="card-header-flex">
-                <h3 className="section-card-heading">Your Applications</h3>
-                <span className="count-pill">{data.applicationsList.length} Total</span>
-              </div>
+        {/* Main Command Center Layout Grid */}
+        <div className="command-center-grid">
+          
+          {/* LEFT COLUMN: Main Command Cards */}
+          <div className="center-left-column">
 
-              <div className="applications-table-wrapper">
-                <table className="applications-table">
-                  <thead>
-                    <tr>
-                      <th>ROLE & COMPANY</th>
-                      <th>APPLIED DATE</th>
-                      <th>STATUS</th>
-                      <th>ACTION</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.applicationsList.map((app) => (
-                      <tr key={app.id}>
-                        <td>
-                          <div className="app-role-name">{app.title}</div>
-                          <div className="app-company-name">{app.company} • {app.type}</div>
-                        </td>
-                        <td>{app.appliedDate}</td>
-                        <td>
-                          <span className={`status-badge ${getStatusBadgeClass(app.status)}`}>
-                            ● {app.status}
-                          </span>
-                        </td>
-                        <td>
-                          <button type="button" className="btn-table-action" onClick={() => alert(`Viewing details for ${app.title}`)}>
-                            View →
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+
+
+
 
             {/* 5. Test Performance Section */}
             <div className="command-card glass-panel">
@@ -386,34 +371,6 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
                 >
                   <span>Improve ATS Score →</span>
                 </button>
-              </div>
-            </div>
-
-            {/* 7. Project Progress */}
-            <div className="command-card glass-panel">
-              <h3 className="section-card-heading">Project Progress</h3>
-
-              <div className="project-overview-bar">
-                <span>Completed: <strong>{data.projects?.completed || data.overview?.projectsCompleted || 8}</strong></span>
-                <span>In Progress: <strong>{data.projects?.inProgress || data.overview?.projectsInProgress || 2}</strong></span>
-                <span>Overall Progress: <strong>{data.projects?.progressPercent || data.overview?.projectProgressPercent || 80}%</strong></span>
-              </div>
-
-              <div className="projects-grid">
-                {(data.projectsList || []).map((proj) => (
-                  <div key={proj.id} className="project-mini-card">
-                    <div className="proj-card-top">
-                      <h4 className="proj-title">{proj.title}</h4>
-                      <span className={`proj-status ${proj.status === 'Completed' ? 'status-comp' : 'status-prog'}`}>
-                        {proj.status}
-                      </span>
-                    </div>
-                    <span className="proj-tech">{proj.techStack}</span>
-                    <div className="proj-bar-track">
-                      <div className="proj-bar-fill" style={{ width: `${proj.progress}%` }}></div>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
 
@@ -611,7 +568,7 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
 
       <TaskSubmissionModal 
         isOpen={submitModalOpen}
-        defaultDomain={{ title: 'Web Development (4-Week)' }}
+        defaultDomain={selectedTaskForSubmission || { title: 'Web Development (4-Week)' }}
         onClose={() => setSubmitModalOpen(false)}
         onSubmitSuccess={(msg) => alert(msg)}
       />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Play, BookOpen, Code2, TrendingUp, Sparkles, Award, Send } from 'lucide-react';
+import { ArrowRight, Play, BookOpen, Code2, TrendingUp, Sparkles, Award, CheckCircle2, Send } from 'lucide-react';
 import './Hero.css';
 
 export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick }) {
@@ -59,81 +59,100 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
         </div>
       </div>
 
-      {/* Right Side Visual Component */}
-      <div className="hero-visual">
-        <div className="hero-bg-glow animate-pulse-glow"></div>
+      {/* Right Side 3D Visual Stage */}
+      <div className="hero-visual-3d-stage">
+        {/* Multi-layered background ambient glow spotlights */}
+        <div className="hero-3d-spotlight spotlight-cyan"></div>
+        <div className="hero-3d-spotlight spotlight-purple"></div>
 
-        <div className="hero-image-wrapper">
-          {/* Tech Grid Backdrop & SVG Illustration */}
-          <svg width="100%" height="100%" viewBox="0 0 540 440" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="540" height="440" fill="#050814" rx="20" />
-
-            {/* Grid Line Network */}
-            <g opacity="0.12" stroke="#38BDF8" strokeWidth="1">
-              <path d="M0 60H540M0 120H540M0 180H540M0 240H540M0 300H540M0 360H540" />
-              <path d="M60 0V440M120 0V440M180 0V440M240 0V440M300 0V440M360 0V440M420 0V440M480 0V440" />
-            </g>
-
-            {/* Glowing Center Radial */}
-            <circle cx="230" cy="200" r="130" fill="url(#hero-orb-grad)" opacity="0.5" />
-
-            {/* Central IDE/Browser Preview Window */}
-            <rect x="60" y="75" width="310" height="195" rx="14" fill="#0D1427" stroke="url(#hero-window-border)" strokeWidth="1.8" />
+        {/* 3D Tilted Card Wrapper */}
+        <div className="hero-3d-card-wrapper">
+          
+          {/* Main IDE / Workspace Card (Middle 3D Layer) */}
+          <div className="hero-3d-ide-window">
             
-            {/* Window Top Controls */}
-            <rect x="68" y="83" width="294" height="24" rx="6" fill="#151D33" />
-            <circle cx="82" cy="95" r="4" fill="#EF4444" />
-            <circle cx="96" cy="95" r="4" fill="#F59E0B" />
-            <circle cx="110" cy="95" r="4" fill="#10B981" />
+            {/* Header bar with controls & live URL */}
+            <div className="ide-header-bar">
+              <div className="ide-dots">
+                <span className="ide-dot dot-close"></span>
+                <span className="ide-dot dot-min"></span>
+                <span className="ide-dot dot-max"></span>
+              </div>
+              <div className="ide-url-pill">
+                <span>ndrise.tech/internships</span>
+              </div>
+              <div className="ide-live-badge">
+                <span className="pulse-green-dot"></span> LIVE TRACK
+              </div>
+            </div>
 
-            {/* Logo Display Header Inside Window */}
-            <g transform="translate(155, 118)">
-              <rect x="0" y="0" width="120" height="42" rx="8" fill="#FFFFFF" stroke="#6366F1" strokeWidth="1" />
-              <image href="/logo.jpg" x="4" y="4" width="112" height="34" preserveAspectRatio="xMidYMid meet" />
-            </g>
+            {/* IDE Workspace Inner */}
+            <div className="ide-body-content">
+              {/* Logo Banner Container */}
+              <div className="ide-logo-header">
+                <img src="/logo.jpg" alt="NDRaise Technologies" className="ide-logo-img" />
+                <div className="ide-logo-text">
+                  <span className="ide-logo-title">NDRaise Technologies</span>
+                  <span className="ide-logo-sub">Virtual Career Accelerator</span>
+                </div>
+              </div>
 
-            {/* Code / Content Highlight Lines */}
-            <line x1="85" y1="180" x2="200" y2="180" stroke="#38BDF8" strokeWidth="3.5" strokeLinecap="round" />
-            <line x1="85" y1="200" x2="280" y2="200" stroke="#818CF8" strokeWidth="3.5" strokeLinecap="round" />
-            <line x1="85" y1="220" x2="240" y2="220" stroke="#C084FC" strokeWidth="3.5" strokeLinecap="round" />
-            <line x1="85" y1="240" x2="320" y2="240" stroke="#34D399" strokeWidth="3.5" strokeLinecap="round" />
+              {/* Simulated Code & Progress Block */}
+              <div className="ide-code-block">
+                <div className="code-line">
+                  <span className="code-keyword">const</span> <span className="code-var">internship</span> = <span className="code-function">await</span> <span className="code-var">ndrise</span>.<span className="code-method">enroll</span>(&#123;
+                </div>
+                <div className="code-line code-indent">
+                  <span className="code-prop">track</span>: <span className="code-string">"Full Stack Development"</span>,
+                </div>
+                <div className="code-line code-indent">
+                  <span className="code-prop">duration</span>: <span className="code-string">"4 Weeks"</span>,
+                </div>
+                <div className="code-line code-indent">
+                  <span className="code-prop">tasks</span>: <span className="code-number">3</span>,
+                </div>
+                <div className="code-line code-indent">
+                  <span className="code-prop">certificate</span>: <span className="code-boolean">true</span>
+                </div>
+                <div className="code-line">&#125;);</div>
+              </div>
+            </div>
 
-            {/* Monitor Base Stand & Student Silhouette */}
-            <path d="M180 300 C180 250 200 230 230 230 C260 230 280 250 280 300 Z" fill="url(#student-silhouette)" />
-            <circle cx="230" cy="210" r="28" fill="#1A1848" stroke="#6366F1" strokeWidth="2" />
+          </div>
 
-            <defs>
-              <radialGradient id="hero-orb-grad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(230 200) rotate(90) scale(130)">
-                <stop stopColor="#6366F1" stopOpacity="0.4" />
-                <stop offset="1" stopColor="#06B6D4" stopOpacity="0" />
-              </radialGradient>
-              <linearGradient id="hero-window-border" x1="60" y1="75" x2="370" y2="270" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#38BDF8" />
-                <stop offset="0.5" stopColor="#818CF8" />
-                <stop offset="1" stopColor="#C084FC" />
-              </linearGradient>
-              <linearGradient id="student-silhouette" x1="230" y1="230" x2="230" y2="300" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#2563EB" />
-                <stop offset="1" stopColor="#050814" stopOpacity="0.8" />
-              </linearGradient>
-            </defs>
-          </svg>
+          {/* Floating 3D Micro Chips */}
+          <div className="hero-3d-micro-chip chip-certificate animate-float-slow">
+            <CheckCircle2 size={16} className="chip-icon green" />
+            <div className="chip-text">
+              <strong>Verifiable Certificate</strong>
+              <span>Instant QR Verification</span>
+            </div>
+          </div>
 
-          {/* Floating Action Pill Badges (Right Side Column) */}
-          <div className="hero-pill-badge pill-learn animate-float">
-            <BookOpen size={16} className="pill-icon" />
+          <div className="hero-3d-micro-chip chip-rating animate-float-delayed-slow">
+            <Award size={16} className="chip-icon amber" />
+            <div className="chip-text">
+              <strong>100% Free Virtual Track</strong>
+              <span>No Hidden Charges</span>
+            </div>
+          </div>
+
+          {/* Floating Action Pill Badges (Front 3D Layer) */}
+          <div className="hero-pill-badge-3d pill-learn-3d animate-float">
+            <BookOpen size={16} className="pill-icon-3d cyan" />
             <span>LEARN</span>
           </div>
 
-          <div className="hero-pill-badge pill-build animate-float-delayed">
-            <Code2 size={16} className="pill-icon" />
+          <div className="hero-pill-badge-3d pill-build-3d animate-float-delayed">
+            <Code2 size={16} className="pill-icon-3d purple" />
             <span>BUILD</span>
           </div>
 
-          <div className="hero-pill-badge pill-grow animate-float">
-            <TrendingUp size={16} className="pill-icon" />
+          <div className="hero-pill-badge-3d pill-grow-3d animate-float">
+            <TrendingUp size={16} className="pill-icon-3d emerald" />
             <span>GROW</span>
           </div>
+
         </div>
       </div>
     </section>

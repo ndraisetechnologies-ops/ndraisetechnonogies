@@ -288,16 +288,10 @@ export default function InternshipDetailPage({ internship, onBack, onApplyClick,
                   <div className="task-actions-row">
                     <button 
                       className="btn-task-action btn-task-outline"
-                      onClick={() => onOpenTasksModal && onOpenTasksModal(internship)}
+                      onClick={() => onOpenTasksModal && onOpenTasksModal(internship, task)}
                     >
                       <FileText size={15} />
-                      View Guidelines
-                    </button>
-                    <button 
-                      className="btn-task-action btn-task-primary"
-                      onClick={() => onApplyClick(internship)}
-                    >
-                      Submit Task
+                      <span>View Guidelines</span>
                     </button>
                   </div>
                 </div>

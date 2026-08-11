@@ -1959,10 +1959,6 @@ export default function BrowseCoursesPage({ onSelectCourse }) {
                   <CheckCircle2 size={15} className="meta-info-icon" />
                   <span>{course.passScore}</span>
                 </div>
-                <div className="meta-info-item">
-                  <Award size={15} className="meta-info-icon" />
-                  <span>{course.reward}</span>
-                </div>
               </div>
 
               {/* Action Button */}

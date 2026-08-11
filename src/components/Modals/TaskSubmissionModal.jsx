@@ -159,20 +159,6 @@ export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, on
               </div>
 
               <div>
-                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <Video size={15} color="#c084fc" />
-                  <span>Video Demo / Live Hosted Link (Optional)</span>
-                </label>
-                <input 
-                  type="url" 
-                  className="form-input" 
-                  placeholder="https://youtube.com/watch?v=... or Vercel link"
-                  value={formData.videoUrl}
-                  onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
-                />
-              </div>
-
-              <div>
                 <label className="form-label">Key Highlights / Learnings (Optional)</label>
                 <textarea 
                   className="form-input" 
