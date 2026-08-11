@@ -3,9 +3,6 @@
 export const studentDashboardData = {
   welcome: {
     name: 'Nikhil Sharma',
-    currentTrack: 'Frontend Development Internship',
-    batch: 'August 2026',
-    overallReadiness: 78
   },
 
   overview: {
@@ -225,14 +222,7 @@ export const studentDashboardData = {
       urgency: 'medium' // 3-7 days -> Yellow
     }
   ],
-
-  nextBestAction: {
-    title: 'Complete your Interview Preparation',
-    desc: 'Your current interview readiness is 72%. Improving your interview preparation could strengthen your overall career readiness.',
-    ctaText: 'Start Interview Practice →',
-    targetView: 'interview-preparation'
-  },
-
+  
   recommendedInternships: [
     {
       id: 'rec-1',

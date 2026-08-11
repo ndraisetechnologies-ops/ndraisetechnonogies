@@ -73,7 +73,7 @@ export default function Navbar({
       label: 'More', 
       hasDropdown: true,
       options: [
-        { label: '⭐ Student Reviews', actionType: 'reviews' },
+        { label: 'Student Reviews', actionType: 'reviews' },
         { label: 'Contact Support', actionType: 'contact' },
         { label: 'Terms & Conditions', actionType: 'terms' },
         { label: 'Privacy Policy', actionType: 'privacy' },
