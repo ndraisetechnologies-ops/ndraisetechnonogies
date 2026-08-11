@@ -33,7 +33,7 @@ export default function App() {
   const [selectedInternship, setSelectedInternship] = useState(ALL_INTERNSHIPS[0]);
   const [user, setUser] = useState(null);
 
-  // Protect student dashboard view only (guests can view internships, details, courses, and tools)
+  // Protect student dashboard view only (guests can browse courses & tools, action buttons trigger register modal)
   useEffect(() => {
     if (currentView === 'student-dashboard' && !user) {
       setCurrentView('home');
@@ -193,7 +193,7 @@ export default function App() {
         {currentView === 'browse-courses' && (
           <BrowseCoursesPage 
             user={user}
-            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'login' })}
+            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'register' })}
             onSelectCourse={(course) => {
               showToast(`Selected course: ${course.title}`);
             }}
@@ -204,7 +204,7 @@ export default function App() {
           <AtsScorePage 
             setCurrentView={setCurrentView}
             user={user}
-            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'login' })}
+            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'register' })}
           />
         )}
 
@@ -212,7 +212,7 @@ export default function App() {
           <JobEmailBuilderPage 
             setCurrentView={setCurrentView}
             user={user}
-            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'login' })}
+            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'register' })}
           />
         )}
 
@@ -220,7 +220,7 @@ export default function App() {
           <InterviewPrepPage 
             setCurrentView={setCurrentView}
             user={user}
-            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'login' })}
+            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'register' })}
           />
         )}
 

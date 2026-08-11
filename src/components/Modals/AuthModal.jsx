@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Lock, Mail, User } from 'lucide-react';
 import './Modals.css';
 
@@ -7,6 +7,10 @@ export default function AuthModal({ isOpen, mode, onClose, onLoginSuccess }) {
   const [email, setEmail] = useState('nikhil@example.com');
   const [password, setPassword] = useState('••••••••');
   const [name, setName] = useState('Nikhil Sharma');
+
+  useEffect(() => {
+    setCurrentMode(mode || 'login');
+  }, [mode, isOpen]);
 
   if (!isOpen) return null;
 

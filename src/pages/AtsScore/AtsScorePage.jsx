@@ -6,7 +6,7 @@ import {
 import { getATSAnalysisResult } from './atsMockData';
 import './AtsScorePage.css';
 
-export default function AtsScorePage({ setCurrentView }) {
+export default function AtsScorePage({ setCurrentView, user, onRequireAuth }) {
   const [file, setFile] = useState(null);
   const [targetInternship, setTargetInternship] = useState('general');
   const [isDragOver, setIsDragOver] = useState(false);
@@ -71,6 +71,11 @@ export default function AtsScorePage({ setCurrentView }) {
   const handleStartAnalysis = () => {
     if (!file) {
       setErrorMsg('Please upload your resume before continuing.');
+      return;
+    }
+
+    if (!user) {
+      if (onRequireAuth) onRequireAuth();
       return;
     }
 

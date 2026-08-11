@@ -7,7 +7,7 @@ import {
 import { EMAIL_TYPES, TONE_OPTIONS, LENGTH_OPTIONS, generateJobEmail } from '../../services/jobEmail.service';
 import './JobEmailBuilderPage.css';
 
-export default function JobEmailBuilderPage({ user, setCurrentView }) {
+export default function JobEmailBuilderPage({ user, setCurrentView, onRequireAuth }) {
   const [selectedType, setSelectedType] = useState('internship-app');
   
   // Form State
@@ -67,6 +67,10 @@ export default function JobEmailBuilderPage({ user, setCurrentView }) {
 
   const handleGenerate = (e) => {
     if (e) e.preventDefault();
+    if (!user) {
+      if (onRequireAuth) onRequireAuth();
+      return;
+    }
     if (!validateForm()) return;
 
     setIsGenerating(true);

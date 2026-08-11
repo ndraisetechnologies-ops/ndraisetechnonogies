@@ -227,7 +227,7 @@ export default function Navbar({
               onClick={() => setUserMenuOpen(!userMenuOpen)}
             >
               <div className="user-avatar-circle">
-                <span>{user.name ? user.name.charAt(0).toUpperCase() : 'D'}</span>
+                <img src={user.avatar || "/student-avatar.svg"} alt="User Avatar" className="user-avatar-icon" />
               </div>
               <span className="user-profile-name">{user.name || 'Divilash'}</span>
               <ChevronDown size={14} className={`user-chevron ${userMenuOpen ? 'open' : ''}`} />
@@ -237,7 +237,7 @@ export default function Navbar({
               <div className="user-profile-dropdown">
                 <div className="dropdown-user-header">
                   <div className="user-avatar-circle header-avatar">
-                    <span>{user.name ? user.name.charAt(0).toUpperCase() : 'D'}</span>
+                    <img src={user.avatar || "/student-avatar.svg"} alt="User Avatar" className="user-avatar-icon" />
                   </div>
                   <div className="user-info-text">
                     <div className="info-name">{user.name || 'Divilash'}</div>

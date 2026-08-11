@@ -10,7 +10,7 @@ import {
 } from '../../data/interviewQuestions';
 import './InterviewPrepPage.css';
 
-export default function InterviewPrepPage({ setCurrentView }) {
+export default function InterviewPrepPage({ setCurrentView, user, onRequireAuth }) {
   // Setup selections
   const [selectedRole, setSelectedRole] = useState('Frontend Developer');
   const [experienceLevel, setExperienceLevel] = useState('Beginner');
@@ -34,6 +34,10 @@ export default function InterviewPrepPage({ setCurrentView }) {
   const currentQuestion = activeQuestions[currentIndex] || MOCK_QUESTIONS[0];
 
   const handleStartSetup = () => {
+    if (!user) {
+      if (onRequireAuth) onRequireAuth();
+      return;
+    }
     const filtered = getFilteredQuestions(selectedRole, interviewType, experienceLevel);
     const questionsToUse = filtered.length > 0 ? filtered : MOCK_QUESTIONS;
     setActiveQuestions(questionsToUse);
@@ -50,6 +54,10 @@ export default function InterviewPrepPage({ setCurrentView }) {
   };
 
   const handleSelectCategory = (catId) => {
+    if (!user) {
+      if (onRequireAuth) onRequireAuth();
+      return;
+    }
     setInterviewType(catId);
     const filtered = getFilteredQuestions(selectedRole, catId, experienceLevel);
     setActiveQuestions(filtered.length > 0 ? filtered : MOCK_QUESTIONS);
