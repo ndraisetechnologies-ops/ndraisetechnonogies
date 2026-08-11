@@ -30,7 +30,7 @@ const FAQ_ITEMS = [
 ];
 
 export default function FAQ() {
-  const [openIdx, setOpenIdx] = useState(0);
+  const [openIdx, setOpenIdx] = useState(null);
 
   const toggleFaq = (idx) => {
     setOpenIdx(openIdx === idx ? null : idx);

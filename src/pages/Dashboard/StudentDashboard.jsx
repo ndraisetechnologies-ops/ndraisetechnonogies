@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { 
-  LayoutDashboard, Home, BookOpen, Code, FileText, CheckSquare, Award, User, 
-  Settings, LogOut, Clock, Calendar, CheckCircle2, AlertCircle, Download, 
-  ExternalLink, Send, Target, Mail, Brain, ArrowRight, TrendingUp, Sparkles, 
-  ChevronRight, Briefcase, FileCheck, Star, ShieldAlert 
+  LayoutDashboard, Home, Code, Award, User, Settings, LogOut, CheckCircle2, 
+  Target, Mail, Brain, Briefcase, FileCheck 
 } from 'lucide-react';
 import { studentDashboardData } from '../../data/studentDashboardData';
 import OfferLetterModal from '../../components/Modals/OfferLetterModal';
@@ -23,16 +21,16 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
     {
       group: 'MAIN',
       items: [
-        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { id: 'home', label: 'Home Page', icon: Home },
+        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
       ]
     },
     {
       group: 'CAREER TOOLS',
       items: [
-        { id: 'ats-score', label: '⭐ Check ATS Score', icon: Target },
-        { id: 'job-email-builder', label: '✉ Job Email Builder', icon: Mail },
-        { id: 'interview-prep', label: '🎯 Interview Preparation', icon: Brain },
+        { id: 'ats-score', label: ' Check ATS Score', icon: Target },
+        { id: 'job-email-builder', label: 'Job Email Builder', icon: Mail },
+        { id: 'interview-prep', label: 'Interview Preparation', icon: Brain },
       ]
     },
     {
@@ -67,16 +65,6 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
       setActiveMenu(itemId);
       if (itemId === 'offer-letter') setOfferModalOpen(true);
       if (itemId === 'tasks') setSubmitModalOpen(true);
-    }
-  };
-
-  const getStatusBadgeClass = (status) => {
-    switch (status.toLowerCase()) {
-      case 'shortlisted': return 'badge-shortlisted';
-      case 'under review': return 'badge-review';
-      case 'selected': return 'badge-selected';
-      case 'rejected': return 'badge-rejected';
-      default: return 'badge-default';
     }
   };
 
@@ -140,25 +128,12 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
             <h1>Welcome back, {user?.name || data.welcome.name} 👋</h1>
             <p>Here's your career progress at NDRise.</p>
             <div className="header-meta-pills">
-              <span className="meta-pill">Current Track: <strong>{data.welcome.currentTrack}</strong></span>
-              <span className="meta-pill">Batch: <strong>{data.welcome.batch}</strong></span>
-            </div>
-          </div>
-
-          <div className="header-readiness-box">
-            <div className="readiness-top-row">
-              <span className="readiness-label">Overall Career Readiness</span>
-              <span className="readiness-percent">{data.welcome.overallReadiness}%</span>
-            </div>
-            <div className="readiness-track">
-              <div className="readiness-fill" style={{ width: `${data.welcome.overallReadiness}%` }}></div>
             </div>
           </div>
         </div>
 
         {/* 2. Career Overview Summary Cards Row */}
         <div className="career-overview-grid">
-          
           <div className="summary-card glass-panel" onClick={() => handleMenuClick('applications')}>
             <div className="summary-icon icon-blue"><Briefcase size={22} /></div>
             <div className="summary-body">
@@ -221,7 +196,7 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
 
         </div>
 
-        {/* Full-Width Assigned Projects Section at Top */}
+        {/* Full-Width Assigned Projects Section */}
         <div className="command-card glass-panel" style={{ border: '1.5px solid var(--primary, #2563eb)', marginBottom: '1.75rem' }}>
           <div className="card-header-flex" style={{ alignItems: 'flex-start' }}>
             <div>
@@ -295,267 +270,79 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
           </div>
         </div>
 
-        {/* Main Command Center Layout Grid */}
-        <div className="command-center-grid">
+        {/* Side-by-Side Cards: Test Performance & ATS Score */}
+        <div className="side-by-side-grid">
           
-          {/* LEFT COLUMN: Main Command Cards */}
-          <div className="center-left-column">
-
-
-
-
-
-            {/* 5. Test Performance Section */}
-            <div className="command-card glass-panel">
-              <h3 className="section-card-heading">Test Performance</h3>
-              
-              <div className="test-stats-row">
-                <div className="test-stat-pill"><span>Attended:</span> <strong>{data.testPerformance.attended}</strong></div>
-                <div className="test-stat-pill"><span>Passed:</span> <strong>{data.testPerformance.passed}</strong></div>
-                <div className="test-stat-pill"><span>Average Score:</span> <strong>{data.testPerformance.averageScore}%</strong></div>
-                <div className="test-stat-pill"><span>Highest Score:</span> <strong>{data.testPerformance.highestScore}%</strong></div>
-              </div>
-
-              {/* Lightweight SVG Bar Chart */}
-              <div className="test-chart-container">
-                <div className="chart-title">Recent Test Scores</div>
-                <div className="chart-bars-flex">
-                  {data.testPerformance.recentScores.map((item) => (
-                    <div key={item.id} className="bar-item">
-                      <span className="bar-val">{item.score}%</span>
-                      <div className="bar-track">
-                        <div className="bar-fill" style={{ height: `${item.score}%` }}></div>
-                      </div>
-                      <span className="bar-name">{item.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          {/* Test Performance Section */}
+          <div className="command-card glass-panel">
+            <h3 className="section-card-heading">Test Performance</h3>
+            
+            <div className="test-stats-row">
+              <div className="test-stat-pill"><span>Attended:</span> <strong>{data.testPerformance.attended}</strong></div>
+              <div className="test-stat-pill"><span>Passed:</span> <strong>{data.testPerformance.passed}</strong></div>
+              <div className="test-stat-pill"><span>Average Score:</span> <strong>{data.testPerformance.averageScore}%</strong></div>
+              <div className="test-stat-pill"><span>Highest Score:</span> <strong>{data.testPerformance.highestScore}%</strong></div>
             </div>
 
-            {/* 6. Resume & ATS Score Section */}
-            <div className="command-card glass-panel">
-              <h3 className="section-card-heading">Resume & ATS Score</h3>
-
-              <div className="ats-widget-row">
-                <div className="ats-score-display">
-                  <div className="ats-num-badge">{data.ats?.score || data.overview?.atsScore || 78}</div>
-                  <div className="ats-grade-text">
-                    <strong>{data.ats?.grade || data.overview?.atsGrade || 'Good'}</strong>
-                    <span>Your resume is performing well</span>
-                  </div>
-                </div>
-
-                <div className="ats-breakdown-column">
-                  {(data.atsBreakdown || []).map((item, idx) => (
-                    <div key={idx} className="ats-item-row">
-                      <span className="ats-item-name">{item.name}</span>
-                      <div className="ats-item-track">
-                        <div className="ats-item-fill" style={{ width: `${item.score}%` }}></div>
-                      </div>
-                      <span className="ats-item-val">{item.score}%</span>
+            {/* Bar Chart */}
+            <div className="test-chart-container">
+              <div className="chart-title">Recent Test Scores</div>
+              <div className="chart-bars-flex">
+                {data.testPerformance.recentScores.map((item) => (
+                  <div key={item.id} className="bar-item">
+                    <span className="bar-val">{item.score}%</span>
+                    <div className="bar-track">
+                      <div className="bar-fill" style={{ height: `${item.score}%` }}></div>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="ats-rec-box">
-                <Target size={18} color="#38bdf8" />
-                <span>
-                  <strong>Top Recommendation:</strong> Add relevant skills and keywords from internships you are genuinely qualified for.
-                </span>
-                <button 
-                  type="button" 
-                  className="btn-secondary btn-ats-cta"
-                  onClick={() => setCurrentView && setCurrentView('ats-score')}
-                >
-                  <span>Improve ATS Score →</span>
-                </button>
-              </div>
-            </div>
-
-            {/* 8. Certificates & Achievements */}
-            <div className="command-card glass-panel">
-              <h3 className="section-card-heading">Certificates & Achievements</h3>
-
-              <div className="certs-overview-bar">
-                <span>Total: <strong>{data.certificates?.total || data.overview?.totalCertificates || 5}</strong></span>
-                <span>Internship: <strong>{data.certificates?.internship || data.overview?.internshipCertificates || 3}</strong></span>
-                <span>Course: <strong>{data.certificates?.course || data.overview?.courseCertificates || 2}</strong></span>
-              </div>
-
-              <div className="certs-grid">
-                {data.certificatesList.map((cert) => (
-                  <div key={cert.id} className="cert-card">
-                    <Award size={24} color="#34d399" />
-                    <div>
-                      <h4 className="cert-title">{cert.title}</h4>
-                      <span className="cert-meta">{cert.company} • {cert.date}</span>
-                    </div>
-                    <button type="button" className="btn-table-action" onClick={() => alert(`Viewing certificate: ${cert.title}`)}>
-                      View
-                    </button>
+                    <span className="bar-name">{item.name}</span>
                   </div>
                 ))}
               </div>
-
-              <div className="next-cert-box">
-                <Sparkles size={18} color="#f59e0b" />
-                <div>
-                  <strong>Next Certificate:</strong> Complete your current internship to unlock your next certificate ({data.certificates?.nextUnlockProgress || data.currentInternship?.progressPercent || 66}% completed).
-                </div>
-              </div>
             </div>
-
           </div>
 
-          {/* RIGHT COLUMN: Next Action, Career Readiness, Roadmap, Activity, Deadlines */}
-          <div className="center-right-column">
-            
-            {/* 13. Highly Visible Next Best Action */}
-            <div className="command-card glass-panel next-action-card">
-              <div className="next-action-badge">
-                <Target size={16} />
-                <span>RECOMMENDED NEXT STEP</span>
-              </div>
+          {/* Resume & ATS Score Section */}
+          <div className="command-card glass-panel">
+            <h3 className="section-card-heading">Resume & ATS Score</h3>
 
-              <h3 className="next-action-title">{data.nextBestAction?.title}</h3>
-              <p className="next-action-desc">{data.nextBestAction?.desc}</p>
-
-              <button 
-                type="button" 
-                className="btn-primary btn-next-action"
-                onClick={() => setCurrentView && setCurrentView(data.nextBestAction?.targetView)}
-              >
-                <span>{data.nextBestAction?.ctaText}</span>
-              </button>
-            </div>
-
-            {/* 9. Career Readiness Breakdown Card */}
-            <div className="command-card glass-panel readiness-breakdown-card">
-              <h3 className="section-card-heading">Career Readiness</h3>
-              
-              <div className="readiness-big-score">
-                <span className="big-num">{data.careerReadiness?.overall || 78}%</span>
-                <span className="big-lbl">Overall Readiness</span>
-              </div>
-
-              <div className="readiness-list">
-                {(data.careerReadiness?.breakdown || []).map((item, idx) => (
-                  <div key={idx} className="readiness-item">
-                    <div className="readiness-item-label">
-                      <span>{item.name}</span>
-                      <strong>{item.score}%</strong>
-                    </div>
-                    <div className="readiness-item-track">
-                      <div className="readiness-item-fill" style={{ width: `${item.score}%` }}></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="readiness-insights">
-                <div className="insight-pill insight-strong">
-                  <span>Strongest:</span> <strong>{data.careerReadiness?.strongestArea}</strong>
-                </div>
-                <div className="insight-pill insight-improve">
-                  <span>Focus Area:</span> <strong>{data.careerReadiness?.recommendedImprovement}</strong>
+            <div className="ats-widget-row">
+              <div className="ats-score-display">
+                <div className="ats-num-badge">{data.ats?.score || data.overview?.atsScore || 78}</div>
+                <div className="ats-grade-text">
+                  <strong>{data.ats?.grade || data.overview?.atsGrade || 'Good'}</strong>
+                  <span>Your resume is performing well</span>
                 </div>
               </div>
 
+              <div className="ats-breakdown-column">
+                {(data.atsBreakdown || []).map((item, idx) => (
+                  <div key={idx} className="ats-item-row">
+                    <span className="ats-item-name">{item.name}</span>
+                    <div className="ats-item-track">
+                      <div className="ats-item-fill" style={{ width: `${item.score}%` }}></div>
+                    </div>
+                    <span className="ats-item-val">{item.score}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="ats-rec-box">
+              <Target size={18} color="#38bdf8" />
+              <span>
+                <strong>Top Recommendation:</strong> Add relevant skills and keywords from internships you are genuinely qualified for.
+              </span>
               <button 
                 type="button" 
-                className="btn-secondary btn-full-width"
-                onClick={() => setCurrentView && setCurrentView('interview-preparation')}
+                className="btn-secondary btn-ats-cta"
+                onClick={() => setCurrentView && setCurrentView('ats-score')}
               >
-                <span>Improve Interview Skills →</span>
+                <span>Improve ATS Score →</span>
               </button>
             </div>
-
-            {/* 10. Career Journey Milestone Roadmap */}
-            <div className="command-card glass-panel roadmap-card">
-              <h3 className="section-card-heading">Career Journey Milestone</h3>
-
-              <div className="journey-roadmap-list">
-                {(data.careerJourney || []).map((stepObj, i) => (
-                  <div key={i} className={`journey-step ${stepObj.status}`}>
-                    <span className="journey-icon">
-                      {stepObj.status === 'completed' ? '✓' : stepObj.status === 'active' ? '●' : '○'}
-                    </span>
-                    <span className="journey-name">{stepObj.stage}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 12. Upcoming Deadlines Widget */}
-            <div className="command-card glass-panel deadlines-card">
-              <h3 className="section-card-heading">Upcoming Deadlines</h3>
-
-              <div className="deadlines-list">
-                {(data.upcomingDeadlines || []).map((dl) => (
-                  <div key={dl.id} className={`deadline-item urgency-${dl.urgency}`}>
-                    <div className="dl-top">
-                      <h4 className="dl-title">{dl.title}</h4>
-                      <span className="dl-badge">{dl.daysRemaining} days left</span>
-                    </div>
-                    <span className="dl-sub">{dl.subtitle} • Due: {dl.dueDate}</span>
-                    <button 
-                      type="button" 
-                      className="btn-table-action dl-btn"
-                      onClick={() => setSubmitModalOpen(true)}
-                    >
-                      Continue Task →
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 11. Recent Activity Feed */}
-            <div className="command-card glass-panel activity-card">
-              <h3 className="section-card-heading">Recent Activity</h3>
-
-              <div className="activity-list">
-                {(data.recentActivity || []).map((act) => (
-                  <div key={act.id} className="activity-item">
-                    <div className="act-bullet">●</div>
-                    <div className="act-content">
-                      <div className="act-text">{act.text}</div>
-                      <span className="act-time">{act.time}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 14. Recommended Internships Compact Section */}
-            <div className="command-card glass-panel recommended-internships-card">
-              <h3 className="section-card-heading">Recommended For You</h3>
-
-              <div className="recommended-list">
-                {(data.recommendedInternships || []).map((rec) => (
-                  <div key={rec.id} className="recommended-item">
-                    <div>
-                      <h4 className="rec-title">{rec.title}</h4>
-                      <span className="rec-details">{rec.details}</span>
-                    </div>
-                    <button 
-                      type="button" 
-                      className="btn-table-action"
-                      onClick={() => setCurrentView && setCurrentView('internships')}
-                    >
-                      View →
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
           </div>
 
         </div>
-
       </main>
 
       {/* Modals */}
