@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Lock, Mail, User, ShieldAlert } from 'lucide-react';
-import { authApi } from '../../services/api';
+import { authAPI, setAuthToken } from '../../services/apiClient';
 import './Modals.css';
 
 export default function AuthModal({ isOpen, mode, onClose, onLoginSuccess }) {
@@ -26,11 +26,15 @@ export default function AuthModal({ isOpen, mode, onClose, onLoginSuccess }) {
     try {
       let res;
       if (currentMode === 'admin-login') {
-        res = await authApi.adminLogin(email, password);
+        res = await authAPI.adminLogin({ email, password });
       } else if (currentMode === 'register') {
-        res = await authApi.register(name, email, password);
+        res = await authAPI.register({ name, email, password });
       } else {
-        res = await authApi.login(email, password);
+        res = await authAPI.login({ email, password });
+      }
+
+      if (res.token) {
+        setAuthToken(res.token);
       }
 
       if (res.success && res.user) {
@@ -40,7 +44,7 @@ export default function AuthModal({ isOpen, mode, onClose, onLoginSuccess }) {
         setErrorMessage(res.error || 'Authentication failed. Please check your credentials.');
       }
     } catch (err) {
-      setErrorMessage('An unexpected authentication error occurred.');
+      setErrorMessage(err.message || 'An unexpected authentication error occurred.');
     } finally {
       setLoading(false);
     }

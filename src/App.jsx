@@ -26,7 +26,7 @@ import TaskSubmissionModal from './components/Modals/TaskSubmissionModal';
 import OfferLetterModal from './components/Modals/OfferLetterModal';
 import PolicyModal from './components/Modals/PolicyModal';
 import { CheckCircle2, ShieldAlert } from 'lucide-react';
-import { authApi } from './services/api';
+import { authAPI, setAuthToken, internshipAPI } from './services/apiClient';
 import './App.css';
 
 export default function App() {
@@ -42,7 +42,7 @@ export default function App() {
 
   // Check backend session state on mount
   useEffect(() => {
-    authApi.getMe().then((res) => {
+    authAPI.getMe().then((res) => {
       if (res.success && res.user) {
         setUser(res.user);
       }
@@ -197,7 +197,9 @@ export default function App() {
           setCurrentView={setCurrentView}
           openAuthModal={(mode) => setAuthModal({ isOpen: true, mode })}
           user={user}
-          onLogout={() => {
+          onLogout={async () => {
+            try { await authAPI.logout(); } catch (e) {}
+            setAuthToken(null);
             setUser(null);
             setCurrentView('home');
             showToast('Logged out successfully');
