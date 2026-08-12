@@ -121,7 +121,7 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
           </div>
 
           {/* Floating 3D Micro Chips */}
-          <div className="hero-3d-micro-chip chip-certificate animate-float-slow">
+          <div className="hero-3d-micro-chip chip-certificate">
             <CheckCircle2 size={16} className="chip-icon green" />
             <div className="chip-text">
               <strong>Verifiable Certificate</strong>
@@ -129,7 +129,7 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
             </div>
           </div>
 
-          <div className="hero-3d-micro-chip chip-rating animate-float-delayed-slow">
+          <div className="hero-3d-micro-chip chip-rating">
             <Award size={16} className="chip-icon amber" />
             <div className="chip-text">
               <strong>100% Free Virtual Track</strong>
@@ -138,17 +138,17 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
           </div>
 
           {/* Floating Action Pill Badges (Front 3D Layer) */}
-          <div className="hero-pill-badge-3d pill-learn-3d animate-float">
+          <div className="hero-pill-badge-3d pill-learn-3d">
             <BookOpen size={16} className="pill-icon-3d cyan" />
             <span>LEARN</span>
           </div>
 
-          <div className="hero-pill-badge-3d pill-build-3d animate-float-delayed">
+          <div className="hero-pill-badge-3d pill-build-3d">
             <Code2 size={16} className="pill-icon-3d purple" />
             <span>BUILD</span>
           </div>
 
-          <div className="hero-pill-badge-3d pill-grow-3d animate-float">
+          <div className="hero-pill-badge-3d pill-grow-3d">
             <TrendingUp size={16} className="pill-icon-3d emerald" />
             <span>GROW</span>
           </div>

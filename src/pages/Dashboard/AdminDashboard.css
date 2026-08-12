@@ -2,6 +2,8 @@
   display: grid;
   grid-template-columns: 260px 1fr;
   min-height: calc(100vh - 50px);
+  background: var(--bg-dark);
+  color: var(--text-main);
 }
 
 .admin-sidebar {
@@ -19,6 +21,17 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+}
+
+.admin-heading {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.admin-subheading {
+  color: var(--text-muted);
+  font-size: 0.95rem;
 }
 
 .admin-metrics {
@@ -45,6 +58,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.admin-card-number {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.admin-card-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
 }
 
 .charts-grid {
@@ -76,13 +100,64 @@
   color: var(--text-main);
 }
 
-/* SVG Chart Visuals */
 .chart-visual-box {
   width: 100%;
   height: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.admin-btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-btn-secondary:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--primary);
+}
+
+.admin-search-input {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-light);
+  color: var(--text-main);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  width: 300px;
+  font-size: 0.88rem;
+  outline: none;
+}
+
+.admin-search-input:focus {
+  border-color: var(--primary);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  color: var(--text-main);
+  font-size: 0.88rem;
+}
+
+.admin-table th {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.admin-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .admin-mobile-bar {

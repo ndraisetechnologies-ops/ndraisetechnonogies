@@ -2,15 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Menu, X, ChevronDown, ArrowRight, Sun, Moon, UserCheck, ShieldCheck, Send, Award, HelpCircle, BookOpen, LogOut, LayoutDashboard, FileText, Star } from 'lucide-react';
 import './Navbar.css';
 
-export default function Navbar({ 
-  currentView, 
-  setCurrentView, 
-  openAuthModal, 
-  user, 
+export default function Navbar({
+  currentView,
+  setCurrentView,
+  openAuthModal,
+  user,
   onLogout,
-  theme, 
-  toggleTheme, 
-  onVerifyClick, 
+  theme,
+  toggleTheme,
+  onVerifyClick,
   onSubmitTaskClick,
   onOfferLetterClick,
   onCertificatesClick,
@@ -22,12 +22,15 @@ export default function Navbar({
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
+  const navMenuRef = useRef(null);
 
-  // Close user dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setUserMenuOpen(false);
+      }
+      if (navMenuRef.current && !navMenuRef.current.contains(event.target)) {
+        setActiveDropdown(null);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -35,14 +38,14 @@ export default function Navbar({
   }, []);
 
   const menuItems = [
-    { 
-      id: 'home', 
-      label: 'Home', 
-      hasDropdown: false 
+    {
+      id: 'home',
+      label: 'Home',
+      hasDropdown: false
     },
-    { 
-      id: 'internships-folder', 
-      label: 'Internships', 
+    {
+      id: 'internships-folder',
+      label: 'Internships',
       hasDropdown: true,
       options: [
         { label: 'Apply Now', actionType: 'apply-now' },
@@ -50,9 +53,9 @@ export default function Navbar({
         { label: 'My Certificates', actionType: 'certificates' }
       ]
     },
-    { 
-      id: 'skill-courses', 
-      label: 'Skill Courses', 
+    {
+      id: 'skill-courses',
+      label: 'Skill Courses',
       hasDropdown: true,
       options: [
         { label: '📚 Browse Courses', actionType: 'browse-courses' },
@@ -68,9 +71,9 @@ export default function Navbar({
         { label: '🧠 Interview Preparation', actionType: 'interview-prep' },
       ]
     },
-    { 
-      id: 'more', 
-      label: 'More', 
+    {
+      id: 'more',
+      label: 'More',
       hasDropdown: true,
       options: [
         { label: 'Student Reviews', actionType: 'reviews' },
@@ -143,34 +146,48 @@ export default function Navbar({
       {/* 1. Logo */}
       <div className="nav-brand navbar-logo">
         <div className="brand-logo-badge logo-badge">
-          <img src="/logo.jpg" alt="ND Raise Technologies Logo" className="brand-logo-img logo-img" />
+          <img src="/logo.jpg" alt="ND Rais Technologies Logo" className="brand-logo-img logo-img" />
         </div>
         <div className="brand-text logo-text-group">
           <div className="brand-title logo-title">
-            ND <span>Raise</span> Technologies
+            ND <span>Raise</span><span className="brand-tech-word"> Technologies</span>
           </div>
           <div className="brand-tagline logo-subtitle">ISO 9001:2015 CERTIFIED PLATFORM</div>
         </div>
       </div>
 
       {/* 2. Center Navigation Menu */}
-      <nav className={`nav-pill-wrapper nav-menu ${mobileOpen ? 'mobile-open open' : ''}`}>
+      <nav ref={navMenuRef} className={`nav-pill-wrapper nav-menu ${mobileOpen ? 'mobile-open open' : ''}`}>
         <ul className="nav-pill-list nav-list">
           {menuItems.map((item) => {
             const isActive = currentView === item.id;
             return (
-              <li 
-                key={item.id} 
+              <li
+                key={item.id}
                 className={`nav-pill-item nav-item ${item.hasDropdown ? 'has-dropdown' : ''}`}
-                onMouseEnter={() => item.hasDropdown && setActiveDropdown(item.id)}
-                onMouseLeave={() => item.hasDropdown && setActiveDropdown(null)}
+                onMouseEnter={() => {
+                  if (window.innerWidth > 1024 && item.hasDropdown) {
+                    setActiveDropdown(item.id);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (window.innerWidth > 1024 && item.hasDropdown) {
+                    setActiveDropdown(null);
+                  }
+                }}
               >
-                <a 
+                <a
                   href={`#${item.id}`}
                   className={`nav-pill-link nav-link ${isActive ? 'active' : ''}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    if (!item.hasDropdown) {
+                    if (item.hasDropdown) {
+                      if (window.innerWidth <= 1024) {
+                        setActiveDropdown((prev) => (prev === item.id ? null : item.id));
+                      } else {
+                        handleNavClick(item);
+                      }
+                    } else {
                       handleNavClick(item);
                     }
                   }}
@@ -183,7 +200,7 @@ export default function Navbar({
                 {item.hasDropdown && (
                   <div className={`nav-dropdown-menu dropdown-menu ${activeDropdown === item.id ? 'open' : ''}`}>
                     {item.options.map((opt, idx) => (
-                      <a 
+                      <a
                         key={idx}
                         href="#option"
                         className="dropdown-item"
@@ -206,7 +223,7 @@ export default function Navbar({
       {/* 3. Right Action Items */}
       <div className="nav-actions">
         {/* Theme Switcher Button */}
-        <button 
+        <button
           className="theme-toggle-btn"
           onClick={toggleTheme}
           title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
@@ -221,13 +238,13 @@ export default function Navbar({
 
         {user ? (
           <div className="user-profile-wrapper" ref={userMenuRef}>
-            <button 
+            <button
               type="button"
-              className="user-profile-pill" 
+              className="user-profile-pill"
               onClick={() => setUserMenuOpen(!userMenuOpen)}
             >
               <div className="user-avatar-circle">
-                <img src={user.avatar || "/student-avatar.svg"} alt="User Avatar" className="user-avatar-icon" />
+                <img src={user.avatar || (['admin', 'super_admin'].includes(user.role) ? "/admin-avatar.svg" : "/student-avatar.svg")} alt="User Avatar" className="user-avatar-icon" />
               </div>
               <span className="user-profile-name">{user.name || 'Divilash'}</span>
               <ChevronDown size={14} className={`user-chevron ${userMenuOpen ? 'open' : ''}`} />
@@ -237,7 +254,7 @@ export default function Navbar({
               <div className="user-profile-dropdown">
                 <div className="dropdown-user-header">
                   <div className="user-avatar-circle header-avatar">
-                    <img src={user.avatar || "/student-avatar.svg"} alt="User Avatar" className="user-avatar-icon" />
+                    <img src={user.avatar || (['admin', 'super_admin'].includes(user.role) ? "/admin-avatar.svg" : "/student-avatar.svg")} alt="User Avatar" className="user-avatar-icon" />
                   </div>
                   <div className="user-info-text">
                     <div className="info-name">{user.name || 'Divilash'}</div>
@@ -247,17 +264,32 @@ export default function Navbar({
 
                 <div className="user-dropdown-divider" />
 
-                <button 
-                  type="button"
-                  className="user-dropdown-item" 
-                  onClick={() => {
-                    setCurrentView('student-dashboard');
-                    setUserMenuOpen(false);
-                  }}
-                >
-                  <LayoutDashboard size={16} />
-                  <span>Student Dashboard</span>
-                </button>
+                {['admin', 'super_admin'].includes(user.role) ? (
+                  <button
+                    type="button"
+                    className="user-dropdown-item"
+                    style={{ color: '#38bdf8', fontWeight: '600' }}
+                    onClick={() => {
+                      setCurrentView('admin-dashboard');
+                      setUserMenuOpen(false);
+                    }}
+                  >
+                    <LayoutDashboard size={16} />
+                    <span>Admin Dashboard</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="user-dropdown-item"
+                    onClick={() => {
+                      setCurrentView('student-dashboard');
+                      setUserMenuOpen(false);
+                    }}
+                  >
+                    <LayoutDashboard size={16} />
+                    <span>Student Dashboard</span>
+                  </button>
+                )}
 
                 {/* <button 
                   type="button"
@@ -298,9 +330,9 @@ export default function Navbar({
                 </button> */}
                 <div className="user-dropdown-divider" />
 
-                <button 
+                <button
                   type="button"
-                  className="user-dropdown-item logout-btn" 
+                  className="user-dropdown-item logout-btn"
                   onClick={() => {
                     setUserMenuOpen(false);
                     onLogout();
@@ -321,7 +353,7 @@ export default function Navbar({
         )}
 
         {/* Mobile Menu Toggle Button */}
-        <button 
+        <button
           type="button"
           className="mobile-toggle"
           onClick={() => setMobileOpen(!mobileOpen)}

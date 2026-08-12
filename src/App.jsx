@@ -25,21 +25,57 @@ import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
 import TaskSubmissionModal from './components/Modals/TaskSubmissionModal';
 import OfferLetterModal from './components/Modals/OfferLetterModal';
 import PolicyModal from './components/Modals/PolicyModal';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, ShieldAlert } from 'lucide-react';
+import { authApi } from './services/api';
 import './App.css';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('home');
+  const [currentView, setCurrentView] = useState(() => {
+    const path = window.location.pathname.toLowerCase();
+    if (path.startsWith('/admin')) return 'admin-dashboard';
+    if (path.startsWith('/student')) return 'student-dashboard';
+    return 'home';
+  });
   const [selectedInternship, setSelectedInternship] = useState(ALL_INTERNSHIPS[0]);
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
-  // Protect student dashboard view only (guests can browse courses & tools, action buttons trigger register modal)
+  // Check backend session state on mount
   useEffect(() => {
+    authApi.getMe().then((res) => {
+      if (res.success && res.user) {
+        setUser(res.user);
+      }
+      setAuthLoading(false);
+    }).catch(() => {
+      setAuthLoading(false);
+    });
+  }, []);
+
+  // Strict Server-Backed Route Guard for Admin & Student Views
+  useEffect(() => {
+    if (authLoading) return;
+
+    // 1. Admin Dashboard Route Protection
+    if (currentView === 'admin-dashboard') {
+      if (!user) {
+        // Unauthenticated user -> redirect to home & open login modal
+        setCurrentView('home');
+        setAuthModal({ isOpen: true, mode: 'login' });
+        showToast('Authentication required to access Admin Dashboard');
+      } else if (user.role !== 'admin' && user.role !== 'super_admin') {
+        // Student attempting /admin -> 403 Forbidden redirect to student dashboard
+        setCurrentView('student-dashboard');
+        showToast('403 Forbidden: Student accounts cannot access the Admin Dashboard.');
+      }
+    }
+
+    // 2. Student Dashboard Route Protection
     if (currentView === 'student-dashboard' && !user) {
       setCurrentView('home');
       setAuthModal({ isOpen: true, mode: 'login' });
     }
-  }, [currentView, user]);
+  }, [currentView, user, authLoading]);
   
   // Theme management ('light' or 'dark')
   const [theme, setTheme] = useState(() => {
@@ -112,10 +148,19 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleGetStarted = () => {
+    if (user) {
+      setCurrentView('internships');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      setAuthModal({ isOpen: true, mode: 'login' });
+    }
+  };
+
   const handleAuthSuccess = (userData) => {
     setUser(userData);
     showToast(`Welcome ${userData.name}! Successfully signed in.`);
-    setCurrentView('home');
+    setCurrentView('internships');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -175,7 +220,7 @@ export default function App() {
             onSelectInternship={handleSelectInternship}
             onApplyClick={handleApplyClick}
             onViewAllClick={() => setCurrentView('internships')}
-            onGetStarted={() => setAuthModal({ isOpen: true, mode: 'register' })}
+            onGetStarted={handleGetStarted}
             onVerifyClick={scrollToVerifier}
             onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
             onOpenTasksModal={handleOpenTasksModal}
@@ -293,7 +338,14 @@ export default function App() {
 
         {currentView === 'admin-dashboard' && (
           <AdminDashboard 
+            user={user}
             setCurrentView={setCurrentView}
+            onLogout={() => {
+              authApi.logout();
+              setUser(null);
+              setCurrentView('home');
+              showToast('Logged out successfully');
+            }}
           />
         )}
       </div>
