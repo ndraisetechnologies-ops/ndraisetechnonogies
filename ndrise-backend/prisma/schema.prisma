@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum ApplicationStatus {
+  APPLIED
+  SHORTLISTED
+  UNDER_REVIEW
+  SELECTED
+  REJECTED
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String
+  role         Role          @default(STUDENT)
+  avatar       String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  applications Application[]
+  testResults  TestResult[]
+  certificates Certificate[]
+  submissions  Submission[]
+
+  @@map("users")
+}
+
+model Internship {
+  id           String        @id @default(uuid())
+  title        String
+  domain       String
+  description  String        @db.Text
+  duration     String
+  stipend      String        @default("Unpaid / Certificate")
+  status       String        @default("ACTIVE")
+  createdAt    DateTime      @default(now())
+
+  applications Application[]
+
+  @@map("internships")
+}
+
+model Application {
+  id           String            @id @default(uuid())
+  userId       String
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  internshipId String
+  internship   Internship        @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  status       ApplicationStatus @default(APPLIED)
+  appliedAt    DateTime          @default(now())
+
+  @@map("applications")
+}
+
+model Course {
+  id             String       @id @default(uuid())
+  title          String
+  category       String
+  duration       String
+  questionsCount Int
+  passScore      String
+  description    String       @db.Text
+  createdAt      DateTime     @default(now())
+
+  testResults    TestResult[]
+
+  @@map("courses")
+}
+
+model TestResult {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  score       Int
+  passed      Boolean
+  completedAt DateTime @default(now())
+
+  @@map("test_results")
+}
+
+model Certificate {
+  id              String   @id @default(uuid())
+  certificateCode String   @unique
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trackTitle      String
+  issueDate       DateTime @default(now())
+
+  @@map("certificates")
+}
+
+model Submission {
+  id           String           @id @default(uuid())
+  userId       String
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectTitle String
+  domain       String
+  fileUrl      String
+  status       SubmissionStatus @default(PENDING)
+  submittedAt  DateTime         @default(now())
+
+  @@map("submissions")
+}

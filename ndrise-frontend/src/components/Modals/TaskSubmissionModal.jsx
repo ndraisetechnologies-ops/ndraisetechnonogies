@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Send, Github, Linkedin, Video, CheckCircle2, AlertCircle } from 'lucide-react';
+import { submissionAPI } from '../../services/apiClient';
 import './Modals.css';
 
 export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, onSubmitSuccess }) {
@@ -16,20 +17,31 @@ export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, on
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMsg('');
 
-    setTimeout(() => {
+    try {
+      const res = await submissionAPI.submitProject({
+        projectTitle: `${formData.domain} Task`,
+        domain: formData.domain,
+        fileUrl: formData.githubUrl || formData.linkedinUrl || formData.videoUrl || 'https://github.com/project'
+      });
+
       setIsSubmitting(false);
       setSubmitted(true);
       if (onSubmitSuccess) {
-        onSubmitSuccess(`Task submission received for ${formData.fullName}! Verification ID: CA-2026-${Math.floor(1000 + Math.random() * 9000)}`);
+        onSubmitSuccess(`Task submission received for ${formData.fullName}! ID: ${res.submission?.id?.substring(0, 8) || 'SUB-2026'}`);
       }
-    }, 1000);
+    } catch (err) {
+      setIsSubmitting(false);
+      setErrorMsg(err.message || 'Submission failed. Please make sure you are signed in.');
+    }
   };
 
   const handleReset = () => {
@@ -78,6 +90,24 @@ export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, on
             <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '1.5rem' }}>
               Enter your project links below to trigger credential evaluation & certificate issuance.
             </p>
+
+            {errorMsg && (
+              <div style={{
+                background: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.4)',
+                color: '#f87171',
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                marginBottom: '1rem',
+                fontSize: '0.85rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                <AlertCircle size={16} />
+                <span>{errorMsg}</span>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>

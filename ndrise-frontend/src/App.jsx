@@ -63,7 +63,7 @@ export default function App() {
         setCurrentView('home');
         setAuthModal({ isOpen: true, mode: 'login' });
         showToast('Authentication required to access Admin Dashboard');
-      } else if (user.role !== 'admin' && user.role !== 'super_admin') {
+      } else if (user.role?.toUpperCase() !== 'ADMIN' && user.role !== 'admin' && user.role !== 'super_admin') {
         // Student attempting /admin -> 403 Forbidden redirect to student dashboard
         setCurrentView('student-dashboard');
         showToast('403 Forbidden: Student accounts cannot access the Admin Dashboard.');
@@ -342,8 +342,9 @@ export default function App() {
           <AdminDashboard 
             user={user}
             setCurrentView={setCurrentView}
-            onLogout={() => {
-              authApi.logout();
+            onLogout={async () => {
+              try { await authAPI.logout(); } catch (e) {}
+              setAuthToken(null);
               setUser(null);
               setCurrentView('home');
               showToast('Logged out successfully');

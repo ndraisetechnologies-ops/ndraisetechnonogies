@@ -48,3 +48,10 @@ export const internshipAPI = {
   apply: (payload) => request('/applications', { method: 'POST', body: JSON.stringify(payload) }),
   getMyApplications: () => request('/applications/my', { method: 'GET' })
 };
+
+export const submissionAPI = {
+  submitProject: (payload) => request('/submissions', { method: 'POST', body: JSON.stringify(payload) }),
+  getMySubmissions: () => request('/submissions/my', { method: 'GET' }),
+  getAllSubmissions: () => request('/admin/submissions', { method: 'GET' }),
+  updateSubmissionStatus: (id, status) => request(`/admin/submissions/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) })
+};

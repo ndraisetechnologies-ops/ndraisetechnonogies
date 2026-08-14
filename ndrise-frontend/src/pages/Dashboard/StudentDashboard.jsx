@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Home, Code, Award, User, Settings, LogOut, CheckCircle2, 
-  Target, Mail, Brain, Briefcase, FileCheck, Menu, X 
+  Target, Mail, Brain, Briefcase, FileCheck, Menu, X, Clock, ExternalLink
 } from 'lucide-react';
 import { studentDashboardData } from '../../data/studentDashboardData';
+import { submissionAPI, internshipAPI } from '../../services/apiClient';
 import OfferLetterModal from '../../components/Modals/OfferLetterModal';
 import TaskSubmissionModal from '../../components/Modals/TaskSubmissionModal';
 import './StudentDashboard.css';
@@ -14,6 +15,26 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
   const [selectedTaskForSubmission, setSelectedTaskForSubmission] = useState(null);
+  
+  const [submissions, setSubmissions] = useState([]);
+  const [applications, setApplications] = useState([]);
+
+  const fetchSubmissions = () => {
+    submissionAPI.getMySubmissions().then((res) => {
+      if (res.success && res.submissions) {
+        setSubmissions(res.submissions);
+      }
+    }).catch(() => {});
+  };
+
+  useEffect(() => {
+    fetchSubmissions();
+    internshipAPI.getMyApplications().then((res) => {
+      if (res.success && res.applications) {
+        setApplications(res.applications);
+      }
+    }).catch(() => {});
+  }, []);
 
   const data = studentDashboardData;
 
@@ -299,6 +320,75 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
           </div>
         </div>
 
+        {/* Live Project Submissions (Neon Database) */}
+        <div className="command-card glass-panel" style={{ marginBottom: '1.75rem' }}>
+          <div className="card-header-flex">
+            <div>
+              <h3 className="section-card-heading" style={{ fontSize: '1.25rem' }}>Your Submitted Projects</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                Track your live evaluation status synced with Neon Cloud PostgreSQL.
+              </p>
+            </div>
+            <button
+              type="button"
+              className="btn-primary"
+              style={{ fontSize: '0.82rem', padding: '0.5rem 1rem' }}
+              onClick={() => setSubmitModalOpen(true)}
+            >
+              + Submit New Project
+            </button>
+          </div>
+
+          {submissions.length === 0 ? (
+            <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+              No project submissions logged yet. Click <strong>Submit New Project</strong> to submit your task!
+            </div>
+          ) : (
+            <div style={{ overflowX: 'auto', marginTop: '1rem' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left', color: 'var(--text-muted)' }}>
+                    <th style={{ padding: '0.75rem 1rem' }}>Project Title</th>
+                    <th style={{ padding: '0.75rem 1rem' }}>Domain</th>
+                    <th style={{ padding: '0.75rem 1rem' }}>Submission Link</th>
+                    <th style={{ padding: '0.75rem 1rem' }}>Submitted At</th>
+                    <th style={{ padding: '0.75rem 1rem' }}>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {submissions.map((sub) => (
+                    <tr key={sub.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                      <td style={{ padding: '0.85rem 1rem', fontWeight: '600' }}>{sub.projectTitle}</td>
+                      <td style={{ padding: '0.85rem 1rem', color: 'var(--text-muted)' }}>{sub.domain}</td>
+                      <td style={{ padding: '0.85rem 1rem' }}>
+                        <a href={sub.fileUrl} target="_blank" rel="noreferrer" style={{ color: '#38bdf8', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', textDecoration: 'none' }}>
+                          <span>View Link</span>
+                          <ExternalLink size={14} />
+                        </a>
+                      </td>
+                      <td style={{ padding: '0.85rem 1rem', color: 'var(--text-muted)' }}>
+                        {new Date(sub.submittedAt).toLocaleDateString()}
+                      </td>
+                      <td style={{ padding: '0.85rem 1rem' }}>
+                        <span style={{
+                          padding: '0.25rem 0.65rem',
+                          borderRadius: '12px',
+                          fontSize: '0.78rem',
+                          fontWeight: '700',
+                          background: sub.status === 'APPROVED' ? 'rgba(52, 211, 153, 0.15)' : sub.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                          color: sub.status === 'APPROVED' ? '#34d399' : sub.status === 'REJECTED' ? '#f87171' : '#fbbf24'
+                        }}>
+                          {sub.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
         {/* Side-by-Side Cards: Test Performance & ATS Score */}
         <div className="side-by-side-grid">
           
@@ -386,7 +476,9 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
         isOpen={submitModalOpen}
         defaultDomain={selectedTaskForSubmission || { title: 'Web Development (4-Week)' }}
         onClose={() => setSubmitModalOpen(false)}
-        onSubmitSuccess={(msg) => alert(msg)}
+        onSubmitSuccess={(msg) => {
+          fetchSubmissions();
+        }}
       />
 
     </div>
