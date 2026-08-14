@@ -244,9 +244,9 @@ export default function Navbar({
               onClick={() => setUserMenuOpen(!userMenuOpen)}
             >
               <div className="user-avatar-circle">
-                <img src={user.avatar || (['admin', 'super_admin'].includes(user.role) ? "/admin-avatar.svg" : "/student-avatar.svg")} alt="User Avatar" className="user-avatar-icon" />
+                <img src={user.avatar || (['admin', 'super_admin'].includes(user.role?.toLowerCase()) ? "/admin-avatar.svg" : "/student-avatar.svg")} alt="User Avatar" className="user-avatar-icon" />
               </div>
-              <span className="user-profile-name">{user.name || 'Divilash'}</span>
+              <span className="user-profile-name">{user.name || 'User'}</span>
               <ChevronDown size={14} className={`user-chevron ${userMenuOpen ? 'open' : ''}`} />
             </button>
 
@@ -254,17 +254,17 @@ export default function Navbar({
               <div className="user-profile-dropdown">
                 <div className="dropdown-user-header">
                   <div className="user-avatar-circle header-avatar">
-                    <img src={user.avatar || (['admin', 'super_admin'].includes(user.role) ? "/admin-avatar.svg" : "/student-avatar.svg")} alt="User Avatar" className="user-avatar-icon" />
+                    <img src={user.avatar || (['admin', 'super_admin'].includes(user.role?.toLowerCase()) ? "/admin-avatar.svg" : "/student-avatar.svg")} alt="User Avatar" className="user-avatar-icon" />
                   </div>
                   <div className="user-info-text">
-                    <div className="info-name">{user.name || 'Divilash'}</div>
-                    <div className="info-email">{user.email || 'student@ndtech.com'}</div>
+                    <div className="info-name">{user.name || 'User'}</div>
+                    <div className="info-email">{user.email || 'user@ndtech.com'}</div>
                   </div>
                 </div>
 
                 <div className="user-dropdown-divider" />
 
-                {['admin', 'super_admin'].includes(user.role) ? (
+                {['admin', 'super_admin'].includes(user.role?.toLowerCase()) ? (
                   <button
                     type="button"
                     className="user-dropdown-item"

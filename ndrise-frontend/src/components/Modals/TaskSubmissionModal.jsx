@@ -1,23 +1,33 @@
-import React, { useState } from 'react';
-import { X, Send, Github, Linkedin, Video, CheckCircle2, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Send, Github, Linkedin, CheckCircle2, AlertCircle, Link as LinkIcon } from 'lucide-react';
 import { submissionAPI } from '../../services/apiClient';
 import './Modals.css';
 
-export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, onSubmitSuccess }) {
+export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, user, onSubmitSuccess }) {
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    batchId: '',
-    domain: defaultDomain ? defaultDomain.title : 'Web Development Virtual Internship',
-    githubUrl: '',
-    linkedinUrl: '',
-    videoUrl: '',
+    fullName: user?.name || '',
+    email: user?.email || '',
+    projectTitle: defaultDomain?.title || 'Personal Portfolio Website',
+    domain: defaultDomain?.domain || 'Frontend Development Internship',
+    fileUrl: '',
     notes: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    if (defaultDomain || user) {
+      setFormData((prev) => ({
+        ...prev,
+        fullName: user?.name || prev.fullName,
+        email: user?.email || prev.email,
+        projectTitle: defaultDomain?.title || prev.projectTitle,
+        domain: defaultDomain?.domain || prev.domain
+      }));
+    }
+  }, [defaultDomain, user]);
 
   if (!isOpen) return null;
 
@@ -28,15 +38,16 @@ export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, on
 
     try {
       const res = await submissionAPI.submitProject({
-        projectTitle: `${formData.domain} Task`,
+        projectTitle: formData.projectTitle,
         domain: formData.domain,
-        fileUrl: formData.githubUrl || formData.linkedinUrl || formData.videoUrl || 'https://github.com/project'
+        fileUrl: formData.fileUrl,
+        notes: formData.notes
       });
 
       setIsSubmitting(false);
       setSubmitted(true);
       if (onSubmitSuccess) {
-        onSubmitSuccess(`Task submission received for ${formData.fullName}! ID: ${res.submission?.id?.substring(0, 8) || 'SUB-2026'}`);
+        onSubmitSuccess(`Task submission received for ${formData.projectTitle}! ID: ${res.submission?.id?.substring(0, 8) || 'SUB-2026'}`);
       }
     } catch (err) {
       setIsSubmitting(false);
@@ -51,7 +62,7 @@ export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, on
 
   return (
     <div className="modal-overlay animate-fade-in" onClick={onClose}>
-      <div className="modal-content glass-panel" style={{ maxWidth: '650px' }} onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content glass-panel" style={{ maxWidth: '620px' }} onClick={(e) => e.stopPropagation()}>
         <button className="modal-close-btn" onClick={onClose}>
           <X size={20} />
         </button>
@@ -61,34 +72,30 @@ export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, on
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
               <CheckCircle2 size={36} />
             </div>
-            <h3 style={{ fontSize: '1.75rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '0.75rem' }}>
-              Task Submission Received!
+            <h3 style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '0.75rem' }}>
+              Task Submitted Successfully!
             </h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginBottom: '1.5rem', lineHeight: '1.6' }}>
-              Thank you, <strong>{formData.fullName}</strong>. Your project task submission for <strong>{formData.domain}</strong> has been logged. Our evaluation team will review your GitHub code & LinkedIn post within 48 hours.
+              Your project submission for <strong>{formData.projectTitle}</strong> has been stored live in <strong>Neon Cloud PostgreSQL</strong> with status <span style={{ color: '#fbbf24', fontWeight: '700' }}>PENDING</span>. An admin will review it shortly.
             </p>
 
-            <div style={{ background: 'rgba(99, 102, 241, 0.1)', border: '1px solid var(--primary)', padding: '1rem', borderRadius: 'var(--radius-md)', marginBottom: '2rem', fontSize: '0.85rem', color: 'var(--text-main)' }}>
-              Your Submission Reference ID: <strong>CA-2026-{Math.floor(1000 + Math.random() * 9000)}</strong>
-            </div>
-
             <button className="btn-primary" style={{ margin: '0 auto' }} onClick={handleReset}>
-              Done & Return to Site
+              Done & Return to Dashboard
             </button>
           </div>
         ) : (
           <>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#34d399', fontSize: '0.78rem', fontWeight: '700', background: 'rgba(52, 211, 153, 0.1)', padding: '0.3rem 0.8rem', borderRadius: '20px', marginBottom: '0.75rem' }}>
               <Send size={14} />
-              <span>ND RAISE TASK SUBMISSION PORTAL</span>
+              <span>PROJECT TASK SUBMISSION PORTAL</span>
             </div>
 
-            <h2 className="modal-title" style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>
-              Submit Your <span>Internship Tasks</span>
+            <h2 className="modal-title" style={{ fontSize: '1.5rem', marginBottom: '0.35rem' }}>
+              Submit Task: <span style={{ color: 'var(--primary, #2563eb)' }}>{formData.projectTitle}</span>
             </h2>
 
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '1.5rem' }}>
-              Enter your project links below to trigger credential evaluation & certificate issuance.
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', marginBottom: '1.25rem' }}>
+              Provide your project repository or hosted application link for review.
             </p>
 
             {errorMsg && (
@@ -112,42 +119,17 @@ export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, on
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label className="form-label">Full Name *</label>
+                  <label className="form-label">Project Title *</label>
                   <input 
                     type="text" 
                     required 
-                    className="form-input" 
-                    placeholder="e.g. Nikhil Sharma"
-                    value={formData.fullName}
-                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    className="form-input"
+                    value={formData.projectTitle}
+                    onChange={(e) => setFormData({ ...formData, projectTitle: e.target.value })}
                   />
                 </div>
                 <div>
-                  <label className="form-label">Registered Email *</label>
-                  <input 
-                    type="email" 
-                    required 
-                    className="form-input" 
-                    placeholder="e.g. nikhil@example.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div>
-                  <label className="form-label">Batch / Verification ID (Optional)</label>
-                  <input 
-                    type="text" 
-                    className="form-input" 
-                    placeholder="e.g. NDR-2026-1042"
-                    value={formData.batchId}
-                    onChange={(e) => setFormData({ ...formData, batchId: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label className="form-label">Internship Domain *</label>
+                  <label className="form-label">Track / Domain *</label>
                   <input 
                     type="text" 
                     required
@@ -160,51 +142,36 @@ export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, on
 
               <div>
                 <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <Github size={15} color="#38bdf8" />
-                  <span>GitHub Repository Link (Public) *</span>
+                  <LinkIcon size={15} color="#38bdf8" />
+                  <span>Project Repository / Demo Link (GitHub, Vercel, Netlify) *</span>
                 </label>
                 <input 
                   type="url" 
                   required 
                   className="form-input" 
-                  placeholder="https://github.com/username/ndraise-task1"
-                  value={formData.githubUrl}
-                  onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
+                  placeholder="https://github.com/username/project-repo or https://myproject.vercel.app"
+                  value={formData.fileUrl}
+                  onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
                 />
               </div>
 
               <div>
-                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <Linkedin size={15} color="#0077b5" />
-                  <span>LinkedIn Post Link (#ndraisetechnologies #internship) *</span>
-                </label>
-                <input 
-                  type="url" 
-                  required 
-                  className="form-input" 
-                  placeholder="https://linkedin.com/posts/username_ndraise_task-1"
-                  value={formData.linkedinUrl}
-                  onChange={(e) => setFormData({ ...formData, linkedinUrl: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">Key Highlights / Learnings (Optional)</label>
+                <label className="form-label">Submission Notes & Feature Highlights (Optional)</label>
                 <textarea 
                   className="form-input" 
-                  rows={2} 
-                  placeholder="Share a brief summary of how you built your tasks..."
+                  rows={3} 
+                  placeholder="Briefly describe what you built, key features, or any instructions for the reviewer..."
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 ></textarea>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '0.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
                 <button type="button" className="btn-secondary" onClick={onClose}>
                   Cancel
                 </button>
                 <button type="submit" className="btn-primary" disabled={isSubmitting}>
-                  {isSubmitting ? 'Submitting Form...' : 'Submit Solutions'}
+                  {isSubmitting ? 'Submitting to Neon DB...' : 'Submit Project 🚀'}
                 </button>
               </div>
             </form>

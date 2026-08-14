@@ -56,6 +56,9 @@ export default function App() {
   useEffect(() => {
     if (authLoading) return;
 
+    const roleLower = user?.role?.toLowerCase();
+    const isAdminUser = roleLower === 'admin' || roleLower === 'super_admin';
+
     // 1. Admin Dashboard Route Protection
     if (currentView === 'admin-dashboard') {
       if (!user) {
@@ -63,7 +66,7 @@ export default function App() {
         setCurrentView('home');
         setAuthModal({ isOpen: true, mode: 'login' });
         showToast('Authentication required to access Admin Dashboard');
-      } else if (user.role?.toUpperCase() !== 'ADMIN' && user.role !== 'admin' && user.role !== 'super_admin') {
+      } else if (!isAdminUser) {
         // Student attempting /admin -> 403 Forbidden redirect to student dashboard
         setCurrentView('student-dashboard');
         showToast('403 Forbidden: Student accounts cannot access the Admin Dashboard.');
@@ -71,9 +74,14 @@ export default function App() {
     }
 
     // 2. Student Dashboard Route Protection
-    if (currentView === 'student-dashboard' && !user) {
-      setCurrentView('home');
-      setAuthModal({ isOpen: true, mode: 'login' });
+    if (currentView === 'student-dashboard') {
+      if (!user) {
+        setCurrentView('home');
+        setAuthModal({ isOpen: true, mode: 'login' });
+      } else if (isAdminUser) {
+        // Admin logging in -> direct to admin dashboard
+        setCurrentView('admin-dashboard');
+      }
     }
   }, [currentView, user, authLoading]);
   
@@ -160,7 +168,12 @@ export default function App() {
   const handleAuthSuccess = (userData) => {
     setUser(userData);
     showToast(`Welcome ${userData.name}! Successfully signed in.`);
-    setCurrentView('internships');
+    const roleLower = userData?.role?.toLowerCase();
+    if (roleLower === 'admin' || roleLower === 'super_admin') {
+      setCurrentView('admin-dashboard');
+    } else {
+      setCurrentView('student-dashboard');
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

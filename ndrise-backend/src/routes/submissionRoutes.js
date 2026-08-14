@@ -4,41 +4,66 @@ const { verifyToken, isAdmin } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// POST /api/submissions (Protected - Students submit project)
+// POST /api/submissions (Protected - Students submit or update project task)
 router.post('/submissions', verifyToken, async (req, res) => {
   try {
-    const { projectTitle, domain, fileUrl } = req.body;
+    const { projectTitle, domain, fileUrl, notes } = req.body;
     const userId = req.user.id;
 
     if (!projectTitle || !fileUrl) {
       return res.status(400).json({
         success: false,
-        error: 'Project title and file URL / repository link are required.'
+        error: 'Project title and submission link / file URL are required.'
       });
     }
 
-    const submission = await prisma.submission.create({
-      data: {
+    // Check if user already submitted for this specific project title
+    const existingSubmission = await prisma.submission.findFirst({
+      where: {
         userId,
-        projectTitle,
-        domain: domain || 'Software Development',
-        fileUrl,
-        status: 'PENDING'
+        projectTitle
       }
     });
 
-    return res.status(201).json({
+    let submission;
+
+    if (existingSubmission) {
+      submission = await prisma.submission.update({
+        where: { id: existingSubmission.id },
+        data: {
+          domain: domain || existingSubmission.domain,
+          fileUrl,
+          notes: notes !== undefined ? notes : existingSubmission.notes,
+          status: 'PENDING',
+          adminFeedback: null,
+          submittedAt: new Date()
+        }
+      });
+    } else {
+      submission = await prisma.submission.create({
+        data: {
+          userId,
+          projectTitle,
+          domain: domain || 'Frontend Development Internship',
+          fileUrl,
+          notes: notes || null,
+          status: 'PENDING'
+        }
+      });
+    }
+
+    return res.status(200).json({
       success: true,
-      message: 'Project submitted successfully for review!',
+      message: 'Project task submitted live to Neon PostgreSQL for review!',
       submission
     });
   } catch (error) {
-    console.error('Create submission error:', error);
-    return res.status(500).json({ success: false, error: 'Failed to submit project. Please try again.' });
+    console.error('Create/Update submission error:', error);
+    return res.status(500).json({ success: false, error: 'Failed to submit project task. Please try again.' });
   }
 });
 
-// GET /api/submissions/my (Protected - Student fetches their submissions)
+// GET /api/submissions/my (Protected - Student fetches their live submissions)
 router.get('/submissions/my', verifyToken, async (req, res) => {
   try {
     const userId = req.user.id;
@@ -54,7 +79,7 @@ router.get('/submissions/my', verifyToken, async (req, res) => {
   }
 });
 
-// GET /api/admin/submissions (Protected Admin - View all submissions)
+// GET /api/admin/submissions (Protected Admin - View all student project submissions)
 router.get('/admin/submissions', verifyToken, isAdmin, async (req, res) => {
   try {
     const submissions = await prisma.submission.findMany({
@@ -73,19 +98,31 @@ router.get('/admin/submissions', verifyToken, isAdmin, async (req, res) => {
   }
 });
 
-// PATCH /api/admin/submissions/:id/status (Protected Admin - Approve/Reject)
+// PATCH /api/admin/submissions/:id/status (Protected Admin - Approve, Reject, or Request Revision)
 router.patch('/admin/submissions/:id/status', verifyToken, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, adminFeedback } = req.body;
 
-    if (!status || (status !== 'APPROVED' && status !== 'REJECTED' && status !== 'PENDING')) {
-      return res.status(400).json({ success: false, error: 'Invalid status. Must be APPROVED, REJECTED, or PENDING.' });
+    const validStatuses = ['APPROVED', 'REJECTED', 'REVISION_REQUESTED', 'PENDING'];
+    if (!status || !validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        error: `Invalid status. Must be one of: ${validStatuses.join(', ')}`
+      });
     }
 
     const updated = await prisma.submission.update({
       where: { id },
-      data: { status }
+      data: {
+        status,
+        ...(adminFeedback !== undefined ? { adminFeedback } : {})
+      },
+      include: {
+        user: {
+          select: { id: true, name: true, email: true }
+        }
+      }
     });
 
     return res.json({

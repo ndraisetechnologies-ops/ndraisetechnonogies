@@ -268,125 +268,127 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
           </div>
 
           <div className="project-overview-bar" style={{ marginTop: '1rem', marginBottom: '1.25rem' }}>
-            <span>Completed: <strong>{data.projects?.completed || data.overview?.projectsCompleted || 8}</strong></span>
-            <span>In Progress: <strong>{data.projects?.inProgress || data.overview?.projectsInProgress || 2}</strong></span>
-            <span>Overall Progress: <strong>{data.projects?.progressPercent || data.overview?.projectProgressPercent || 80}%</strong></span>
+            <span>Completed: <strong>{submissions.filter(s => s.status === 'APPROVED').length || data.projects?.completed || 0}</strong></span>
+            <span>In Progress: <strong>{submissions.filter(s => s.status === 'PENDING' || s.status === 'REVISION_REQUESTED').length || (data.projectsList?.length || 3) - submissions.filter(s => s.status === 'APPROVED').length}</strong></span>
+            <span>Submissions Logged: <strong>{submissions.length} live in Neon DB</strong></span>
           </div>
 
           <div className="projects-grid">
-            {(data.projectsList || []).map((proj) => (
-              <div key={proj.id} className="project-mini-card">
-                <div className="proj-card-top">
-                  <h4 className="proj-title" style={{ fontSize: '1.05rem' }}>{proj.title}</h4>
-                  <span className={`proj-status ${proj.status === 'Completed' ? 'status-comp' : 'status-prog'}`}>
-                    {proj.status}
-                  </span>
-                </div>
+            {(data.projectsList || []).map((proj) => {
+              const existingSub = submissions.find(
+                (s) => s.projectTitle?.trim().toLowerCase() === proj.title?.trim().toLowerCase()
+              );
 
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted, #64748b)', margin: '0.25rem 0 0.5rem' }}>
-                  Domain: <strong>{proj.domain || data.welcome?.currentTrack || 'Frontend Development Internship'}</strong>
-                </div>
+              return (
+                <div key={proj.id} className="project-mini-card">
+                  <div className="proj-card-top">
+                    <h4 className="proj-title" style={{ fontSize: '1.05rem' }}>{proj.title}</h4>
+                    {existingSub ? (
+                      <span className="proj-status" style={{
+                        padding: '0.25rem 0.65rem',
+                        borderRadius: '12px',
+                        fontSize: '0.76rem',
+                        fontWeight: '700',
+                        background: existingSub.status === 'APPROVED' ? 'rgba(52, 211, 153, 0.18)' :
+                                    existingSub.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.18)' :
+                                    existingSub.status === 'REVISION_REQUESTED' ? 'rgba(192, 132, 252, 0.18)' : 'rgba(245, 158, 11, 0.18)',
+                        color: existingSub.status === 'APPROVED' ? '#34d399' :
+                               existingSub.status === 'REJECTED' ? '#f87171' :
+                               existingSub.status === 'REVISION_REQUESTED' ? '#c084fc' : '#fbbf24'
+                      }}>
+                        {existingSub.status === 'APPROVED' && 'Approved ✔'}
+                        {existingSub.status === 'PENDING' && 'Pending Review ⏳'}
+                        {existingSub.status === 'REVISION_REQUESTED' && 'Revision Requested ⚠️'}
+                        {existingSub.status === 'REJECTED' && 'Rejected ❌'}
+                      </span>
+                    ) : (
+                      <span className={`proj-status ${proj.status === 'Completed' ? 'status-comp' : 'status-prog'}`}>
+                        {proj.status}
+                      </span>
+                    )}
+                  </div>
 
-                <span className="proj-tech" style={{ display: 'block', marginBottom: '0.6rem' }}>{proj.techStack}</span>
-                
-                <div className="proj-bar-track" style={{ marginBottom: '1rem' }}>
-                  <div className="proj-bar-fill" style={{ width: `${proj.progress}%` }}></div>
-                </div>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted, #64748b)', margin: '0.25rem 0 0.5rem' }}>
+                    Domain: <strong>{proj.domain || data.welcome?.currentTrack || 'Frontend Development Internship'}</strong>
+                  </div>
 
-                <div style={{ display: 'flex', gap: '0.65rem', marginTop: '0.75rem' }}>
-                  <button 
-                    type="button"
-                    className="btn-secondary"
-                    style={{ flex: 1, padding: '0.55rem 0.65rem', fontSize: '0.82rem', justifyContent: 'center' }}
-                    onClick={() => setCurrentView && setCurrentView('project-guidelines', proj)}
-                  >
-                    <span>View Guidelines</span>
-                  </button>
+                  <span className="proj-tech" style={{ display: 'block', marginBottom: '0.6rem' }}>{proj.techStack}</span>
+                  
+                  <div className="proj-bar-track" style={{ marginBottom: '0.75rem' }}>
+                    <div className="proj-bar-fill" style={{
+                      width: existingSub?.status === 'APPROVED' ? '100%' : existingSub ? '60%' : `${proj.progress}%`,
+                      background: existingSub?.status === 'APPROVED' ? '#34d399' : undefined
+                    }}></div>
+                  </div>
 
-                  <button 
-                    type="button"
-                    className="btn-primary"
-                    style={{ flex: 1, padding: '0.55rem 0.65rem', fontSize: '0.82rem', justifyContent: 'center' }}
-                    onClick={() => {
-                      setSelectedTaskForSubmission(proj);
-                      setSubmitModalOpen(true);
-                    }}
-                  >
-                    <span>Submit Task 🚀</span>
-                  </button>
+                  {existingSub?.adminFeedback && (
+                    <div style={{
+                      background: 'rgba(192, 132, 252, 0.1)',
+                      border: '1px dashed #c084fc',
+                      padding: '0.5rem 0.75rem',
+                      borderRadius: '6px',
+                      fontSize: '0.78rem',
+                      color: '#e9d5ff',
+                      marginBottom: '0.75rem'
+                    }}>
+                      💡 <strong>Admin Note:</strong> {existingSub.adminFeedback}
+                    </div>
+                  )}
+
+                  {existingSub?.fileUrl && (
+                    <div style={{ marginBottom: '0.75rem', fontSize: '0.78rem' }}>
+                      <a 
+                        href={existingSub.fileUrl} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        style={{ color: '#38bdf8', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', textDecoration: 'none', fontWeight: '600' }}
+                      >
+                        <span>Submitted Link</span>
+                        <ExternalLink size={13} />
+                      </a>
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', gap: '0.65rem', marginTop: '0.5rem' }}>
+                    <button 
+                      type="button"
+                      className="btn-secondary"
+                      style={{ flex: 1, padding: '0.55rem 0.65rem', fontSize: '0.82rem', justifyContent: 'center' }}
+                      onClick={() => setCurrentView && setCurrentView('project-guidelines', proj)}
+                    >
+                      <span>Guidelines</span>
+                    </button>
+
+                    <button 
+                      type="button"
+                      className="btn-primary"
+                      style={{
+                        flex: 1,
+                        padding: '0.55rem 0.65rem',
+                        fontSize: '0.82rem',
+                        justify: 'center',
+                        background: existingSub?.status === 'APPROVED' ? 'rgba(52, 211, 153, 0.2)' : undefined,
+                        borderColor: existingSub?.status === 'APPROVED' ? '#34d399' : undefined,
+                        color: existingSub?.status === 'APPROVED' ? '#34d399' : undefined
+                      }}
+                      onClick={() => {
+                        setSelectedTaskForSubmission(proj);
+                        setSubmitModalOpen(true);
+                      }}
+                    >
+                      <span>
+                        {existingSub?.status === 'APPROVED' && 'Update Submission 🚀'}
+                        {existingSub?.status === 'PENDING' && 'Update Link 🚀'}
+                        {existingSub?.status === 'REVISION_REQUESTED' && 'Resubmit Task 🚀'}
+                        {existingSub?.status === 'REJECTED' && 'Resubmit Task 🚀'}
+                        {!existingSub && 'Submit Task 🚀'}
+                      </span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
-        </div>
-
-        {/* Live Project Submissions (Neon Database) */}
-        <div className="command-card glass-panel" style={{ marginBottom: '1.75rem' }}>
-          <div className="card-header-flex">
-            <div>
-              <h3 className="section-card-heading" style={{ fontSize: '1.25rem' }}>Your Submitted Projects</h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                Track your live evaluation status synced with Neon Cloud PostgreSQL.
-              </p>
-            </div>
-            <button
-              type="button"
-              className="btn-primary"
-              style={{ fontSize: '0.82rem', padding: '0.5rem 1rem' }}
-              onClick={() => setSubmitModalOpen(true)}
-            >
-              + Submit New Project
-            </button>
-          </div>
-
-          {submissions.length === 0 ? (
-            <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              No project submissions logged yet. Click <strong>Submit New Project</strong> to submit your task!
-            </div>
-          ) : (
-            <div style={{ overflowX: 'auto', marginTop: '1rem' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left', color: 'var(--text-muted)' }}>
-                    <th style={{ padding: '0.75rem 1rem' }}>Project Title</th>
-                    <th style={{ padding: '0.75rem 1rem' }}>Domain</th>
-                    <th style={{ padding: '0.75rem 1rem' }}>Submission Link</th>
-                    <th style={{ padding: '0.75rem 1rem' }}>Submitted At</th>
-                    <th style={{ padding: '0.75rem 1rem' }}>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {submissions.map((sub) => (
-                    <tr key={sub.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                      <td style={{ padding: '0.85rem 1rem', fontWeight: '600' }}>{sub.projectTitle}</td>
-                      <td style={{ padding: '0.85rem 1rem', color: 'var(--text-muted)' }}>{sub.domain}</td>
-                      <td style={{ padding: '0.85rem 1rem' }}>
-                        <a href={sub.fileUrl} target="_blank" rel="noreferrer" style={{ color: '#38bdf8', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', textDecoration: 'none' }}>
-                          <span>View Link</span>
-                          <ExternalLink size={14} />
-                        </a>
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem', color: 'var(--text-muted)' }}>
-                        {new Date(sub.submittedAt).toLocaleDateString()}
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem' }}>
-                        <span style={{
-                          padding: '0.25rem 0.65rem',
-                          borderRadius: '12px',
-                          fontSize: '0.78rem',
-                          fontWeight: '700',
-                          background: sub.status === 'APPROVED' ? 'rgba(52, 211, 153, 0.15)' : sub.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                          color: sub.status === 'APPROVED' ? '#34d399' : sub.status === 'REJECTED' ? '#f87171' : '#fbbf24'
-                        }}>
-                          {sub.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
         </div>
 
         {/* Side-by-Side Cards: Test Performance & ATS Score */}
@@ -474,8 +476,12 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
 
       <TaskSubmissionModal 
         isOpen={submitModalOpen}
-        defaultDomain={selectedTaskForSubmission || { title: 'Web Development (4-Week)' }}
-        onClose={() => setSubmitModalOpen(false)}
+        defaultDomain={selectedTaskForSubmission}
+        user={user}
+        onClose={() => {
+          setSubmitModalOpen(false);
+          setSelectedTaskForSubmission(null);
+        }}
         onSubmitSuccess={(msg) => {
           fetchSubmissions();
         }}

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Users, Briefcase, GraduationCap, Award, DollarSign, 
-  FileSpreadsheet, Settings, LogOut, BarChart3, Layers, Menu, X, Shield, ShieldAlert, History 
+  FileSpreadsheet, Settings, LogOut, BarChart3, Layers, Menu, X, Shield, ShieldAlert, History, ExternalLink
 } from 'lucide-react';
 import { adminApi } from '../../services/api';
+import { submissionAPI } from '../../services/apiClient';
 import './AdminDashboard.css';
 
 export default function AdminDashboard({ user, setCurrentView, onLogout }) {
@@ -17,20 +18,22 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
   });
 
   const [students, setStudents] = useState([]);
+  const [submissions, setSubmissions] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [feedbackInput, setFeedbackInput] = useState({});
 
-  const isSuperAdmin = user?.role === 'super_admin';
+  const isSuperAdmin = user?.role?.toLowerCase() === 'super_admin';
 
   // Base Menu items for Admin & Super Admin
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'projects', label: 'Student Submissions', icon: Layers },
     { id: 'students', label: 'Students', icon: Users },
     { id: 'internships', label: 'Internships', icon: Briefcase },
     { id: 'courses', label: 'Courses', icon: GraduationCap },
-    { id: 'projects', label: 'Projects', icon: Layers },
     { id: 'assignments', label: 'Assignments', icon: FileSpreadsheet },
     { id: 'certificates', label: 'Certificates', icon: Award },
     ...(isSuperAdmin ? [
@@ -39,6 +42,16 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
     ] : []),
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
+
+  const fetchSubmissions = () => {
+    setLoading(true);
+    submissionAPI.getAllSubmissions().then((res) => {
+      if (res.success && res.submissions) {
+        setSubmissions(res.submissions);
+      }
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  };
 
   // Fetch Dashboard Metrics on mount
   useEffect(() => {
@@ -59,6 +72,10 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
       }).catch(() => setLoading(false));
     }
 
+    if (activeMenu === 'projects' || activeMenu === 'assignments') {
+      fetchSubmissions();
+    }
+
     if (activeMenu === 'audit-logs' && isSuperAdmin) {
       setLoading(true);
       adminApi.getAuditLogs().then((res) => {
@@ -67,6 +84,21 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
       }).catch(() => setLoading(false));
     }
   }, [activeMenu, searchQuery, isSuperAdmin]);
+
+  const handleUpdateStatus = async (submissionId, newStatus) => {
+    try {
+      const feedback = feedbackInput[submissionId] || '';
+      const res = await submissionAPI.updateSubmissionStatus(submissionId, newStatus, feedback);
+      if (res.success) {
+        setMessage(`Submission #${submissionId.substring(0, 8)} updated to ${newStatus}`);
+        fetchSubmissions();
+      } else {
+        setMessage(res.error || 'Failed to update status.');
+      }
+    } catch (err) {
+      setMessage(err.message || 'Error updating status.');
+    }
+  };
 
   const handleDeleteStudent = async (studentId) => {
     if (!window.confirm(`Are you sure you want to delete Student #${studentId}? This action will be audit logged.`)) return;
@@ -151,10 +183,11 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
           <div>
             <h1 className="admin-heading">
               {activeMenu === 'dashboard' && 'Dashboard Overview'}
+              {activeMenu === 'projects' && 'Project Submissions Review'}
               {activeMenu === 'students' && 'Student Management'}
               {activeMenu === 'audit-logs' && 'Security Audit Logs'}
               {activeMenu === 'users' && 'Role & Access Control'}
-              {activeMenu !== 'dashboard' && activeMenu !== 'students' && activeMenu !== 'audit-logs' && activeMenu !== 'users' && `${activeMenu.charAt(0).toUpperCase() + activeMenu.slice(1)} Management`}
+              {activeMenu !== 'dashboard' && activeMenu !== 'projects' && activeMenu !== 'students' && activeMenu !== 'audit-logs' && activeMenu !== 'users' && `${activeMenu.charAt(0).toUpperCase() + activeMenu.slice(1)} Management`}
             </h1>
             <p className="admin-subheading">
               Logged in as <strong style={{ color: 'var(--text-main)' }}>{user?.email || 'admin@ndraise.com'}</strong> ({user?.role || 'admin'})
@@ -310,7 +343,165 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
           </>
         )}
 
-        {/* TAB 2: STUDENTS MANAGEMENT */}
+        {/* TAB 2: PROJECT SUBMISSIONS REVIEW (LIVE NEON DB) */}
+        {(activeMenu === 'projects' || activeMenu === 'assignments') && (
+          <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <div>
+                <h3 style={{ color: 'var(--text-main)', fontSize: '1.2rem', marginBottom: '0.2rem' }}>
+                  Live Neon Cloud PostgreSQL Submissions ({submissions.length})
+                </h3>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                  Review student repository links, approve projects, or request revisions with direct feedback notes.
+                </p>
+              </div>
+              <button className="admin-btn-secondary" style={{ fontSize: '0.8rem' }} onClick={fetchSubmissions}>
+                Refresh Submissions 🔄
+              </button>
+            </div>
+
+            {loading ? (
+              <p style={{ color: 'var(--text-muted)', padding: '1rem' }}>Loading live submissions from Neon PostgreSQL...</p>
+            ) : submissions.length === 0 ? (
+              <p style={{ color: 'var(--text-muted)', padding: '2rem', textAlign: 'center' }}>No student project submissions found in database yet.</p>
+            ) : (
+              <div style={{ overflowX: 'auto' }}>
+                <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
+                  <thead>
+                    <tr>
+                      <th>Student</th>
+                      <th>Project Title</th>
+                      <th>Domain</th>
+                      <th>Submission Link</th>
+                      <th>Submitted At</th>
+                      <th>Status</th>
+                      <th>Admin Feedback / Review Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {submissions.map((sub) => (
+                      <tr key={sub.id} style={{ verticalAlign: 'top' }}>
+                        <td>
+                          <div style={{ fontWeight: '600' }}>{sub.user?.name || 'Student User'}</div>
+                          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{sub.user?.email || 'N/A'}</div>
+                        </td>
+                        <td>
+                          <div style={{ fontWeight: '600' }}>{sub.projectTitle}</div>
+                          {sub.notes && (
+                            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.25rem', fontStyle: 'italic' }}>
+                              "{sub.notes}"
+                            </div>
+                          )}
+                        </td>
+                        <td>{sub.domain}</td>
+                        <td>
+                          <a 
+                            href={sub.fileUrl} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            style={{ color: '#38bdf8', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', textDecoration: 'none', fontWeight: '600' }}
+                          >
+                            <span>Open Link</span>
+                            <ExternalLink size={13} />
+                          </a>
+                        </td>
+                        <td style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>
+                          {new Date(sub.submittedAt).toLocaleDateString()} {new Date(sub.submittedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </td>
+                        <td>
+                          <span style={{
+                            padding: '0.25rem 0.65rem',
+                            borderRadius: '12px',
+                            fontSize: '0.78rem',
+                            fontWeight: '700',
+                            background: sub.status === 'APPROVED' ? 'rgba(52, 211, 153, 0.18)' :
+                                        sub.status === 'REJECTED' ? 'rgba(239, 68, 68, 0.18)' :
+                                        sub.status === 'REVISION_REQUESTED' ? 'rgba(192, 132, 252, 0.18)' : 'rgba(245, 158, 11, 0.18)',
+                            color: sub.status === 'APPROVED' ? '#34d399' :
+                                   sub.status === 'REJECTED' ? '#f87171' :
+                                   sub.status === 'REVISION_REQUESTED' ? '#c084fc' : '#fbbf24'
+                          }}>
+                            {sub.status}
+                          </span>
+                        </td>
+                        <td style={{ minWidth: '280px' }}>
+                          <input 
+                            type="text"
+                            placeholder="Add optional admin note..."
+                            value={feedbackInput[sub.id] || sub.adminFeedback || ''}
+                            onChange={(e) => setFeedbackInput({ ...feedbackInput, [sub.id]: e.target.value })}
+                            style={{
+                              width: '100%',
+                              padding: '0.4rem 0.6rem',
+                              borderRadius: '6px',
+                              border: '1px solid var(--border-light)',
+                              background: 'rgba(255,255,255,0.05)',
+                              color: 'var(--text-main)',
+                              fontSize: '0.78rem',
+                              marginBottom: '0.5rem'
+                            }}
+                          />
+                          <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                            <button
+                              type="button"
+                              style={{
+                                background: 'rgba(52, 211, 153, 0.2)',
+                                color: '#34d399',
+                                border: '1px solid #34d399',
+                                padding: '0.3rem 0.6rem',
+                                borderRadius: '4px',
+                                fontSize: '0.75rem',
+                                fontWeight: '700',
+                                cursor: 'pointer'
+                              }}
+                              onClick={() => handleUpdateStatus(sub.id, 'APPROVED')}
+                            >
+                              Approve ✔
+                            </button>
+                            <button
+                              type="button"
+                              style={{
+                                background: 'rgba(192, 132, 252, 0.2)',
+                                color: '#c084fc',
+                                border: '1px solid #c084fc',
+                                padding: '0.3rem 0.6rem',
+                                borderRadius: '4px',
+                                fontSize: '0.75rem',
+                                fontWeight: '700',
+                                cursor: 'pointer'
+                              }}
+                              onClick={() => handleUpdateStatus(sub.id, 'REVISION_REQUESTED')}
+                            >
+                              Request Revision ⚠️
+                            </button>
+                            <button
+                              type="button"
+                              style={{
+                                background: 'rgba(239, 68, 68, 0.2)',
+                                color: '#f87171',
+                                border: '1px solid #f87171',
+                                padding: '0.3rem 0.6rem',
+                                borderRadius: '4px',
+                                fontSize: '0.75rem',
+                                fontWeight: '700',
+                                cursor: 'pointer'
+                              }}
+                              onClick={() => handleUpdateStatus(sub.id, 'REJECTED')}
+                            >
+                              Reject ❌
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 3: STUDENTS MANAGEMENT */}
         {activeMenu === 'students' && (
           <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
@@ -359,7 +550,7 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
           </div>
         )}
 
-        {/* TAB 3: AUDIT LOGS (SUPER ADMIN ONLY) */}
+        {/* TAB 4: AUDIT LOGS (SUPER ADMIN ONLY) */}
         {activeMenu === 'audit-logs' && isSuperAdmin && (
           <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)' }}>
             <h3 style={{ color: 'var(--text-main)', marginBottom: '1rem' }}>Administrative & Security Activity Log</h3>
@@ -392,7 +583,7 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
         )}
 
         {/* OTHER TABS PLACEHOLDER */}
-        {activeMenu !== 'dashboard' && activeMenu !== 'students' && activeMenu !== 'audit-logs' && (
+        {activeMenu !== 'dashboard' && activeMenu !== 'projects' && activeMenu !== 'assignments' && activeMenu !== 'students' && activeMenu !== 'audit-logs' && (
           <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)', background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)' }}>
             <Shield size={48} color="var(--primary)" style={{ marginBottom: '1rem' }} />
             <h3 style={{ color: 'var(--text-main)', marginBottom: '0.5rem' }}>{activeMenu.toUpperCase()} Protected Module</h3>
