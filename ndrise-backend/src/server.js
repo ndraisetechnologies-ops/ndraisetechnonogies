@@ -7,6 +7,7 @@ dotenv.config();
 const authRoutes = require('./routes/authRoutes');
 const internshipRoutes = require('./routes/internshipRoutes');
 const submissionRoutes = require('./routes/submissionRoutes');
+const studentRoutes = require('./routes/studentRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -32,6 +33,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api', internshipRoutes);
 app.use('/api', submissionRoutes);
+app.use('/api/student', studentRoutes);
 
 // 404 Handler
 app.use((req, res) => {

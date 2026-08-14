@@ -61,3 +61,7 @@ export const submissionAPI = {
     body: JSON.stringify({ status, adminFeedback }) 
   })
 };
+
+export const studentAPI = {
+  getDashboardMetrics: () => request('/student/dashboard', { method: 'GET' })
+};
