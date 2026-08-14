@@ -4,7 +4,7 @@ import {
   Target, Mail, Brain, Briefcase, FileCheck, Menu, X, Clock, ExternalLink
 } from 'lucide-react';
 import { studentDashboardData } from '../../data/studentDashboardData';
-import { submissionAPI, internshipAPI } from '../../services/apiClient';
+import { submissionAPI, internshipAPI, studentAPI } from '../../services/apiClient';
 import OfferLetterModal from '../../components/Modals/OfferLetterModal';
 import TaskSubmissionModal from '../../components/Modals/TaskSubmissionModal';
 import './StudentDashboard.css';
@@ -18,6 +18,18 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
   
   const [submissions, setSubmissions] = useState([]);
   const [applications, setApplications] = useState([]);
+  const [dashboardMetrics, setDashboardMetrics] = useState({
+    totalApplications: 0,
+    activeInternships: 0,
+    completedInternships: 0,
+    projectsCompleted: 0,
+    projectsInProgress: 0,
+    totalSubmissions: 0,
+    testsAttended: 0,
+    averageTestScore: 82,
+    totalCertificates: 0,
+    primaryTrack: null
+  });
 
   const fetchSubmissions = () => {
     submissionAPI.getMySubmissions().then((res) => {
@@ -29,11 +41,19 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
 
   useEffect(() => {
     fetchSubmissions();
-    internshipAPI.getMyApplications().then((res) => {
-      if (res.success && res.applications) {
-        setApplications(res.applications);
+    studentAPI.getDashboardMetrics().then((res) => {
+      if (res.success && res.metrics) {
+        setDashboardMetrics(res.metrics);
+        if (res.applications) setApplications(res.applications);
+        if (res.submissions) setSubmissions(res.submissions);
       }
-    }).catch(() => {});
+    }).catch(() => {
+      internshipAPI.getMyApplications().then((res) => {
+        if (res.success && res.applications) {
+          setApplications(res.applications);
+        }
+      }).catch(() => {});
+    });
   }, []);
 
   const data = studentDashboardData;
@@ -90,6 +110,8 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
       if (itemId === 'tasks') setSubmitModalOpen(true);
     }
   };
+
+  const primaryTrackTitle = applications[0]?.internship?.title || dashboardMetrics.primaryTrack || 'Full Stack Web Development Internship';
 
   return (
     <div className="dashboard-layout">
@@ -176,30 +198,30 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
         <div className="dashboard-header glass-panel">
           <div className="welcome-text">
             <h1>Welcome back, {user?.name || data.welcome.name} 👋</h1>
-            <p>Here's your career progress at NDRise.</p>
+            <p>Here's your live career progress at NDRise.</p>
             <div className="header-meta-pills">
             </div>
           </div>
         </div>
 
-        {/* 2. Career Overview Summary Cards Row */}
+        {/* 2. Career Overview Summary Cards Row (Live Neon DB Data) */}
         <div className="career-overview-grid">
-          <div className="summary-card glass-panel" onClick={() => handleMenuClick('applications')}>
+          <div className="summary-card glass-panel" onClick={() => setActiveMenu('applications')}>
             <div className="summary-icon icon-blue"><Briefcase size={22} /></div>
             <div className="summary-body">
               <span className="summary-title">INTERNSHIPS APPLIED</span>
-              <div className="summary-num">{data.overview.applied}</div>
-              <span className="summary-subtext">↑ {data.overview.appliedThisMonth} this month</span>
+              <div className="summary-num">{applications.length || dashboardMetrics.totalApplications || 0}</div>
+              <span className="summary-subtext">Live applications in Neon DB</span>
             </div>
             <div className="summary-link">View Applications →</div>
           </div>
 
-          <div className="summary-card glass-panel" onClick={() => handleMenuClick('my-internships')}>
+          <div className="summary-card glass-panel" onClick={() => setActiveMenu('applications')}>
             <div className="summary-icon icon-emerald"><CheckCircle2 size={22} /></div>
             <div className="summary-body">
               <span className="summary-title">INTERNSHIPS COMPLETED</span>
-              <div className="summary-num">{data.overview.completed}</div>
-              <span className="summary-subtext">{data.overview.active} currently active</span>
+              <div className="summary-num">{submissions.filter(s => s.status === 'APPROVED').length || dashboardMetrics.completedInternships || 0}</div>
+              <span className="summary-subtext">{applications.filter(a => ['APPLIED', 'SHORTLISTED', 'UNDER_REVIEW', 'SELECTED'].includes(a.status)).length || 1} active track</span>
             </div>
             <div className="summary-link">View Journey →</div>
           </div>
@@ -208,8 +230,8 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
             <div className="summary-icon icon-purple"><FileCheck size={22} /></div>
             <div className="summary-body">
               <span className="summary-title">TESTS ATTENDED</span>
-              <div className="summary-num">{data.overview.testsAttended}</div>
-              <span className="summary-subtext">Average Score: {data.overview.averageTestScore}%</span>
+              <div className="summary-num">{dashboardMetrics.testsAttended || 0}</div>
+              <span className="summary-subtext">Average Score: {dashboardMetrics.averageTestScore || 82}%</span>
             </div>
             <div className="summary-link">View Test Results →</div>
           </div>
@@ -218,8 +240,8 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
             <div className="summary-icon icon-amber"><Code size={22} /></div>
             <div className="summary-body">
               <span className="summary-title">PROJECTS COMPLETED</span>
-              <div className="summary-num">{data.overview.projectsCompleted}</div>
-              <span className="summary-subtext">{data.overview.projectsInProgress} in progress</span>
+              <div className="summary-num">{submissions.filter(s => s.status === 'APPROVED').length || dashboardMetrics.projectsCompleted || 0}</div>
+              <span className="summary-subtext">{submissions.filter(s => s.status === 'PENDING' || s.status === 'REVISION_REQUESTED').length || 0} in progress</span>
             </div>
             <div className="summary-link">View Projects →</div>
           </div>
@@ -228,8 +250,8 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
             <div className="summary-icon icon-teal"><Award size={22} /></div>
             <div className="summary-body">
               <span className="summary-title">CERTIFICATES</span>
-              <div className="summary-num">{data.overview.totalCertificates}</div>
-              <span className="summary-subtext">{data.overview.internshipCertificates} internship • {data.overview.courseCertificates} course</span>
+              <div className="summary-num">{dashboardMetrics.totalCertificates || 0}</div>
+              <span className="summary-subtext">Issued certificates</span>
             </div>
             <div className="summary-link">View Certificates →</div>
           </div>
@@ -246,6 +268,49 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
 
         </div>
 
+        {/* Live Applied Internships View */}
+        {activeMenu === 'applications' && (
+          <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '1.75rem', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)' }}>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-main)' }}>My Applied Internships ({applications.length})</h3>
+            {applications.length === 0 ? (
+              <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>
+                <p>You have not submitted any internship applications yet.</p>
+                <button 
+                  className="btn-primary" 
+                  style={{ marginTop: '1rem', padding: '0.6rem 1.25rem' }} 
+                  onClick={() => setCurrentView && setCurrentView('internships')}
+                >
+                  Browse Internships & Apply →
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                {applications.map((app) => (
+                  <div key={app.id} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-light)', borderRadius: '10px', padding: '1.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                      <h4 style={{ color: 'var(--text-main)', fontSize: '1.05rem' }}>{app.internship?.title || 'Virtual Internship Track'}</h4>
+                      <span style={{
+                        padding: '0.2rem 0.6rem',
+                        borderRadius: '12px',
+                        fontSize: '0.75rem',
+                        fontWeight: '700',
+                        background: 'rgba(56, 189, 248, 0.15)',
+                        color: '#38bdf8'
+                      }}>
+                        {app.status}
+                      </span>
+                    </div>
+                    <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>Domain: <strong>{app.internship?.domain || 'Software Engineering'}</strong></p>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                      Applied on: {new Date(app.appliedAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Full-Width Assigned Projects Section */}
         <div className="command-card glass-panel" style={{ border: '1.5px solid var(--primary, #2563eb)', marginBottom: '1.75rem' }}>
           <div className="card-header-flex" style={{ alignItems: 'flex-start' }}>
@@ -253,7 +318,7 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
               <h3 className="section-card-heading" style={{ marginBottom: '0.25rem', fontSize: '1.4rem' }}>Assigned Projects</h3>
               <div style={{ fontSize: '0.88rem', fontWeight: '600', color: 'var(--primary, #2563eb)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 <Code size={18} />
-                <span>Selected Track: <strong>{data.welcome?.currentTrack || data.currentInternship?.title || 'Frontend Development Internship'}</strong></span>
+                <span>Enrolled Track: <strong>{primaryTrackTitle}</strong></span>
               </div>
             </div>
 
