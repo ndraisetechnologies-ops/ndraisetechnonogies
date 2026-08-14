@@ -19,6 +19,7 @@ import AtsScorePage from './pages/AtsScore/AtsScorePage';
 import JobEmailBuilderPage from './pages/JobEmailBuilder/JobEmailBuilderPage';
 import InterviewPrepPage from './pages/InterviewPrep/InterviewPrepPage';
 import ProjectGuidelinesPage from './pages/ProjectGuidelines/ProjectGuidelinesPage';
+import AuthPage from './pages/Auth/AuthPage';
 import AuthModal from './components/Modals/AuthModal';
 import ApplyModal from './components/Modals/ApplyModal';
 import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
@@ -201,14 +202,16 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const isAuthView = currentView === 'login' || currentView === 'register' || currentView === 'forgot-password' || currentView === 'admin-login';
+
   return (
     <div className="app-container">
       {/* Main Navbar */}
-      {currentView !== 'student-dashboard' && currentView !== 'admin-dashboard' && (
+      {currentView !== 'student-dashboard' && currentView !== 'admin-dashboard' && !isAuthView && (
         <Navbar 
           currentView={currentView}
           setCurrentView={setCurrentView}
-          openAuthModal={(mode) => setAuthModal({ isOpen: true, mode })}
+          openAuthModal={(mode) => setCurrentView(mode || 'login')}
           user={user}
           onLogout={async () => {
             try { await authAPI.logout(); } catch (e) {}
@@ -230,6 +233,17 @@ export default function App() {
 
       {/* View Router */}
       <div className="main-content">
+        {isAuthView && (
+          <AuthPage 
+            initialMode={currentView}
+            onAuthSuccess={(userData) => {
+              handleAuthSuccess(userData);
+            }}
+            onGoHome={() => setCurrentView('home')}
+            showToast={showToast}
+          />
+        )}
+
         {currentView === 'home' && (
           <Home 
             onSelectInternship={handleSelectInternship}
@@ -253,7 +267,7 @@ export default function App() {
         {currentView === 'browse-courses' && (
           <BrowseCoursesPage 
             user={user}
-            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'register' })}
+            onRequireAuth={() => setCurrentView('register')}
             onSelectCourse={(course) => {
               showToast(`Selected course: ${course.title}`);
             }}
@@ -264,7 +278,7 @@ export default function App() {
           <AtsScorePage 
             setCurrentView={setCurrentView}
             user={user}
-            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'register' })}
+            onRequireAuth={() => setCurrentView('register')}
           />
         )}
 
@@ -272,7 +286,7 @@ export default function App() {
           <JobEmailBuilderPage 
             setCurrentView={setCurrentView}
             user={user}
-            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'register' })}
+            onRequireAuth={() => setCurrentView('register')}
           />
         )}
 
@@ -280,7 +294,7 @@ export default function App() {
           <InterviewPrepPage 
             setCurrentView={setCurrentView}
             user={user}
-            onRequireAuth={() => setAuthModal({ isOpen: true, mode: 'register' })}
+            onRequireAuth={() => setCurrentView('register')}
           />
         )}
 
@@ -367,11 +381,11 @@ export default function App() {
       </div>
 
       {/* Main Footer */}
-      {currentView !== 'student-dashboard' && currentView !== 'admin-dashboard' && (
+      {currentView !== 'student-dashboard' && currentView !== 'admin-dashboard' && !isAuthView && (
         <Footer 
           setCurrentView={setCurrentView} 
           user={user}
-          onAuthClick={(mode) => setAuthModal({ isOpen: true, mode })}
+          onAuthClick={(mode) => setCurrentView(mode || 'login')}
         />
       )}
 

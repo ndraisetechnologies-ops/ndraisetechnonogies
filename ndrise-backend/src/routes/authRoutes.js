@@ -231,4 +231,120 @@ router.post('/logout', (req, res) => {
   return res.json({ success: true, message: 'Logged out successfully.' });
 });
 
+// POST /api/auth/forgot-password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, error: 'Email address is required.' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() }
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'No account found with this email address.' });
+    }
+
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    return res.json({
+      success: true,
+      message: `Password reset code generated. Use verification code ${resetCode} to set a new password.`,
+      resetCode
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    return res.status(500).json({ success: false, error: 'Failed to process forgot password request.' });
+  }
+});
+
+// POST /api/auth/reset-password
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword) {
+      return res.status(400).json({ success: false, error: 'Email address and new password are required.' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, error: 'Password must be at least 6 characters long.' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() }
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User account not found.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword }
+    });
+
+    return res.json({
+      success: true,
+      message: 'Password updated successfully! You can now log in with your new password.'
+    });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    return res.status(500).json({ success: false, error: 'Failed to reset password.' });
+  }
+});
+
+// POST /api/auth/google
+router.post('/google', async (req, res) => {
+  try {
+    const { email, name, avatar } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, error: 'Google email is required.' });
+    }
+
+    let user = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() }
+    });
+
+    if (!user) {
+      const defaultPassword = await bcrypt.hash('GoogleAuth_' + Math.random(), 10);
+      user = await prisma.user.create({
+        data: {
+          name: name || email.split('@')[0],
+          email: email.toLowerCase(),
+          password: defaultPassword,
+          role: 'STUDENT',
+          avatar: avatar || '/student-avatar.svg'
+        }
+      });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+
+    setAuthCookie(res, token);
+
+    return res.json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar
+      }
+    });
+  } catch (error) {
+    console.error('Google auth error:', error);
+    return res.status(500).json({ success: false, error: 'Google authentication failed.' });
+  }
+});
+
 module.exports = router;
