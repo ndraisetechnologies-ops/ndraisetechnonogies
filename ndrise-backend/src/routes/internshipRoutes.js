@@ -1,6 +1,6 @@
 const express = require('express');
 const prisma = require('../lib/prisma');
-const { verifyToken } = require('../middleware/authMiddleware');
+const { verifyToken, isAdmin } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
@@ -156,6 +156,43 @@ router.get('/applications/my', verifyToken, async (req, res) => {
   } catch (error) {
     console.error('Fetch my applications error:', error);
     return res.status(500).json({ success: false, error: 'Failed to fetch applications.' });
+  }
+});
+
+// POST /api/admin/internships (Protected - Admin create internship)
+router.post('/admin/internships', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const { title, domain, description, duration, stipend } = req.body;
+    if (!title || !domain) {
+      return res.status(400).json({ success: false, error: 'Title and domain are required.' });
+    }
+
+    const internship = await prisma.internship.create({
+      data: {
+        title,
+        domain,
+        description: description || 'Hands-on virtual internship track with real project guidelines.',
+        duration: duration || '4 - 8 Weeks',
+        stipend: stipend || 'Performance Based'
+      }
+    });
+
+    return res.status(201).json({ success: true, message: 'Internship track created live in Neon DB!', internship });
+  } catch (error) {
+    console.error('Create internship error:', error);
+    return res.status(500).json({ success: false, error: 'Failed to create internship track.' });
+  }
+});
+
+// DELETE /api/admin/internships/:id (Protected - Admin delete internship)
+router.delete('/admin/internships/:id', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.internship.delete({ where: { id } });
+    return res.json({ success: true, message: 'Internship track deleted successfully.' });
+  } catch (error) {
+    console.error('Delete internship error:', error);
+    return res.status(500).json({ success: false, error: 'Failed to delete internship track.' });
   }
 });
 

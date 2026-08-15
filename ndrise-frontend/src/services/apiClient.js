@@ -49,7 +49,9 @@ export const authAPI = {
 export const internshipAPI = {
   getInternships: () => request('/internships', { method: 'GET' }),
   apply: (payload) => request('/applications', { method: 'POST', body: JSON.stringify(payload) }),
-  getMyApplications: () => request('/applications/my', { method: 'GET' })
+  getMyApplications: () => request('/applications/my', { method: 'GET' }),
+  createInternship: (payload) => request('/admin/internships', { method: 'POST', body: JSON.stringify(payload) }),
+  deleteInternship: (id) => request(`/admin/internships/${id}`, { method: 'DELETE' })
 };
 
 export const submissionAPI = {
