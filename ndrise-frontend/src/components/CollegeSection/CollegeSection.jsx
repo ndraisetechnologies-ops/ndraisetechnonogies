@@ -1,8 +1,11 @@
 import React from 'react';
-import { GraduationCap, Landmark, Building2, BookOpenCheck } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { FadeIn, StaggerContainer, StaggerItem } from '../Motion/MotionUtils';
 import './CollegeSection.css';
 
 export default function CollegeSection() {
+  const shouldReduceMotion = useReducedMotion();
+
   const colleges = [
     { id: 'iitm', name: 'IIT Madras', initials: 'IIT' },
     { id: 'nitt', name: 'NIT Trichy', initials: 'NIT' },
@@ -14,18 +17,26 @@ export default function CollegeSection() {
 
   return (
     <section className="college-section">
-      <h3 className="college-title">Trusted by Students from Top Colleges</h3>
+      <FadeIn direction="up">
+        <h3 className="college-title">Trusted by Students from Top Colleges</h3>
+      </FadeIn>
 
-      <div className="college-grid">
+      <StaggerContainer className="college-grid" staggerChildren={0.06}>
         {colleges.map((c) => (
-          <div key={c.id} className="college-badge">
-            <div className="college-icon-circle">
-              {c.initials}
-            </div>
-            <span>{c.name}</span>
-          </div>
+          <StaggerItem key={c.id}>
+            <motion.div 
+              className="college-badge"
+              whileHover={shouldReduceMotion ? {} : { scale: 1.05, y: -2 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
+            >
+              <div className="college-icon-circle">
+                {c.initials}
+              </div>
+              <span>{c.name}</span>
+            </motion.div>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerContainer>
 
       <div className="college-pagination">
         <div className="pagination-dot"></div>

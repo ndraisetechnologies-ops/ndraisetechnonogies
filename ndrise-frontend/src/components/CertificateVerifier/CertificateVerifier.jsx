@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Search, ShieldCheck, CheckCircle2, Award, Calendar, ExternalLink, Printer, Share2, Sparkles, Building2, User, BookOpen } from 'lucide-react';
+import { Search, ShieldCheck, CheckCircle2, Award, Calendar, Printer, Share2, Building2, User, BookOpen } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { FadeIn } from '../Motion/MotionUtils';
 import './CertificateVerifier.css';
 
 const SAMPLE_CERTIFICATES = {
@@ -52,6 +54,7 @@ export default function CertificateVerifier() {
   const [activeCert, setActiveCert] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const handleVerify = (idToTest) => {
     const searchId = (idToTest || certIdInput).trim().toUpperCase();
@@ -65,11 +68,9 @@ export default function CertificateVerifier() {
 
     setTimeout(() => {
       setIsSearching(false);
-      // Look up in sample database or generate dynamic verified credential for any test query!
       if (SAMPLE_CERTIFICATES[searchId]) {
         setActiveCert(SAMPLE_CERTIFICATES[searchId]);
       } else {
-        // Fallback: Dynamic verification generator for user testing custom IDs!
         setActiveCert({
           id: searchId,
           name: 'Verified Student Candidate',
@@ -96,69 +97,82 @@ export default function CertificateVerifier() {
   return (
     <section className="verifier-section" id="verify-certificate">
       <div className="verifier-container">
-        <div className="verifier-header">
-          <div className="verifier-tag">
-            <ShieldCheck size={18} />
-            <span>ISO 9001:2015 CERTIFIED VERIFICATION PORTAL</span>
+        <FadeIn direction="up">
+          <div className="verifier-header">
+            <div className="verifier-tag">
+              <ShieldCheck size={18} />
+              <span>ISO 9001:2015 CERTIFIED VERIFICATION PORTAL</span>
+            </div>
+            <h2 className="verifier-title">
+              Verify <span>Internship Certificate</span> & Credentials
+            </h2>
+            <p className="verifier-subtitle">
+              Employers, recruiters, and colleges can instantly verify the authenticity of certificates and Letters of Recommendation (LOR) issued by ND Raise Technologies.
+            </p>
           </div>
-          <h2 className="verifier-title">
-            Verify <span>Internship Certificate</span> & Credentials
-          </h2>
-          <p className="verifier-subtitle">
-            Employers, recruiters, and colleges can instantly verify the authenticity of certificates and Letters of Recommendation (LOR) issued by ND Raise Technologies.
-          </p>
-        </div>
+        </FadeIn>
 
         {/* Input & Search Bar */}
-        <div className="verifier-box-wrapper glass-panel">
-          <div className="verifier-input-group">
-            <div className="input-icon-label">
-              <Award size={20} className="input-icon" />
-              <input 
-                type="text"
-                className="verifier-input"
-                placeholder="Enter Certificate ID (e.g. CA-2026-8942, NDR-2026-1042)"
-                value={certIdInput}
-                onChange={(e) => setCertIdInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
-              />
-            </div>
-            <button 
-              className="btn-primary verifier-search-btn"
-              onClick={() => handleVerify()}
-              disabled={isSearching}
-            >
-              {isSearching ? (
-                <span>Verifying...</span>
-              ) : (
-                <>
-                  <span>Verify Credential</span>
-                  <Search size={18} />
-                </>
-              )}
-            </button>
-          </div>
-
-          {errorMsg && <div className="verifier-error">{errorMsg}</div>}
-
-          {/* Quick Click Sample IDs */}
-          <div className="sample-ids-row">
-            <span className="sample-label">Try Sample IDs:</span>
-            {Object.keys(SAMPLE_CERTIFICATES).map(sampleId => (
-              <button 
-                key={sampleId}
-                className="sample-chip"
-                onClick={() => handleSampleClick(sampleId)}
+        <FadeIn direction="up" delay={0.1}>
+          <div className="verifier-box-wrapper glass-panel">
+            <div className="verifier-input-group">
+              <div className="input-icon-label">
+                <Award size={20} className="input-icon" />
+                <input 
+                  type="text"
+                  className="verifier-input"
+                  placeholder="Enter Certificate ID (e.g. CA-2026-8942, NDR-2026-1042)"
+                  value={certIdInput}
+                  onChange={(e) => setCertIdInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
+                />
+              </div>
+              <motion.button 
+                className="btn-primary verifier-search-btn"
+                onClick={() => handleVerify()}
+                disabled={isSearching}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
               >
-                {sampleId}
-              </button>
-            ))}
+                {isSearching ? (
+                  <span>Verifying...</span>
+                ) : (
+                  <>
+                    <span>Verify Credential</span>
+                    <Search size={18} />
+                  </>
+                )}
+              </motion.button>
+            </div>
+
+            {errorMsg && <div className="verifier-error">{errorMsg}</div>}
+
+            {/* Quick Click Sample IDs */}
+            <div className="sample-ids-row">
+              <span className="sample-label">Try Sample IDs:</span>
+              {Object.keys(SAMPLE_CERTIFICATES).map(sampleId => (
+                <motion.button 
+                  key={sampleId}
+                  className="sample-chip"
+                  onClick={() => handleSampleClick(sampleId)}
+                  whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
+                >
+                  {sampleId}
+                </motion.button>
+              ))}
+            </div>
           </div>
-        </div>
+        </FadeIn>
 
         {/* Verified Certificate Card Modal Result */}
         {activeCert && (
-          <div className="cert-result-card glass-panel animate-fade-in">
+          <motion.div 
+            className="cert-result-card glass-panel"
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          >
             <div className="cert-card-header">
               <div className="cert-verified-badge">
                 <CheckCircle2 size={18} color="#34d399" />
@@ -176,10 +190,6 @@ export default function CertificateVerifier() {
                   <div className="org-logo-wrap">
                     <img src="/logo.jpg" alt="Logo" className="org-logo-img" />
                   </div>
-                  {/* <div>
-                    <h3 className="org-name">ND Raise Technologies</h3>
-                    <p className="org-sub">ISO 9001:2015 Certified Virtual Internship Provider</p>
-                  </div> */}
                 </div>
 
                 <h4 className="student-name">{activeCert.name}</h4>
@@ -243,16 +253,26 @@ export default function CertificateVerifier() {
 
             {/* Bottom Actions */}
             <div className="cert-actions">
-              <button className="btn-secondary" onClick={() => window.print()}>
+              <motion.button 
+                className="btn-secondary" 
+                onClick={() => window.print()}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+              >
                 <Printer size={16} />
                 <span>Print Certificate</span>
-              </button>
-              <button className="btn-primary" onClick={() => alert(`Shareable verification link copied: https://ndraise.com/verify/${activeCert.id}`)}>
+              </motion.button>
+              <motion.button 
+                className="btn-primary" 
+                onClick={() => alert(`Shareable verification link copied: https://ndraise.com/verify/${activeCert.id}`)}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+              >
                 <Share2 size={16} />
                 <span>Share Credential Link</span>
-              </button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
     </section>

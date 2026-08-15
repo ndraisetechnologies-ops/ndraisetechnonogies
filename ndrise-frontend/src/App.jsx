@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import Home from './pages/Home/Home';
@@ -26,8 +27,9 @@ import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
 import TaskSubmissionModal from './components/Modals/TaskSubmissionModal';
 import OfferLetterModal from './components/Modals/OfferLetterModal';
 import PolicyModal from './components/Modals/PolicyModal';
-import { CheckCircle2, ShieldAlert } from 'lucide-react';
-import { authAPI, setAuthToken, internshipAPI } from './services/apiClient';
+import { CheckCircle2 } from 'lucide-react';
+import { authAPI, setAuthToken } from './services/apiClient';
+import { PageTransition } from './components/Motion/MotionUtils';
 import './App.css';
 
 export default function App() {
@@ -63,12 +65,10 @@ export default function App() {
     // 1. Admin Dashboard Route Protection
     if (currentView === 'admin-dashboard') {
       if (!user) {
-        // Unauthenticated user -> redirect to home & open login modal
         setCurrentView('home');
         setAuthModal({ isOpen: true, mode: 'login' });
         showToast('Authentication required to access Admin Dashboard');
       } else if (!isAdminUser) {
-        // Student attempting /admin -> 403 Forbidden redirect to student dashboard
         setCurrentView('student-dashboard');
         showToast('403 Forbidden: Student accounts cannot access the Admin Dashboard.');
       }
@@ -80,7 +80,6 @@ export default function App() {
         setCurrentView('home');
         setAuthModal({ isOpen: true, mode: 'login' });
       } else if (isAdminUser) {
-        // Admin logging in -> direct to admin dashboard
         setCurrentView('admin-dashboard');
       }
     }
@@ -231,153 +230,193 @@ export default function App() {
         />
       )}
 
-      {/* View Router */}
+      {/* View Router with Fast Page Transition */}
       <div className="main-content">
-        {isAuthView && (
-          <AuthPage 
-            initialMode={currentView}
-            onAuthSuccess={(userData) => {
-              handleAuthSuccess(userData);
-            }}
-            onGoHome={() => setCurrentView('home')}
-            showToast={showToast}
-          />
-        )}
+        <AnimatePresence mode="wait">
+          {isAuthView && (
+            <PageTransition keyId="auth-page">
+              <AuthPage 
+                initialMode={currentView}
+                onAuthSuccess={(userData) => {
+                  handleAuthSuccess(userData);
+                }}
+                onGoHome={() => setCurrentView('home')}
+                showToast={showToast}
+              />
+            </PageTransition>
+          )}
 
-        {currentView === 'home' && (
-          <Home 
-            onSelectInternship={handleSelectInternship}
-            onApplyClick={handleApplyClick}
-            onViewAllClick={() => setCurrentView('internships')}
-            onGetStarted={handleGetStarted}
-            onVerifyClick={scrollToVerifier}
-            onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
-            onOpenTasksModal={handleOpenTasksModal}
-          />
-        )}
+          {currentView === 'home' && (
+            <PageTransition keyId="home">
+              <Home 
+                onSelectInternship={handleSelectInternship}
+                onApplyClick={handleApplyClick}
+                onViewAllClick={() => setCurrentView('internships')}
+                onGetStarted={handleGetStarted}
+                onVerifyClick={scrollToVerifier}
+                onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
+                onOpenTasksModal={handleOpenTasksModal}
+              />
+            </PageTransition>
+          )}
 
-        {currentView === 'internships' && (
-          <InternshipsPage 
-            onSelectInternship={handleSelectInternship}
-            onApplyClick={handleApplyClick}
-            onOpenTasksModal={handleOpenTasksModal}
-          />
-        )}
+          {currentView === 'internships' && (
+            <PageTransition keyId="internships">
+              <InternshipsPage 
+                onSelectInternship={handleSelectInternship}
+                onApplyClick={handleApplyClick}
+                onOpenTasksModal={handleOpenTasksModal}
+              />
+            </PageTransition>
+          )}
 
-        {currentView === 'browse-courses' && (
-          <BrowseCoursesPage 
-            user={user}
-            onRequireAuth={() => setCurrentView('register')}
-            onSelectCourse={(course) => {
-              showToast(`Selected course: ${course.title}`);
-            }}
-          />
-        )}
+          {currentView === 'browse-courses' && (
+            <PageTransition keyId="browse-courses">
+              <BrowseCoursesPage 
+                user={user}
+                onRequireAuth={() => setCurrentView('register')}
+                onSelectCourse={(course) => {
+                  showToast(`Selected course: ${course.title}`);
+                }}
+              />
+            </PageTransition>
+          )}
 
-        {currentView === 'ats-score' && (
-          <AtsScorePage 
-            setCurrentView={setCurrentView}
-            user={user}
-            onRequireAuth={() => setCurrentView('register')}
-          />
-        )}
+          {currentView === 'ats-score' && (
+            <PageTransition keyId="ats-score">
+              <AtsScorePage 
+                setCurrentView={setCurrentView}
+                user={user}
+                onRequireAuth={() => setCurrentView('register')}
+              />
+            </PageTransition>
+          )}
 
-        {currentView === 'job-email-builder' && (
-          <JobEmailBuilderPage 
-            setCurrentView={setCurrentView}
-            user={user}
-            onRequireAuth={() => setCurrentView('register')}
-          />
-        )}
+          {currentView === 'job-email-builder' && (
+            <PageTransition keyId="job-email-builder">
+              <JobEmailBuilderPage 
+                setCurrentView={setCurrentView}
+                user={user}
+                onRequireAuth={() => setCurrentView('register')}
+              />
+            </PageTransition>
+          )}
 
-        {currentView === 'interview-preparation' && (
-          <InterviewPrepPage 
-            setCurrentView={setCurrentView}
-            user={user}
-            onRequireAuth={() => setCurrentView('register')}
-          />
-        )}
+          {currentView === 'interview-preparation' && (
+            <PageTransition keyId="interview-prep">
+              <InterviewPrepPage 
+                setCurrentView={setCurrentView}
+                user={user}
+                onRequireAuth={() => setCurrentView('register')}
+              />
+            </PageTransition>
+          )}
 
-        {currentView === 'project-guidelines' && (
-          <ProjectGuidelinesPage 
-            project={selectedProject}
-            onBack={() => setCurrentView('student-dashboard')}
-            onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
-            setCurrentView={setCurrentView}
-          />
-        )}
+          {currentView === 'project-guidelines' && (
+            <PageTransition keyId="project-guidelines">
+              <ProjectGuidelinesPage 
+                project={selectedProject}
+                onBack={() => setCurrentView('student-dashboard')}
+                onSubmitTaskClick={() => setTaskSubmissionModalOpen(true)}
+                setCurrentView={setCurrentView}
+              />
+            </PageTransition>
+          )}
 
-        {currentView === 'detail' && (
-          <InternshipDetailPage 
-            internship={selectedInternship}
-            onBack={() => setCurrentView('internships')}
-            onApplyClick={handleApplyClick}
-            onShareClick={() => showToast('Internship link copied to clipboard!')}
-            onOpenTasksModal={handleOpenTasksModal}
-          />
-        )}
+          {currentView === 'detail' && (
+            <PageTransition keyId="detail">
+              <InternshipDetailPage 
+                internship={selectedInternship}
+                onBack={() => setCurrentView('internships')}
+                onApplyClick={handleApplyClick}
+                onShareClick={() => showToast('Internship link copied to clipboard!')}
+                onOpenTasksModal={handleOpenTasksModal}
+              />
+            </PageTransition>
+          )}
 
-        {currentView === 'verify' && (
-          <VerifyCertificatePage />
-        )}
+          {currentView === 'verify' && (
+            <PageTransition keyId="verify">
+              <VerifyCertificatePage />
+            </PageTransition>
+          )}
 
-        {currentView === 'offer-letter' && (
-          <OfferLetterPage user={user} />
-        )}
+          {currentView === 'offer-letter' && (
+            <PageTransition keyId="offer-letter">
+              <OfferLetterPage user={user} />
+            </PageTransition>
+          )}
 
-        {currentView === 'my-certificates' && (
-          <MyCertificatesPage 
-            user={user} 
-            onExploreClick={() => setCurrentView('internships')}
-            onSubmitTasksClick={() => setTaskSubmissionModalOpen(true)}
-          />
-        )}
+          {currentView === 'my-certificates' && (
+            <PageTransition keyId="my-certificates">
+              <MyCertificatesPage 
+                user={user} 
+                onExploreClick={() => setCurrentView('internships')}
+                onSubmitTasksClick={() => setTaskSubmissionModalOpen(true)}
+              />
+            </PageTransition>
+          )}
 
-        {currentView === 'reviews' && (
-          <StudentReviewsPage user={user} setCurrentView={setCurrentView} />
-        )}
+          {currentView === 'reviews' && (
+            <PageTransition keyId="reviews">
+              <StudentReviewsPage user={user} setCurrentView={setCurrentView} />
+            </PageTransition>
+          )}
 
-        {currentView === 'contact' && (
-          <ContactUsPage user={user} setCurrentView={setCurrentView} />
-        )}
+          {currentView === 'contact' && (
+            <PageTransition keyId="contact">
+              <ContactUsPage user={user} setCurrentView={setCurrentView} />
+            </PageTransition>
+          )}
 
-        {currentView === 'terms' && (
-          <TermsAndConditionsPage setCurrentView={setCurrentView} />
-        )}
+          {currentView === 'terms' && (
+            <PageTransition keyId="terms">
+              <TermsAndConditionsPage setCurrentView={setCurrentView} />
+            </PageTransition>
+          )}
 
-        {currentView === 'privacy' && (
-          <PrivacyPolicyPage setCurrentView={setCurrentView} />
-        )}
+          {currentView === 'privacy' && (
+            <PageTransition keyId="privacy">
+              <PrivacyPolicyPage setCurrentView={setCurrentView} />
+            </PageTransition>
+          )}
 
-        {currentView === 'cookies' && (
-          <CookiesPolicyPage setCurrentView={setCurrentView} />
-        )}
+          {currentView === 'cookies' && (
+            <PageTransition keyId="cookies">
+              <CookiesPolicyPage setCurrentView={setCurrentView} />
+            </PageTransition>
+          )}
 
-        {currentView === 'student-dashboard' && (
-          <StudentDashboard 
-            user={user}
-            onLogout={() => {
-              setUser(null);
-              setCurrentView('home');
-              showToast('Logged out successfully');
-            }}
-            setCurrentView={setCurrentView}
-          />
-        )}
+          {currentView === 'student-dashboard' && (
+            <PageTransition keyId="student-dashboard">
+              <StudentDashboard 
+                user={user}
+                onLogout={() => {
+                  setUser(null);
+                  setCurrentView('home');
+                  showToast('Logged out successfully');
+                }}
+                setCurrentView={setCurrentView}
+              />
+            </PageTransition>
+          )}
 
-        {currentView === 'admin-dashboard' && (
-          <AdminDashboard 
-            user={user}
-            setCurrentView={setCurrentView}
-            onLogout={async () => {
-              try { await authAPI.logout(); } catch (e) {}
-              setAuthToken(null);
-              setUser(null);
-              setCurrentView('home');
-              showToast('Logged out successfully');
-            }}
-          />
-        )}
+          {currentView === 'admin-dashboard' && (
+            <PageTransition keyId="admin-dashboard">
+              <AdminDashboard 
+                user={user}
+                setCurrentView={setCurrentView}
+                onLogout={async () => {
+                  try { await authAPI.logout(); } catch (e) {}
+                  setAuthToken(null);
+                  setUser(null);
+                  setCurrentView('home');
+                  showToast('Logged out successfully');
+                }}
+              />
+            </PageTransition>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Main Footer */}
@@ -432,15 +471,23 @@ export default function App() {
         onClose={() => setPolicyModal({ isOpen: false, type: 'terms' })}
       />
 
-      {/* Toast Notification */}
-      {toast && (
-        <div className="toast-container">
-          <div className="toast">
-            <CheckCircle2 size={20} color="#34d399" />
-            <span>{toast}</span>
-          </div>
-        </div>
-      )}
+      {/* Toast Notification with AnimatePresence */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div 
+            className="toast-container"
+            initial={{ opacity: 0, y: 15, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="toast">
+              <CheckCircle2 size={20} color="#34d399" />
+              <span>{toast}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

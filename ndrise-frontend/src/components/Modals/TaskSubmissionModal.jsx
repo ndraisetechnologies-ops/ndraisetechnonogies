@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X, Send, Github, Linkedin, CheckCircle2, AlertCircle, Link as LinkIcon } from 'lucide-react';
+import { X, Send, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { submissionAPI } from '../../services/apiClient';
 import './Modals.css';
 
@@ -16,6 +17,7 @@ export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, us
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (defaultDomain || user) {
@@ -28,8 +30,6 @@ export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, us
       }));
     }
   }, [defaultDomain, user]);
-
-  if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,123 +61,155 @@ export default function TaskSubmissionModal({ isOpen, onClose, defaultDomain, us
   };
 
   return (
-    <div className="modal-overlay animate-fade-in" onClick={onClose}>
-      <div className="modal-content glass-panel" style={{ maxWidth: '620px' }} onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-btn" onClick={onClose}>
-          <X size={20} />
-        </button>
-
-        {submitted ? (
-          <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
-            <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-              <CheckCircle2 size={36} />
-            </div>
-            <h3 style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '0.75rem' }}>
-              Task Submitted Successfully!
-            </h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginBottom: '1.5rem', lineHeight: '1.6' }}>
-              Your project submission for <strong>{formData.projectTitle}</strong> has been stored live in <strong>Neon Cloud PostgreSQL</strong> with status <span style={{ color: '#fbbf24', fontWeight: '700' }}>PENDING</span>. An admin will review it shortly.
-            </p>
-
-            <button className="btn-primary" style={{ margin: '0 auto' }} onClick={handleReset}>
-              Done & Return to Dashboard
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          className="modal-overlay" 
+          onClick={handleReset}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          <motion.div 
+            className="modal-content" 
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '520px' }}
+            initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 10 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <button className="modal-close" onClick={handleReset}>
+              <X size={18} />
             </button>
-          </div>
-        ) : (
-          <>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#34d399', fontSize: '0.78rem', fontWeight: '700', background: 'rgba(52, 211, 153, 0.1)', padding: '0.3rem 0.8rem', borderRadius: '20px', marginBottom: '0.75rem' }}>
-              <Send size={14} />
-              <span>PROJECT TASK SUBMISSION PORTAL</span>
+
+            <div className="modal-header">
+              <div className="badge badge-purple" style={{ marginBottom: '0.5rem' }}>
+                SUBMIT ASSIGNED TASK
+              </div>
+              <h3 className="modal-title">Project Submission Portal</h3>
+              <p className="modal-subtitle">
+                Submit your GitHub repository or video demo link for verification
+              </p>
             </div>
-
-            <h2 className="modal-title" style={{ fontSize: '1.5rem', marginBottom: '0.35rem' }}>
-              Submit Task: <span style={{ color: 'var(--primary, #2563eb)' }}>{formData.projectTitle}</span>
-            </h2>
-
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', marginBottom: '1.25rem' }}>
-              Provide your project repository or hosted application link for review.
-            </p>
 
             {errorMsg && (
-              <div style={{
-                background: 'rgba(239, 68, 68, 0.15)',
-                border: '1px solid rgba(239, 68, 68, 0.4)',
-                color: '#f87171',
-                padding: '0.75rem 1rem',
-                borderRadius: '8px',
-                marginBottom: '1rem',
-                fontSize: '0.85rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem'
-              }}>
+              <motion.div 
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  background: 'rgba(239, 68, 68, 0.15)',
+                  border: '1px solid rgba(239, 68, 68, 0.4)',
+                  color: '#f87171',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '8px',
+                  marginBottom: '1rem',
+                  fontSize: '0.85rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}
+              >
                 <AlertCircle size={16} />
                 <span>{errorMsg}</span>
-              </div>
+              </motion.div>
             )}
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div>
-                  <label className="form-label">Project Title *</label>
-                  <input 
-                    type="text" 
-                    required 
+            {submitted ? (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                style={{ textAlign: 'center', padding: '1.5rem 0' }}
+              >
+                <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎉</div>
+                <h4 style={{ color: 'var(--text-main)', fontSize: '1.2rem', marginBottom: '0.5rem' }}>Submission Received!</h4>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                  Your project link has been saved directly to Neon Cloud PostgreSQL database. Our team will review your work shortly.
+                </p>
+                <motion.button 
+                  className="btn-primary" 
+                  onClick={handleReset}
+                  whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+                >
+                  Done
+                </motion.button>
+              </motion.div>
+            ) : (
+              <form className="modal-form" onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label className="form-label">Full Name</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Project Title</label>
+                  <input
+                    type="text"
                     className="form-input"
                     value={formData.projectTitle}
                     onChange={(e) => setFormData({ ...formData, projectTitle: e.target.value })}
+                    required
                   />
                 </div>
-                <div>
-                  <label className="form-label">Track / Domain *</label>
-                  <input 
-                    type="text" 
-                    required
+
+                <div className="form-group">
+                  <label className="form-label">Domain Track</label>
+                  <input
+                    type="text"
                     className="form-input"
                     value={formData.domain}
                     onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
+                    required
                   />
                 </div>
-              </div>
 
-              <div>
-                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <LinkIcon size={15} color="#38bdf8" />
-                  <span>Project Repository / Demo Link (GitHub, Vercel, Netlify) *</span>
-                </label>
-                <input 
-                  type="url" 
-                  required 
-                  className="form-input" 
-                  placeholder="https://github.com/username/project-repo or https://myproject.vercel.app"
-                  value={formData.fileUrl}
-                  onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
-                />
-              </div>
+                <div className="form-group">
+                  <label className="form-label">GitHub Repository / Submission URL</label>
+                  <input
+                    type="url"
+                    className="form-input"
+                    placeholder="https://github.com/username/project-repo"
+                    value={formData.fileUrl}
+                    onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
+                    required
+                  />
+                </div>
 
-              <div>
-                <label className="form-label">Submission Notes & Feature Highlights (Optional)</label>
-                <textarea 
-                  className="form-input" 
-                  rows={3} 
-                  placeholder="Briefly describe what you built, key features, or any instructions for the reviewer..."
-                  value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                ></textarea>
-              </div>
+                <div className="form-group">
+                  <label className="form-label">Notes / Instructions (Optional)</label>
+                  <textarea
+                    className="form-input"
+                    rows="3"
+                    placeholder="Provide any additional deployment or access notes..."
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    style={{ resize: 'vertical' }}
+                  />
+                </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
-                <button type="button" className="btn-secondary" onClick={onClose}>
-                  Cancel
-                </button>
-                <button type="submit" className="btn-primary" disabled={isSubmitting}>
-                  {isSubmitting ? 'Submitting to Neon DB...' : 'Submit Project 🚀'}
-                </button>
-              </div>
-            </form>
-          </>
-        )}
-      </div>
-    </div>
+                <motion.button 
+                  type="submit" 
+                  className="btn-primary form-submit-btn" 
+                  disabled={isSubmitting}
+                  whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                >
+                  <Send size={18} />
+                  <span>{isSubmitting ? 'Submitting to Database...' : 'Submit Task for Review'}</span>
+                </motion.button>
+              </form>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

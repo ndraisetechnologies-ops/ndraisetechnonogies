@@ -1,9 +1,10 @@
 import React from 'react';
-import { X, Shield, FileText, Cookie, Mail, CheckCircle2, Phone, MapPin } from 'lucide-react';
+import { X, Shield, FileText, Cookie, Mail, Phone, MapPin } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import './Modals.css';
 
 export default function PolicyModal({ isOpen, type, onClose }) {
-  if (!isOpen || !type) return null;
+  const shouldReduceMotion = useReducedMotion();
 
   const contentMap = {
     contact: {
@@ -64,50 +65,69 @@ export default function PolicyModal({ isOpen, type, onClose }) {
     cookies: {
       icon: Cookie,
       title: 'Cookies Policy',
-      subtitle: 'Information about cookie preferences and website sessions.',
+      subtitle: 'Information on how we use essential browser cookies to personalize your session.',
       body: (
         <div style={{ fontSize: '0.88rem', lineHeight: '1.7', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-          <p><strong>Essential Cookies:</strong> Used to maintain your theme preference (Light/Dark mode) and active login session.</p>
-          <p><strong>Performance Cookies:</strong> Analytics cookies help us improve task loading speeds and interactive certificate rendering.</p>
-          <p><strong>Managing Cookies:</strong> You can clear or disable cookies via your browser settings at any time without affecting certificate verification.</p>
+          <p><strong>Essential Cookies:</strong> ND Raise Technologies uses local storage and cookies to maintain your login session and dark/light theme preferences.</p>
+          <p><strong>Analytics:</strong> Anonymous usage metrics are analyzed to enhance dashboard load speeds and certificate verification response times.</p>
         </div>
       )
     }
   };
 
-  const item = contentMap[type] || contentMap.terms;
-  const IconComponent = item.icon;
+  const currentPolicy = contentMap[type] || contentMap.terms;
+  const Icon = currentPolicy.icon;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content glass-panel animate-fade-in" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '580px' }}>
-        <button className="modal-close" onClick={onClose}>
-          <X size={18} />
-        </button>
+    <AnimatePresence>
+      {isOpen && type && (
+        <motion.div 
+          className="modal-overlay" 
+          onClick={onClose}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          <motion.div 
+            className="modal-content modal-large glass-panel" 
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '640px' }}
+            initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 10 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <button className="modal-close" onClick={onClose}>
+              <X size={18} />
+            </button>
 
-        <div className="modal-header" style={{ marginBottom: '1.25rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#2563eb', marginBottom: '0.5rem' }}>
-            <IconComponent size={24} />
-            <span style={{ fontWeight: '700', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>ND Raise Platform Policy</span>
-          </div>
-          <h2 className="modal-title" style={{ fontSize: '1.6rem', marginBottom: '0.35rem' }}>
-            {item.title}
-          </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
-            {item.subtitle}
-          </p>
-        </div>
+            <div className="modal-header">
+              <div className="badge badge-purple" style={{ marginBottom: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Icon size={14} />
+                <span>OFFICIAL PLATFORM POLICY</span>
+              </div>
+              <h3 className="modal-title">{currentPolicy.title}</h3>
+              <p className="modal-subtitle">{currentPolicy.subtitle}</p>
+            </div>
 
-        <div style={{ padding: '0.5rem 0 1.5rem' }}>
-          {item.body}
-        </div>
+            <div className="modal-policy-body" style={{ margin: '1.5rem 0' }}>
+              {currentPolicy.body}
+            </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '1rem', borderTop: '1px solid var(--border-glow)' }}>
-          <button className="btn-primary" onClick={onClose} style={{ padding: '0.55rem 1.5rem', fontSize: '0.88rem' }}>
-            Close Window
-          </button>
-        </div>
-      </div>
-    </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
+              <motion.button 
+                className="btn-primary" 
+                onClick={onClose}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+              >
+                Close
+              </motion.button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
