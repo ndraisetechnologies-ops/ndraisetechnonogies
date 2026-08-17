@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { FadeIn, AnimatedNumber } from '../../components/Motion/MotionUtils';
 import { 
   FileText, UploadCloud, CheckCircle2, AlertTriangle, ArrowRight, 
   RefreshCw, Download, Sparkles, Check, AlertCircle, File, X, ShieldAlert, Award, Layers 
@@ -127,20 +129,22 @@ export default function AtsScorePage({ setCurrentView, user, onRequireAuth }) {
       <div className="ats-container">
         
         {/* 1. Page Header */}
-        <div className="ats-header-hero">
-          <div className="ats-badge-tag">
-            <Sparkles size={14} className="sparkle-icon" />
-            <span>AI RESUME COMPATIBILITY ANALYZER</span>
+        <FadeIn direction="up">
+          <div className="ats-header-hero">
+            <div className="ats-badge-tag">
+              <Sparkles size={14} className="sparkle-icon" />
+              <span>AI RESUME COMPATIBILITY ANALYZER</span>
+            </div>
+
+            <h1 className="ats-main-title">
+              Check Your <span className="blue-highlight-text">ATS Score</span>
+            </h1>
+
+            <p className="ats-sub-title">
+              See how well your resume is optimized for applicant tracking systems and discover how you can improve it before applying.
+            </p>
           </div>
-
-          <h1 className="ats-main-title">
-            Check Your <span className="blue-highlight-text">ATS Score</span>
-          </h1>
-
-          <p className="ats-sub-title">
-            See how well your resume is optimized for applicant tracking systems and discover how you can improve it before applying.
-          </p>
-        </div>
+        </FadeIn>
 
         {/* 2. Main Work Area (Upload + Selection vs Results) */}
         {analysisState === 'idle' && (
@@ -268,185 +272,199 @@ export default function AtsScorePage({ setCurrentView, user, onRequireAuth }) {
           <div className="ats-results-wrapper animate-fade-in">
             
             {/* Top Score Overview Card */}
-            <div className="ats-card glass-panel score-overview-card">
-              <div className="score-header-bar">
-                <div>
-                  <span className="score-card-tag">YOUR NDRISE RESUME SCORE</span>
-                  <h2 className="score-file-name">{analysisResult.analyzedFile}</h2>
-                </div>
-                
-                <span className={`grade-badge grade-${analysisResult.grade.toLowerCase().replace(/\s+/g, '-')}`}>
-                  {analysisResult.grade}
-                </span>
-              </div>
-
-              <div className="score-display-body">
-                {/* SVG Gauge Meter */}
-                <div className="score-meter-container">
-                  <svg width="180" height="180" viewBox="0 0 180 180" className="score-svg">
-                    <circle 
-                      cx="90" 
-                      cy="90" 
-                      r="70" 
-                      stroke="rgba(255, 255, 255, 0.08)" 
-                      strokeWidth="12" 
-                      fill="none" 
-                    />
-                    <circle 
-                      cx="90" 
-                      cy="90" 
-                      r="70" 
-                      stroke={getScoreColor(analysisResult.score)} 
-                      strokeWidth="12" 
-                      fill="none" 
-                      strokeDasharray="440" 
-                      strokeDashoffset={440 - (440 * analysisResult.score) / 100}
-                      strokeLinecap="round"
-                      style={{ transition: 'stroke-dashoffset 1.5s ease' }}
-                    />
-                  </svg>
-
-                  <div className="score-center-text">
-                    <span className="score-number">{analysisResult.score}</span>
-                    <span className="score-total">/ 100</span>
+            <FadeIn direction="up">
+              <div className="ats-card glass-panel score-overview-card">
+                <div className="score-header-bar">
+                  <div>
+                    <span className="score-card-tag">YOUR NDRISE RESUME SCORE</span>
+                    <h2 className="score-file-name">{analysisResult.analyzedFile}</h2>
                   </div>
-                </div>
-
-                <div className="score-feedback-text">
-                  <p className="feedback-quote">"{analysisResult.feedback}"</p>
                   
-                  <div className="score-quick-stats">
-                    <div className="stat-pill">
-                      <span>Target:</span>
-                      <strong>{TARGET_INTERNSHIP_OPTIONS.find(t => t.id === targetInternship)?.label}</strong>
+                  <span className={`grade-badge grade-${analysisResult.grade.toLowerCase().replace(/\s+/g, '-')}`}>
+                    {analysisResult.grade}
+                  </span>
+                </div>
+
+                <div className="score-display-body">
+                  {/* SVG Gauge Meter */}
+                  <div className="score-meter-container">
+                    <svg width="180" height="180" viewBox="0 0 180 180" className="score-svg">
+                      <circle 
+                        cx="90" 
+                        cy="90" 
+                        r="70" 
+                        stroke="rgba(255, 255, 255, 0.08)" 
+                        strokeWidth="12" 
+                        fill="none" 
+                      />
+                      <circle 
+                        cx="90" 
+                        cy="90" 
+                        r="70" 
+                        stroke={getScoreColor(analysisResult.score)} 
+                        strokeWidth="12" 
+                        fill="none" 
+                        strokeDasharray="440" 
+                        strokeDashoffset={440 - (440 * analysisResult.score) / 100}
+                        strokeLinecap="round"
+                        style={{ transition: 'stroke-dashoffset 1.5s ease' }}
+                      />
+                    </svg>
+
+                    <div className="score-center-text">
+                      <span className="score-number">{analysisResult.score}</span>
+                      <span className="score-total">/ 100</span>
                     </div>
-                    <div className="stat-pill">
-                      <span>Evaluated:</span>
-                      <strong>{analysisResult.analyzedAt}</strong>
+                  </div>
+
+                  <div className="score-feedback-text">
+                    <p className="feedback-quote">"{analysisResult.feedback}"</p>
+                    
+                    <div className="score-quick-stats">
+                      <div className="stat-pill">
+                        <span>Target:</span>
+                        <strong>{TARGET_INTERNSHIP_OPTIONS.find(t => t.id === targetInternship)?.label}</strong>
+                      </div>
+                      <div className="stat-pill">
+                        <span>Evaluated:</span>
+                        <strong>{analysisResult.analyzedAt}</strong>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </FadeIn>
 
             {/* Score Breakdown Section */}
-            <div className="ats-card glass-panel breakdown-card">
-              <h3 className="card-section-title">Resume Analysis Breakdown</h3>
-              
-              <div className="breakdown-grid">
-                {analysisResult.breakdown.map((item, idx) => (
-                  <div key={idx} className="breakdown-item">
-                    <div className="breakdown-label-row">
-                      <span className="breakdown-name">{item.category}</span>
-                      <span className="breakdown-val">{item.score}%</span>
+            <FadeIn direction="up" delay={0.1}>
+              <div className="ats-card glass-panel breakdown-card">
+                <h3 className="card-section-title">Resume Analysis Breakdown</h3>
+                
+                <div className="breakdown-grid">
+                  {analysisResult.breakdown.map((item, idx) => (
+                    <div key={idx} className="breakdown-item">
+                      <div className="breakdown-label-row">
+                        <span className="breakdown-name">{item.category}</span>
+                        <span className="breakdown-val">{item.score}%</span>
+                      </div>
+                      <div className="breakdown-progress-track">
+                        <div 
+                          className="breakdown-progress-fill"
+                          style={{ 
+                            width: `${item.score}%`,
+                            background: item.score >= 85 ? 'linear-gradient(90deg, #34d399, #10b981)' : item.score >= 70 ? 'linear-gradient(90deg, #38bdf8, #818cf8)' : 'linear-gradient(90deg, #fbbf24, #f59e0b)'
+                          }}
+                        ></div>
+                      </div>
                     </div>
-                    <div className="breakdown-progress-track">
-                      <div 
-                        className="breakdown-progress-fill"
-                        style={{ 
-                          width: `${item.score}%`,
-                          background: item.score >= 85 ? 'linear-gradient(90deg, #34d399, #10b981)' : item.score >= 70 ? 'linear-gradient(90deg, #38bdf8, #818cf8)' : 'linear-gradient(90deg, #fbbf24, #f59e0b)'
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            </FadeIn>
 
             {/* Keyword Analysis Section */}
-            <div className="ats-card glass-panel keywords-card">
-              <h3 className="card-section-title">Keyword Analysis</h3>
-              
-              <div className="keywords-grid">
-                {/* Matched Keywords Box */}
-                <div className="keyword-box matched-box">
-                  <div className="box-title-row">
-                    <CheckCircle2 size={18} color="#34d399" />
-                    <h4>Matched Keywords ({analysisResult.matchedKeywords.length})</h4>
+            <FadeIn direction="up" delay={0.15}>
+              <div className="ats-card glass-panel keywords-card">
+                <h3 className="card-section-title">Keyword Analysis</h3>
+                
+                <div className="keywords-grid">
+                  {/* Matched Keywords Box */}
+                  <div className="keyword-box matched-box">
+                    <div className="box-title-row">
+                      <CheckCircle2 size={18} color="#34d399" />
+                      <h4>Matched Keywords ({analysisResult.matchedKeywords.length})</h4>
+                    </div>
+                    <div className="tags-flex">
+                      {analysisResult.matchedKeywords.map((kw, i) => (
+                        <span key={i} className="kw-chip chip-matched">
+                          ✓ {kw}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <div className="tags-flex">
-                    {analysisResult.matchedKeywords.map((kw, i) => (
-                      <span key={i} className="kw-chip chip-matched">
-                        ✓ {kw}
-                      </span>
-                    ))}
+
+                  {/* Missing Keywords Box */}
+                  <div className="keyword-box missing-box">
+                    <div className="box-title-row">
+                      <AlertTriangle size={18} color="#fbbf24" />
+                      <h4>Missing Keywords ({analysisResult.missingKeywords.length})</h4>
+                    </div>
+                    <div className="tags-flex">
+                      {analysisResult.missingKeywords.map((kw, i) => (
+                        <span key={i} className="kw-chip chip-missing">
+                          ⚠ {kw}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
-                {/* Missing Keywords Box */}
-                <div className="keyword-box missing-box">
-                  <div className="box-title-row">
-                    <AlertTriangle size={18} color="#fbbf24" />
-                    <h4>Missing Keywords ({analysisResult.missingKeywords.length})</h4>
-                  </div>
-                  <div className="tags-flex">
-                    {analysisResult.missingKeywords.map((kw, i) => (
-                      <span key={i} className="kw-chip chip-missing">
-                        ⚠ {kw}
-                      </span>
-                    ))}
-                  </div>
+                <div className="keyword-guidance-note">
+                  <InfoIcon size={16} />
+                  <span>Only add keywords that genuinely reflect your skills and real project experience.</span>
                 </div>
               </div>
-
-              <div className="keyword-guidance-note">
-                <InfoIcon size={16} />
-                <span>Only add keywords that genuinely reflect your skills and real project experience.</span>
-              </div>
-            </div>
+            </FadeIn>
 
             {/* How You Can Improve Section */}
-            <div className="ats-card glass-panel suggestions-card" id="suggestions-section">
-              <h3 className="card-section-title">How You Can Improve</h3>
-              
-              <div className="suggestions-list">
-                {analysisResult.suggestions.map((sug) => (
-                  <div key={sug.id} className="suggestion-item">
-                    <div className="sug-header-row">
-                      <span className={`priority-badge priority-${sug.priority.toLowerCase()}`}>
-                        {sug.priority} Priority
-                      </span>
-                      <h4 className="sug-title">{sug.title}</h4>
+            <FadeIn direction="up" delay={0.2}>
+              <div className="ats-card glass-panel suggestions-card" id="suggestions-section">
+                <h3 className="card-section-title">How You Can Improve</h3>
+                
+                <div className="suggestions-list">
+                  {analysisResult.suggestions.map((sug) => (
+                    <div key={sug.id} className="suggestion-item">
+                      <div className="sug-header-row">
+                        <span className={`priority-badge priority-${sug.priority.toLowerCase()}`}>
+                          {sug.priority} Priority
+                        </span>
+                        <h4 className="sug-title">{sug.title}</h4>
+                      </div>
+                      <p className="sug-desc">{sug.description}</p>
                     </div>
-                    <p className="sug-desc">{sug.description}</p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            </FadeIn>
 
             {/* Action Buttons Row */}
-            <div className="ats-actions-bar">
-              <button 
-                type="button" 
-                className="btn-primary"
-                onClick={() => {
-                  const el = document.getElementById('suggestions-section');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                <span>Improve My Resume</span>
-              </button>
+            <FadeIn direction="up" delay={0.25}>
+              <div className="ats-actions-bar">
+                <motion.button 
+                  type="button" 
+                  className="btn-primary"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => {
+                    const el = document.getElementById('suggestions-section');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  <span>Improve My Resume</span>
+                </motion.button>
 
-              <button 
-                type="button" 
-                className="btn-secondary"
-                onClick={handleResetAnalysis}
-              >
-                <RefreshCw size={16} />
-                <span>Analyze Another Resume</span>
-              </button>
+                <motion.button 
+                  type="button" 
+                  className="btn-secondary"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleResetAnalysis}
+                >
+                  <RefreshCw size={16} />
+                  <span>Analyze Another Resume</span>
+                </motion.button>
 
-              <button 
-                type="button" 
-                className="btn-outline btn-disabled"
-                disabled
-                title="Download report feature coming soon"
-              >
-                <Download size={16} />
-                <span>Download Report (Coming Soon)</span>
-              </button>
-            </div>
+                <button 
+                  type="button" 
+                  className="btn-outline btn-disabled"
+                  disabled
+                  title="Download report feature coming soon"
+                >
+                  <Download size={16} />
+                  <span>Download Report (Coming Soon)</span>
+                </button>
+              </div>
+            </FadeIn>
 
             {/* Official NDRise Disclaimer */}
             <div className="ats-disclaimer-box">

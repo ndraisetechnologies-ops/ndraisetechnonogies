@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { FadeIn, StaggerContainer, StaggerItem } from '../../components/Motion/MotionUtils';
 import { 
   Mail, Briefcase, Building, UserCheck, Clock, Heart, Users, Share2, 
   Sparkles, CheckCircle2, AlertCircle, Copy, RefreshCw, Edit3, Trash2, 
@@ -134,21 +136,23 @@ export default function JobEmailBuilderPage({ user, setCurrentView, onRequireAut
       <div className="email-builder-container">
         
         {/* 1. Page Header */}
-        <div className="email-hero">
-          <div className="hero-badge">
-            <Sparkles size={14} className="sparkle-icon" />
-            <span>SMART CAREER COMMUNICATIONS</span>
+        <FadeIn direction="up">
+          <div className="email-hero">
+            <div className="hero-badge">
+              <Sparkles size={14} className="sparkle-icon" />
+              <span>SMART CAREER COMMUNICATIONS</span>
+            </div>
+            <h1 className="hero-title">
+              Job Email <span className="blue-highlight-text">Builder</span>
+            </h1>
+            <p className="hero-subtitle">
+              Create professional job and internship emails in minutes.
+            </p>
+            <p className="hero-explanation">
+              Choose your purpose, provide a few details, and build a clear, professional email you can personalize before sending.
+            </p>
           </div>
-          <h1 className="hero-title">
-            Job Email <span className="blue-highlight-text">Builder</span>
-          </h1>
-          <p className="hero-subtitle">
-            Create professional job and internship emails in minutes.
-          </p>
-          <p className="hero-explanation">
-            Choose your purpose, provide a few details, and build a clear, professional email you can personalize before sending.
-          </p>
-        </div>
+        </FadeIn>
 
         {/* Toast Notification Banner */}
         {copiedToast && (
@@ -159,34 +163,39 @@ export default function JobEmailBuilderPage({ user, setCurrentView, onRequireAut
         )}
 
         {/* 2. Email Type Selector */}
-        <div className="section-card glass-panel type-selector-card">
-          <h3 className="section-heading">What type of email do you want to write?</h3>
-          <div className="type-cards-grid">
-            {EMAIL_TYPES.map((typeObj) => {
-              const isSelected = selectedType === typeObj.id;
-              return (
-                <div 
-                  key={typeObj.id}
-                  className={`type-card ${isSelected ? 'selected' : ''}`}
-                  onClick={() => setSelectedType(typeObj.id)}
-                >
-                  <div className="type-card-icon">
-                    {getIcon(typeObj.iconName)}
-                  </div>
-                  <div className="type-card-content">
-                    <h4 className="type-card-title">{typeObj.title}</h4>
-                    <p className="type-card-desc">{typeObj.description}</p>
-                  </div>
-                  {isSelected && (
-                    <div className="type-card-check">
-                      <Check size={14} />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+        <FadeIn direction="up" delay={0.1}>
+          <div className="section-card glass-panel type-selector-card">
+            <h3 className="section-heading">What type of email do you want to write?</h3>
+            <StaggerContainer className="type-cards-grid" staggerChildren={0.06}>
+              {EMAIL_TYPES.map((typeObj) => {
+                const isSelected = selectedType === typeObj.id;
+                return (
+                  <StaggerItem key={typeObj.id}>
+                    <motion.div 
+                      className={`type-card ${isSelected ? 'selected' : ''}`}
+                      onClick={() => setSelectedType(typeObj.id)}
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="type-card-icon">
+                        {getIcon(typeObj.iconName)}
+                      </div>
+                      <div className="type-card-content">
+                        <h4 className="type-card-title">{typeObj.title}</h4>
+                        <p className="type-card-desc">{typeObj.description}</p>
+                      </div>
+                      {isSelected && (
+                        <div className="type-card-check">
+                          <Check size={14} />
+                        </div>
+                      )}
+                    </motion.div>
+                  </StaggerItem>
+                );
+              })}
+            </StaggerContainer>
           </div>
-        </div>
+        </FadeIn>
 
         {/* 3. Main Two-Column Layout (Form vs Preview) */}
         <div className="builder-layout-grid">

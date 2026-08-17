@@ -1,10 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, Play, BookOpen, Code2, TrendingUp, Sparkles, Award, CheckCircle2 } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import './Hero.css';
 
 export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick }) {
   const shouldReduceMotion = useReducedMotion();
+
+  const phrases = [
+    { text: 'Build Skills.', className: 'title-line-1' },
+    { text: 'Build Projects.', className: 'title-line-2' },
+    { text: 'Build Your Future.', className: 'title-line-3' }
+  ];
+
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+
+    const currentPhrase = phrases[phraseIndex].text;
+
+    let timerDelay = 60; // Typing speed: 60ms
+
+    if (isDeleting) {
+      timerDelay = 40; // Deleting speed: 40ms
+    }
+
+    if (!isDeleting && displayText === currentPhrase) {
+      timerDelay = 1000; // Pause after typing: 1000ms
+    } else if (isDeleting && displayText === '') {
+      timerDelay = 300; // Pause between phrases: 300ms
+    }
+
+    const timer = setTimeout(() => {
+      if (!isDeleting && displayText === currentPhrase) {
+        setIsDeleting(true);
+      } else if (isDeleting && displayText === '') {
+        setIsDeleting(false);
+        setPhraseIndex((prev) => (prev + 1) % phrases.length);
+      } else if (isDeleting) {
+        setDisplayText(currentPhrase.slice(0, displayText.length - 1));
+      } else {
+        setDisplayText(currentPhrase.slice(0, displayText.length + 1));
+      }
+    }, timerDelay);
+
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, phraseIndex, shouldReduceMotion]);
 
   const scrollToHowItWorks = () => {
     const el = document.getElementById('how-it-works');
@@ -71,11 +114,20 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
           <span>LEARN • BUILD • GROW</span>
         </motion.div>
 
-        {/* 3-Line Headline Title */}
-        <motion.h1 variants={itemVariants} className="hero-title">
-          <span className="title-line title-line-1">Build Skills.</span>{' '}
-          <span className="title-line title-line-2">Build Projects.</span>{' '}
-          <span className="title-line title-line-3">Build Your Future.</span>
+        {/* Headline Title with Continuous Looping Typewriter */}
+        <motion.h1 variants={itemVariants} className="hero-title hero-title-animated">
+          {shouldReduceMotion ? (
+            <>
+              <span className="title-line title-line-1">Build Skills.</span>
+              <span className="title-line title-line-2">Build Projects.</span>
+              <span className="title-line title-line-3">Build Your Future.</span>
+            </>
+          ) : (
+            <span className={`title-line ${phrases[phraseIndex].className}`}>
+              {displayText || '\u00A0'}
+              <span className="typewriter-cursor" aria-hidden="true" />
+            </span>
+          )}
         </motion.h1>
 
         {/* Subdescription */}

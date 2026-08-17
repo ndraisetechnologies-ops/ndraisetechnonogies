@@ -57,10 +57,7 @@ export default function Navbar({
     {
       id: 'skill-courses',
       label: 'Skill Courses',
-      hasDropdown: true,
-      options: [
-        { label: '📚 Browse Courses', actionType: 'browse-courses' },
-      ]
+      hasDropdown: false
     },
     {
       id: 'career-tools',
@@ -142,7 +139,25 @@ export default function Navbar({
     setMobileOpen(false);
   };
 
-  const dropdownVariants = {
+  const navDropdownVariants = {
+    hidden: { opacity: 0, x: '-50%', y: shouldReduceMotion ? 0 : -8, scale: 0.97 },
+    visible: { 
+      opacity: 1, 
+      x: '-50%',
+      y: 0, 
+      scale: 1,
+      transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] } 
+    },
+    exit: { 
+      opacity: 0, 
+      x: '-50%',
+      y: shouldReduceMotion ? 0 : -6, 
+      scale: 0.97,
+      transition: { duration: 0.15, ease: 'easeIn' } 
+    }
+  };
+
+  const userDropdownVariants = {
     hidden: { opacity: 0, y: shouldReduceMotion ? 0 : -8, scale: 0.97 },
     visible: { 
       opacity: 1, 
@@ -178,7 +193,7 @@ export default function Navbar({
           <div className="brand-title logo-title">
             ND <span>Raise</span><span className="brand-tech-word"> Technologies</span>
           </div>
-          <div className="brand-tagline logo-subtitle">ISO 9001:2015 CERTIFIED PLATFORM</div>
+          <div className="brand-tagline logo-subtitle">LEARN • BUILD • GROW</div>
         </div>
       </div>
 
@@ -186,7 +201,7 @@ export default function Navbar({
       <nav ref={navMenuRef} className={`nav-pill-wrapper nav-menu ${mobileOpen ? 'mobile-open open' : ''}`}>
         <ul className="nav-pill-list nav-list">
           {menuItems.map((item) => {
-            const isActive = currentView === item.id;
+            const isActive = currentView === item.id || (item.id === 'skill-courses' && currentView === 'browse-courses');
             return (
               <li
                 key={item.id}
@@ -236,7 +251,7 @@ export default function Navbar({
                       initial="hidden"
                       animate="visible"
                       exit="exit"
-                      variants={dropdownVariants}
+                      variants={navDropdownVariants}
                       className="nav-dropdown-menu dropdown-menu open"
                     >
                       {item.options.map((opt, idx) => (
@@ -301,7 +316,7 @@ export default function Navbar({
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  variants={dropdownVariants}
+                  variants={userDropdownVariants}
                   className="user-profile-dropdown"
                   style={{ display: 'block' }}
                 >
