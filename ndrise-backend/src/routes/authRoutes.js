@@ -17,24 +17,61 @@ const setAuthCookie = (res, token) => {
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   });
 };
-// Auto-seed default Admin account into Neon PostgreSQL if no admin exists
-(async function seedDefaultAdmin() {
+// Auto-seed default Admin & Super Admin accounts into Neon PostgreSQL
+(async function seedDefaultAdmins() {
   try {
-    const adminExists = await prisma.user.findFirst({
-      where: { role: 'ADMIN' }
-    });
-    if (!adminExists) {
-      const hashedPassword = await bcrypt.hash('Admin123!', 10);
-      await prisma.user.create({
-        data: {
-          name: 'NDRise Admin',
-          email: 'admin@ndtech.com',
-          password: hashedPassword,
-          role: 'ADMIN',
-          avatar: '/admin-avatar.svg'
-        }
+    const defaultAccounts = [
+      {
+        name: 'NDRise Admin',
+        email: 'admin@ndtech.com',
+        password: 'Admin123!',
+        role: 'ADMIN',
+        avatar: '/admin-avatar.svg'
+      },
+      {
+        name: 'NDRaise Admin',
+        email: 'admin@ndraise.com',
+        password: 'admin123',
+        role: 'ADMIN',
+        avatar: '/admin-avatar.svg'
+      },
+      {
+        name: 'NDRaise Super Admin',
+        email: 'superadmin@ndraise.com',
+        password: 'superadmin123',
+        role: 'SUPER_ADMIN',
+        avatar: '/admin-avatar.svg'
+      }
+    ];
+
+    for (const acc of defaultAccounts) {
+      const existing = await prisma.user.findUnique({
+        where: { email: acc.email }
       });
-      console.log('✅ Created default Admin account in Neon PostgreSQL: admin@ndtech.com / Admin123!');
+
+      const hashedPassword = await bcrypt.hash(acc.password, 10);
+
+      if (!existing) {
+        await prisma.user.create({
+          data: {
+            name: acc.name,
+            email: acc.email,
+            password: hashedPassword,
+            role: acc.role,
+            avatar: acc.avatar
+          }
+        });
+        console.log(`✅ Created default account in Neon PostgreSQL: ${acc.email} / ${acc.password} (${acc.role})`);
+      } else {
+        await prisma.user.update({
+          where: { email: acc.email },
+          data: {
+            password: hashedPassword,
+            role: acc.role
+          }
+        });
+        console.log(`✅ Updated account in Neon PostgreSQL: ${acc.email} / ${acc.password} (${acc.role})`);
+      }
     }
   } catch (err) {
     console.error('Admin auto-seed error:', err);
