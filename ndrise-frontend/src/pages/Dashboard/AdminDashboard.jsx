@@ -290,7 +290,7 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
               Exit to Website
             </button>
           </div>
-        </FadeIn>
+        </div>
 
         {message && (
           <motion.div 
