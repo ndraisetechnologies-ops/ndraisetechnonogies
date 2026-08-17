@@ -360,7 +360,7 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
                   <div className="admin-card-label">Certificates Issued</div>
                 </div>
               </div>
-            </div>
+            </StaggerContainer>
 
             {/* Quick Live Submissions Table in Dashboard */}
             <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)', marginBottom: '1.75rem' }}>
