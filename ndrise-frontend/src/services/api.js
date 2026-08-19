@@ -60,7 +60,8 @@ export const authApi = {
 
 export const adminApi = {
   getDashboard: () => request('/admin/dashboard'),
-  getStudents: (search = '') => request(`/admin/students?search=${encodeURIComponent(search)}`),
+  getStudents: (search = '', startDate = '', endDate = '') => 
+    request(`/admin/students?search=${encodeURIComponent(search)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
   deleteStudent: (id) => request(`/admin/students/${id}`, { method: 'DELETE' }),
   getInternships: () => request('/admin/internships'),
   createInternship: (data) => request('/admin/internships', { method: 'POST', body: JSON.stringify(data) }),

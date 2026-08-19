@@ -44,11 +44,11 @@ export default function AnimatedCharacters({ focusedField, textLength = 0, showP
   // In password mode (or when tapping show/hide button), eyes ALWAYS look to the far left (opposite side of password field on right!)
   const pupilX = isPassword
     ? -8
-    : (!isPassword 
-        ? mousePos.x * 6 + (isEmail ? Math.min(Math.max((textLength - 8) * 0.6, -2), 6) : 0)
-        : 0);
-  
-  const pupilY = !isPassword 
+    : (!isPassword
+      ? mousePos.x * 6 + (isEmail ? Math.min(Math.max((textLength - 8) * 0.6, -2), 6) : 0)
+      : 0);
+
+  const pupilY = !isPassword
     ? mousePos.y * 5 + (isEmail ? 2 : 0)
     : 0;
 
@@ -57,19 +57,19 @@ export default function AnimatedCharacters({ focusedField, textLength = 0, showP
   const stageRotateY = !isPassword ? mousePos.x * 10 : -20;
 
   return (
-    <div 
+    <div
       ref={stageRef}
       className={`characters-stage ${isPassword ? 'mode-look-away' : ''} ${isEmail ? 'mode-watching' : ''}`}
     >
       <div className="stage-bg-glow"></div>
-      
-      <div 
+
+      <div
         className="characters-group"
         style={{
           transform: `perspective(1000px) rotateX(${stageRotateX}deg) rotateY(${stageRotateY}deg)`
         }}
       >
-        
+
         {/* 1. ORANGE BLOB (Bottom Left) */}
         <div className={`character char-orange ${isPassword ? 'turned-away' : ''}`}>
           <div className="char-body orange-body">
@@ -112,14 +112,14 @@ export default function AnimatedCharacters({ focusedField, textLength = 0, showP
             <div className="char-face">
               <div className={`eyes-container ${isBlinking ? 'blinking' : ''}`}>
                 <div className="eye eye-square">
-                  <div 
-                    className="pupil" 
+                  <div
+                    className="pupil"
                     style={{ transform: `translate(${pupilX * 1.2}px, ${pupilY}px)` }}
                   ></div>
                 </div>
                 <div className="eye eye-square">
-                  <div 
-                    className="pupil" 
+                  <div
+                    className="pupil"
                     style={{ transform: `translate(${pupilX * 1.2}px, ${pupilY}px)` }}
                   ></div>
                 </div>
@@ -133,7 +133,7 @@ export default function AnimatedCharacters({ focusedField, textLength = 0, showP
         <div className={`character char-yellow ${isPassword ? 'turned-away' : ''}`}>
           <div className="char-body yellow-body">
             <div className="char-face">
-              <div 
+              <div
                 className="side-eye-line"
                 style={{
                   transform: `translate(${pupilX * 0.5}px, ${pupilY * 0.5}px)`

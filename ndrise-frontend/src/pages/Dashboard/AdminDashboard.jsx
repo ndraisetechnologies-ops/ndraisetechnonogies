@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Users, Briefcase, GraduationCap, Award, DollarSign, 
-  FileSpreadsheet, Settings, LogOut, BarChart3, Layers, Menu, X, Shield, ShieldAlert, History, ExternalLink, Plus, Trash2
+  FileSpreadsheet, Settings, LogOut, BarChart3, Layers, Menu, X, Shield, ShieldAlert, History, ExternalLink, Plus, Trash2, UserPlus, UserCheck, Calendar, RotateCcw
 } from 'lucide-react';
 import { adminApi } from '../../services/api';
 import { submissionAPI, internshipAPI } from '../../services/apiClient';
 import './AdminDashboard.css';
+
+const getTodayStr = () => new Date().toISOString().split('T')[0];
+const getDaysAgoStr = (days) => {
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  return d.toISOString().split('T')[0];
+};
 
 export default function AdminDashboard({ user, setCurrentView, onLogout }) {
   const [activeMenu, setActiveMenu] = useState('dashboard');
@@ -18,6 +24,10 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
   });
 
   const [students, setStudents] = useState([]);
+  const [studentFilter, setStudentFilter] = useState('all'); // 'all', 'internship', 'just_registered'
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [datePreset, setDatePreset] = useState('all'); // 'all', 'today', '7days', '30days', 'custom'
   const [submissions, setSubmissions] = useState([]);
   const [internships, setInternships] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
@@ -88,7 +98,7 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
   useEffect(() => {
     if (activeMenu === 'students') {
       setLoading(true);
-      adminApi.getStudents(searchQuery).then((res) => {
+      adminApi.getStudents(searchQuery, startDate, endDate).then((res) => {
         if (res.success) setStudents(res.students || []);
         setLoading(false);
       }).catch(() => setLoading(false));
@@ -109,7 +119,7 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
         setLoading(false);
       }).catch(() => setLoading(false));
     }
-  }, [activeMenu, searchQuery, isSuperAdmin]);
+  }, [activeMenu, searchQuery, startDate, endDate, isSuperAdmin]);
 
   const handleUpdateStatus = async (submissionId, newStatus) => {
     try {
@@ -585,53 +595,395 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
         )}
 
         {/* TAB 4: STUDENTS MANAGEMENT */}
-        {activeMenu === 'students' && (
-          <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-              <input 
-                type="text" 
-                placeholder="Search students by name or email..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="admin-search-input"
-              />
+        {activeMenu === 'students' && (() => {
+          const displayedStudents = students.filter(student => {
+            const isInternship = student.registrationType === 'INTERNSHIP_REGISTERED' || (student.applications && student.applications.length > 0);
+
+            if (studentFilter === 'internship' && !isInternship) return false;
+            if (studentFilter === 'just_registered' && isInternship) return false;
+
+            // Client-side date filter safeguard
+            if (startDate || endDate) {
+              const studentTime = new Date(student.createdAt).getTime();
+              if (startDate) {
+                const startMs = new Date(startDate).setHours(0, 0, 0, 0);
+                if (studentTime < startMs) return false;
+              }
+              if (endDate) {
+                const endMs = new Date(endDate).setHours(23, 59, 59, 999);
+                if (studentTime > endMs) return false;
+              }
+            }
+
+            if (searchQuery) {
+              const q = searchQuery.toLowerCase();
+              const nameMatch = student.name?.toLowerCase().includes(q);
+              const emailMatch = student.email?.toLowerCase().includes(q);
+              const trackMatch = student.applications?.some(a => (a.trackTitle || a.internship?.title)?.toLowerCase().includes(q));
+              return nameMatch || emailMatch || trackMatch;
+            }
+
+            return true;
+          });
+
+          const totalCount = students.length;
+          const internshipCount = students.filter(s => s.registrationType === 'INTERNSHIP_REGISTERED' || (s.applications && s.applications.length > 0)).length;
+          const justRegisteredCount = totalCount - internshipCount;
+
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              {/* Student Counts Summary Cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+                <div className="glass-panel" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--bg-card)', borderRadius: '10px' }}>
+                  <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Users size={22} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-main)' }}>{totalCount}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Total Registered Students</div>
+                  </div>
+                </div>
+
+                <div className="glass-panel" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--bg-card)', borderRadius: '10px' }}>
+                  <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <GraduationCap size={22} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '1.4rem', fontWeight: '800', color: '#34d399' }}>{internshipCount}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Internship Registered</div>
+                  </div>
+                </div>
+
+                <div className="glass-panel" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--bg-card)', borderRadius: '10px' }}>
+                  <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(192, 132, 252, 0.15)', color: '#c084fc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <UserPlus size={22} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '1.4rem', fontWeight: '800', color: '#c084fc' }}>{justRegisteredCount}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Just Registered (No Track)</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)' }}>
+                
+                {/* Date Filter Bar */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '0.75rem',
+                  padding: '0.85rem 1rem',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid var(--border-light)',
+                  borderRadius: '8px',
+                  marginBottom: '1.25rem'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-main)', fontSize: '0.85rem', fontWeight: '700' }}>
+                      <Calendar size={16} style={{ color: 'var(--accent-cyan)' }} />
+                      <span>Date Filter:</span>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+                      <button
+                        onClick={() => { setStartDate(''); setEndDate(''); setDatePreset('all'); }}
+                        style={{
+                          padding: '0.3rem 0.65rem',
+                          borderRadius: '6px',
+                          fontSize: '0.78rem',
+                          fontWeight: '600',
+                          border: '1px solid',
+                          borderColor: datePreset === 'all' ? 'var(--accent-cyan)' : 'var(--border-light)',
+                          background: datePreset === 'all' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+                          color: datePreset === 'all' ? '#38bdf8' : 'var(--text-muted)',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        All Time
+                      </button>
+                      <button
+                        onClick={() => {
+                          const t = getTodayStr();
+                          setStartDate(t);
+                          setEndDate(t);
+                          setDatePreset('today');
+                        }}
+                        style={{
+                          padding: '0.3rem 0.65rem',
+                          borderRadius: '6px',
+                          fontSize: '0.78rem',
+                          fontWeight: '600',
+                          border: '1px solid',
+                          borderColor: datePreset === 'today' ? 'var(--accent-cyan)' : 'var(--border-light)',
+                          background: datePreset === 'today' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+                          color: datePreset === 'today' ? '#38bdf8' : 'var(--text-muted)',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Today
+                      </button>
+                      <button
+                        onClick={() => {
+                          setStartDate(getDaysAgoStr(7));
+                          setEndDate(getTodayStr());
+                          setDatePreset('7days');
+                        }}
+                        style={{
+                          padding: '0.3rem 0.65rem',
+                          borderRadius: '6px',
+                          fontSize: '0.78rem',
+                          fontWeight: '600',
+                          border: '1px solid',
+                          borderColor: datePreset === '7days' ? 'var(--accent-cyan)' : 'var(--border-light)',
+                          background: datePreset === '7days' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+                          color: datePreset === '7days' ? '#38bdf8' : 'var(--text-muted)',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Last 7 Days
+                      </button>
+                      <button
+                        onClick={() => {
+                          setStartDate(getDaysAgoStr(30));
+                          setEndDate(getTodayStr());
+                          setDatePreset('30days');
+                        }}
+                        style={{
+                          padding: '0.3rem 0.65rem',
+                          borderRadius: '6px',
+                          fontSize: '0.78rem',
+                          fontWeight: '600',
+                          border: '1px solid',
+                          borderColor: datePreset === '30days' ? 'var(--accent-cyan)' : 'var(--border-light)',
+                          background: datePreset === '30days' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+                          color: datePreset === '30days' ? '#38bdf8' : 'var(--text-muted)',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Last 30 Days
+                      </button>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                      <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: '600' }}>From:</label>
+                      <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => {
+                          setStartDate(e.target.value);
+                          setDatePreset('custom');
+                        }}
+                        style={{
+                          padding: '0.3rem 0.5rem',
+                          borderRadius: '6px',
+                          border: '1px solid var(--border-light)',
+                          background: 'rgba(0,0,0,0.3)',
+                          color: 'var(--text-main)',
+                          fontSize: '0.78rem',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                      <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: '600' }}>To:</label>
+                      <input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => {
+                          setEndDate(e.target.value);
+                          setDatePreset('custom');
+                        }}
+                        style={{
+                          padding: '0.3rem 0.5rem',
+                          borderRadius: '6px',
+                          border: '1px solid var(--border-light)',
+                          background: 'rgba(0,0,0,0.3)',
+                          color: 'var(--text-main)',
+                          fontSize: '0.78rem',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+
+                    {(startDate || endDate) && (
+                      <button
+                        onClick={() => { setStartDate(''); setEndDate(''); setDatePreset('all'); }}
+                        style={{
+                          background: 'rgba(239, 68, 68, 0.15)',
+                          color: '#f87171',
+                          border: '1px solid rgba(239, 68, 68, 0.3)',
+                          padding: '0.3rem 0.6rem',
+                          borderRadius: '6px',
+                          fontSize: '0.75rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.3rem'
+                        }}
+                      >
+                        <RotateCcw size={12} />
+                        <span>Reset</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+                {/* Filter Tabs & Search Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <button 
+                      onClick={() => setStudentFilter('all')}
+                      style={{
+                        padding: '0.45rem 0.9rem',
+                        borderRadius: '20px',
+                        fontSize: '0.82rem',
+                        fontWeight: '600',
+                        border: '1px solid',
+                        borderColor: studentFilter === 'all' ? 'var(--primary, #2563eb)' : 'var(--border-light)',
+                        background: studentFilter === 'all' ? 'rgba(37, 99, 235, 0.2)' : 'transparent',
+                        color: studentFilter === 'all' ? '#60a5fa' : 'var(--text-muted)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      All Students ({totalCount})
+                    </button>
+
+                    <button 
+                      onClick={() => setStudentFilter('internship')}
+                      style={{
+                        padding: '0.45rem 0.9rem',
+                        borderRadius: '20px',
+                        fontSize: '0.82rem',
+                        fontWeight: '600',
+                        border: '1px solid',
+                        borderColor: studentFilter === 'internship' ? '#34d399' : 'var(--border-light)',
+                        background: studentFilter === 'internship' ? 'rgba(52, 211, 153, 0.2)' : 'transparent',
+                        color: studentFilter === 'internship' ? '#34d399' : 'var(--text-muted)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      🎓 Internship Registered ({internshipCount})
+                    </button>
+
+                    <button 
+                      onClick={() => setStudentFilter('just_registered')}
+                      style={{
+                        padding: '0.45rem 0.9rem',
+                        borderRadius: '20px',
+                        fontSize: '0.82rem',
+                        fontWeight: '600',
+                        border: '1px solid',
+                        borderColor: studentFilter === 'just_registered' ? '#c084fc' : 'var(--border-light)',
+                        background: studentFilter === 'just_registered' ? 'rgba(192, 132, 252, 0.2)' : 'transparent',
+                        color: studentFilter === 'just_registered' ? '#c084fc' : 'var(--text-muted)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      👤 Just Registered ({justRegisteredCount})
+                    </button>
+                  </div>
+
+                  <input 
+                    type="text" 
+                    placeholder="Search by student name, email, or internship track..." 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="admin-search-input"
+                    style={{ minWidth: '260px' }}
+                  />
+                </div>
+
+                {loading ? <p style={{ color: 'var(--text-muted)' }}>Loading student records...</p> : (
+                  <div style={{ overflowX: 'auto' }}>
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Student Name & Email</th>
+                          <th>Registration Type</th>
+                          <th>Registered Internship Track(s)</th>
+                          <th>Joined Date</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {displayedStudents.map(student => {
+                          const hasInternship = student.registrationType === 'INTERNSHIP_REGISTERED' || (student.applications && student.applications.length > 0);
+                          const joinedDate = student.createdAt ? new Date(student.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Aug 18, 2026';
+
+                          return (
+                            <tr key={student.id}>
+                              <td style={{ fontWeight: '700', color: 'var(--text-muted)' }}>#{student.id.substring(0, 8)}</td>
+                              <td>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: '700', color: 'var(--accent-cyan)' }}>
+                                    {student.name ? student.name.charAt(0).toUpperCase() : 'S'}
+                                  </div>
+                                  <div>
+                                    <div style={{ fontWeight: '700', color: 'var(--text-main)' }}>{student.name}</div>
+                                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{student.email}</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                {hasInternship ? (
+                                  <span style={{ background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.3)', padding: '0.25rem 0.65rem', borderRadius: '12px', fontSize: '0.78rem', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                                    <GraduationCap size={13} />
+                                    <span>Internship Registered</span>
+                                  </span>
+                                ) : (
+                                  <span style={{ background: 'rgba(192, 132, 252, 0.15)', color: '#c084fc', border: '1px solid rgba(192, 132, 252, 0.3)', padding: '0.25rem 0.65rem', borderRadius: '12px', fontSize: '0.78rem', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                                    <UserPlus size={13} />
+                                    <span>Just Registered</span>
+                                  </span>
+                                )}
+                              </td>
+                              <td>
+                                {hasInternship && student.applications && student.applications.length > 0 ? (
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                                    {student.applications.map((app, idx) => (
+                                      <div key={idx} style={{ fontSize: '0.82rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                        <span style={{ fontWeight: '600', color: '#38bdf8' }}>{app.trackTitle || app.internship?.title || 'Virtual Track'}</span>
+                                        <span style={{ background: 'rgba(255,255,255,0.08)', color: 'var(--text-muted)', padding: '0.1rem 0.4rem', borderRadius: '4px', fontSize: '0.72rem' }}>
+                                          {app.status || 'APPLIED'}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                                    No internship applied yet
+                                  </span>
+                                )}
+                              </td>
+                              <td style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{joinedDate}</td>
+                              <td>
+                                <button 
+                                  onClick={() => handleDeleteStudent(student.id)} 
+                                  style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '0.35rem 0.75rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
+                                >
+                                  <Trash2 size={13} />
+                                  <span>Delete</span>
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                        {displayedStudents.length === 0 && (
+                          <tr><td colSpan="6" style={{ padding: '1.5rem', color: 'var(--text-muted)', textAlign: 'center' }}>No students found matching your criteria.</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
             </div>
-            {loading ? <p style={{ color: 'var(--text-muted)' }}>Loading student records...</p> : (
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {students.map(student => (
-                    <tr key={student.id}>
-                      <td>#{student.id.substring(0, 8)}</td>
-                      <td style={{ fontWeight: '600' }}>{student.name}</td>
-                      <td>{student.email}</td>
-                      <td><span style={{ background: 'rgba(56, 189, 248, 0.15)', color: 'var(--accent-cyan)', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem', fontWeight: '600' }}>{student.role}</span></td>
-                      <td>
-                        <button 
-                          onClick={() => handleDeleteStudent(student.id)} 
-                          style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '0.35rem 0.75rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {students.length === 0 && (
-                    <tr><td colSpan="5" style={{ padding: '1rem', color: 'var(--text-muted)', textAlign: 'center' }}>No students found.</td></tr>
-                  )}
-                </tbody>
-              </table>
-            )}
-          </div>
-        )}
+          );
+        })()}
 
         {/* TAB 5: AUDIT LOGS (SUPER ADMIN ONLY) */}
         {activeMenu === 'audit-logs' && isSuperAdmin && (

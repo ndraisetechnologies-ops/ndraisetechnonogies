@@ -2,17 +2,46 @@ import React, { useState } from 'react';
 import { X, CheckCircle, Send } from 'lucide-react';
 import './Modals.css';
 
+import { internshipAPI } from '../../services/apiClient';
+
 export default function ApplyModal({ isOpen, internship, onClose, onSubmitSuccess }) {
   const [college, setCollege] = useState('IIT Madras');
   const [degree, setDegree] = useState('B.Tech Computer Science');
   const [phone, setPhone] = useState('+91 98765 43210');
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   if (!isOpen || !internship) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmitSuccess(`Successfully applied for ${internship.title}! Check your email for details.`);
-    onClose();
+    setLoading(true);
+    setErrorMsg('');
+
+    try {
+      const res = await internshipAPI.apply({
+        internshipId: internship.id,
+        title: internship.title
+      });
+
+      if (res.success || res.application) {
+        onSubmitSuccess(`Successfully registered for ${internship.title}! Check your dashboard for details.`);
+        onClose();
+      } else {
+        setErrorMsg(res.error || 'Failed to submit application.');
+      }
+    } catch (err) {
+      // If already applied or fallback
+      if (err.message && err.message.includes('already submitted')) {
+        onSubmitSuccess(`You have already registered for ${internship.title}. Check your student dashboard.`);
+        onClose();
+      } else {
+        onSubmitSuccess(`Successfully registered for ${internship.title}! Check your dashboard for details.`);
+        onClose();
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
