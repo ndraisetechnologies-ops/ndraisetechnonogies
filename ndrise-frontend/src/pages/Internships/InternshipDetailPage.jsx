@@ -4,11 +4,14 @@ import {
   Award, CheckCircle2, ChevronDown, ChevronUp, Code, 
   Terminal, FileText, Check, ExternalLink, Sparkles, Layers
 } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { AccordionContent } from '../../components/Motion/MotionUtils';
 import './InternshipDetailPage.css';
 
 export default function InternshipDetailPage({ internship, onBack, onApplyClick, onShareClick, onOpenTasksModal }) {
   const [activeTab, setActiveTab] = useState('Overview');
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
+  const shouldReduceMotion = useReducedMotion();
 
   if (!internship) return null;
 
@@ -101,76 +104,153 @@ export default function InternshipDetailPage({ internship, onBack, onApplyClick,
   return (
     <div className="detail-page">
       {/* High-visibility Back Button */}
-      <button className="btn-back-nav" onClick={onBack}>
+      <motion.button 
+        className="btn-back-nav" 
+        onClick={onBack}
+        whileHover={shouldReduceMotion ? {} : { x: -4 }}
+        whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+        transition={{ duration: 0.2 }}
+      >
         <ArrowLeft size={18} />
         <span>Back to Internships</span>
-      </button>
+      </motion.button>
 
       {/* Course Header Banner */}
-      <div className="detail-header-banner">
+      <motion.div 
+        className="detail-header-banner"
+        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="detail-header-content">
           {internship.bannerTag && (
-            <div className="detail-header-tag">
+            <motion.div 
+              className="detail-header-tag"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
               <span>{internship.bannerTag}</span>
-            </div>
+            </motion.div>
           )}
 
-          <h1 className="detail-title">{internship.title}</h1>
+          <motion.h1 
+            className="detail-title"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.12 }}
+          >
+            {internship.title}
+          </motion.h1>
 
-          <div className="detail-badges">
+          <motion.div 
+            className="detail-badges"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.16 }}
+          >
             <span className="badge badge-purple">⏱ {internship.duration}</span>
             <span className="badge badge-blue">🎯 {internship.level}</span>
             <span className="badge badge-cyan">🌐 {internship.mode || 'Online'}</span>
             <span className="badge badge-green">👥 {internship.applicants || '20K+'} Enrolled</span>
-          </div>
+          </motion.div>
 
-          <p className="detail-header-desc">
+          <motion.p 
+            className="detail-header-desc"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
             {internship.description} Build portfolio-ready projects and master industry standards under expert mentorship.
-          </p>
+          </motion.p>
 
-          <div className="detail-actions">
-            <button className="btn-primary" style={{ padding: '0.85rem 2rem', gap: '0.6rem' }} onClick={() => onApplyClick(internship)}>
+          <motion.div 
+            className="detail-actions"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.24 }}
+          >
+            <motion.button 
+              className="btn-primary" 
+              style={{ padding: '0.85rem 2rem', gap: '0.6rem' }} 
+              onClick={() => onApplyClick(internship)}
+              whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+              transition={{ duration: 0.15 }}
+            >
               <Sparkles size={18} />
               Apply Now
-            </button>
-            <button className="btn-secondary" onClick={onShareClick}>
+            </motion.button>
+            <motion.button 
+              className="btn-secondary" 
+              onClick={onShareClick}
+              whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+              transition={{ duration: 0.15 }}
+            >
               <Share2 size={16} />
               Share
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         </div>
 
         {/* Right Side Banner Picture */}
-        <div className="detail-header-graphic">
+        <motion.div 
+          className="detail-header-graphic"
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        >
           {internship.image ? (
-            <img src={internship.image} alt={internship.title} className="detail-header-img" />
+            <motion.img 
+              src={internship.image} 
+              alt={internship.title} 
+              className="detail-header-img"
+              whileHover={shouldReduceMotion ? {} : { scale: 1.04 }}
+              transition={{ duration: 0.35 }}
+            />
           ) : (
             <div className="detail-fallback-icon">
               <Icon size={64} color="#38bdf8" />
             </div>
           )}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Sticky Navigation Tabs */}
-      <div className="detail-tabs-bar">
+      <motion.div 
+        className="detail-tabs-bar"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.3 }}
+      >
         {tabs.map(tab => (
-          <button
+          <motion.button
             key={tab.id}
             className={`detail-tab-btn ${activeTab === tab.name ? 'active' : ''}`}
             onClick={() => handleTabClick(tab.name, tab.id)}
+            whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+            whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+            transition={{ duration: 0.15 }}
           >
             {tab.name}
-          </button>
+          </motion.button>
         ))}
-      </div>
+      </motion.div>
 
       {/* Main Grid Content */}
       <div className="detail-layout">
         <div className="detail-main-content">
           
           {/* TAB 1: OVERVIEW */}
-          <section id="overview" className="glass-panel detail-section-card">
+          <motion.section 
+            id="overview" 
+            className="glass-panel detail-section-card"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          >
             <h2 className="detail-section-title">
               <BookOpen size={22} className="section-title-icon" />
               Overview
@@ -183,39 +263,40 @@ export default function InternshipDetailPage({ internship, onBack, onApplyClick,
             </p>
 
             <div className="overview-features-grid">
-              <div className="feature-mini-card">
-                <Layers className="feature-icon" size={24} />
-                <div>
-                  <h4>Practical Projects</h4>
-                  <p>Build 3 production-grade projects for your portfolio.</p>
-                </div>
-              </div>
-              <div className="feature-mini-card">
-                <Award className="feature-icon" size={24} />
-                <div>
-                  <h4>Verified Credentials</h4>
-                  <p>Receive an official Offer Letter & QR-verified Certificate.</p>
-                </div>
-              </div>
-              <div className="feature-mini-card">
-                <Target className="feature-icon" size={24} />
-                <div>
-                  <h4>Expert Guidelines</h4>
-                  <p>Step-by-step instructions and code review standards.</p>
-                </div>
-              </div>
-              <div className="feature-mini-card">
-                <Globe className="feature-icon" size={24} />
-                <div>
-                  <h4>100% Online & Flexible</h4>
-                  <p>Self-paced schedule tailored for students & freshers.</p>
-                </div>
-              </div>
+              {[
+                { icon: Layers, title: "Practical Projects", desc: "Build 3 production-grade projects for your portfolio." },
+                { icon: Award, title: "Verified Credentials", desc: "Receive an official Offer Letter & QR-verified Certificate." },
+                { icon: Target, title: "Expert Guidelines", desc: "Step-by-step instructions and code review standards." },
+                { icon: Globe, title: "100% Online & Flexible", desc: "Self-paced schedule tailored for students & freshers." }
+              ].map((feat, i) => {
+                const FeatIcon = feat.icon;
+                return (
+                  <motion.div 
+                    key={i} 
+                    className="feature-mini-card"
+                    whileHover={shouldReduceMotion ? {} : { y: -3, scale: 1.015 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <FeatIcon className="feature-icon" size={24} />
+                    <div>
+                      <h4>{feat.title}</h4>
+                      <p>{feat.desc}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
-          </section>
+          </motion.section>
 
           {/* TAB 2: WHAT YOU'LL LEARN */}
-          <section id="what-youll-learn" className="glass-panel detail-section-card">
+          <motion.section 
+            id="what-youll-learn" 
+            className="glass-panel detail-section-card"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          >
             <h2 className="detail-section-title">
               <Target size={22} className="section-title-icon" />
               What You'll Learn
@@ -226,16 +307,28 @@ export default function InternshipDetailPage({ internship, onBack, onApplyClick,
 
             <div className="learn-skills-grid">
               {skillsToDisplay.map((skill, idx) => (
-                <div key={idx} className="learn-skill-card">
+                <motion.div 
+                  key={idx} 
+                  className="learn-skill-card"
+                  whileHover={shouldReduceMotion ? {} : { x: 3 }}
+                  transition={{ duration: 0.18 }}
+                >
                   <CheckCircle2 size={20} className="check-bullet" />
                   <span>{skill}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* TAB 3: CURRICULUM */}
-          <section id="curriculum" className="glass-panel detail-section-card">
+          <motion.section 
+            id="curriculum" 
+            className="glass-panel detail-section-card"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          >
             <h2 className="detail-section-title">
               <Clock size={22} className="section-title-icon" />
               Curriculum Roadmap
@@ -243,7 +336,12 @@ export default function InternshipDetailPage({ internship, onBack, onApplyClick,
 
             <div className="curriculum-timeline">
               {curriculumModules.map((mod, idx) => (
-                <div key={idx} className="curriculum-card">
+                <motion.div 
+                  key={idx} 
+                  className="curriculum-card"
+                  whileHover={shouldReduceMotion ? {} : { y: -2 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <div className="curriculum-badge">{mod.week}</div>
                   <div className="curriculum-body">
                     <h4>{mod.title}</h4>
@@ -254,13 +352,20 @@ export default function InternshipDetailPage({ internship, onBack, onApplyClick,
                       ))}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* TAB 4: PROJECTS */}
-          <section id="projects" className="glass-panel detail-section-card">
+          <motion.section 
+            id="projects" 
+            className="glass-panel detail-section-card"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          >
             <h2 className="detail-section-title">
               <Code size={22} className="section-title-icon" />
               Assigned Projects ({internship.tasks ? internship.tasks.length : 3})
@@ -275,7 +380,12 @@ export default function InternshipDetailPage({ internship, onBack, onApplyClick,
                 { id: 2, title: 'Task 2: Interactive Web App', difficulty: 'Medium', desc: 'Develop a dynamic application with state management and live API data.' },
                 { id: 3, title: 'Task 3: Full Capstone Application', difficulty: 'Hard', desc: 'Deploy a complete full-stack web application with authentication and routing.' }
               ]).map((task, idx) => (
-                <div key={task.id || idx} className="task-detail-card">
+                <motion.div 
+                  key={task.id || idx} 
+                  className="task-detail-card"
+                  whileHover={shouldReduceMotion ? {} : { y: -3, scale: 1.008 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <div className="task-header-row">
                     <span className={`task-diff-tag diff-${(task.difficulty || 'Easy').toLowerCase()}`}>
                       {task.difficulty || 'Easy'}
@@ -286,21 +396,31 @@ export default function InternshipDetailPage({ internship, onBack, onApplyClick,
                   <p className="task-card-desc">{task.desc}</p>
 
                   <div className="task-actions-row">
-                    <button 
+                    <motion.button 
                       className="btn-task-action btn-task-outline"
                       onClick={() => onOpenTasksModal && onOpenTasksModal(internship, task)}
+                      whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+                      whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+                      transition={{ duration: 0.15 }}
                     >
                       <FileText size={15} />
                       <span>View Guidelines</span>
-                    </button>
+                    </motion.button>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* TAB 5: FAQ */}
-          <section id="faq" className="glass-panel detail-section-card">
+          <motion.section 
+            id="faq" 
+            className="glass-panel detail-section-card"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          >
             <h2 className="detail-section-title">
               <Award size={22} className="section-title-icon" />
               Frequently Asked Questions
@@ -315,23 +435,33 @@ export default function InternshipDetailPage({ internship, onBack, onApplyClick,
                 >
                   <div className="faq-question">
                     <span>{faq.q}</span>
-                    {openFaqIndex === idx ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                    <motion.div
+                      animate={{ rotate: openFaqIndex === idx ? 180 : 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <ChevronDown size={18} />
+                    </motion.div>
                   </div>
-                  {openFaqIndex === idx && (
+                  <AccordionContent isOpen={openFaqIndex === idx}>
                     <div className="faq-answer">
                       <p>{faq.a}</p>
                     </div>
-                  )}
+                  </AccordionContent>
                 </div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
         </div>
 
         {/* Right Sidebar Sticky Details */}
         <div className="detail-sidebar-container">
-          <div className="glass-panel detail-section-card">
+          <motion.div 
+            className="glass-panel detail-section-card"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.2 }}
+          >
             <h3 className="detail-sidebar-title">Key Program Highlights</h3>
             
             <div className="info-row">
@@ -359,16 +489,24 @@ export default function InternshipDetailPage({ internship, onBack, onApplyClick,
               <span className="info-value" style={{ color: '#34d399' }}>Free ($0)</span>
             </div>
 
-            <button 
+            <motion.button 
               className="btn-primary" 
               style={{ width: '100%', marginTop: '1.5rem', justifyContent: 'center' }}
               onClick={() => onApplyClick(internship)}
+              whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+              transition={{ duration: 0.15 }}
             >
               Apply Now
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
 
-          <div className="glass-panel detail-section-card">
+          <motion.div 
+            className="glass-panel detail-section-card"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.28 }}
+          >
             <h3 className="detail-sidebar-title">Skills Overview</h3>
             <div className="skills-list">
               {skillsToDisplay.map((s, idx) => (
@@ -378,10 +516,11 @@ export default function InternshipDetailPage({ internship, onBack, onApplyClick,
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
 
       </div>
     </div>
   );
 }
+

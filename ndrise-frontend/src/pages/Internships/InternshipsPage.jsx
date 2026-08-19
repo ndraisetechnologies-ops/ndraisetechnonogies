@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Users, Clock, ArrowRight, Code, Server, Terminal, BarChart2, Cpu, Shield, Layout, Smartphone, Atom, Cloud } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import './InternshipsPage.css';
 
 export const ALL_INTERNSHIPS = [
@@ -260,6 +261,7 @@ export const ALL_INTERNSHIPS = [
 export default function InternshipsPage({ onSelectInternship }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Programs');
+  const shouldReduceMotion = useReducedMotion();
 
   const categories = [
     'All Programs',
@@ -283,15 +285,30 @@ export default function InternshipsPage({ onSelectInternship }) {
     <div className="internships-domains-page">
       {/* 1. Header Banner */}
       <div className="domains-header-container">
-        <h1 className="domains-main-title">
+        <motion.h1 
+          className="domains-main-title"
+          initial={{ opacity: 0, y: 20, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
           Available <span className="blue-highlight-text">Internships</span>
-        </h1>
-        <p className="domains-sub-title">
+        </motion.h1>
+        <motion.p 
+          className="domains-sub-title"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        >
           Choose from a wide range of technical and non-technical domains. Gain hands-on experience and get certified.
-        </p>
+        </motion.p>
 
         {/* 2. Search Input */}
-        <div className="domains-search-wrapper">
+        <motion.div 
+          className="domains-search-wrapper"
+          initial={{ opacity: 0, y: 15, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.45, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+        >
           <div className="domains-search-box">
             <Search className="domains-search-icon" size={20} />
             <input 
@@ -302,73 +319,115 @@ export default function InternshipsPage({ onSelectInternship }) {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* 3. Category Filter Pills */}
-        <div className="domains-category-pills">
+        <motion.div 
+          className="domains-category-pills"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+        >
           {categories.map(cat => (
-            <button 
+            <motion.button 
               key={cat}
               className={`domain-pill-btn ${selectedCategory === cat ? 'active' : ''}`}
               onClick={() => setSelectedCategory(cat)}
+              whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+              transition={{ duration: 0.15 }}
             >
               {cat}
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       {/* 4. Domains Cards Grid */}
-      <div className="domains-grid-container">
-        {filteredInternships.length > 0 ? (
-          filteredInternships.map(item => (
-            <div key={item.id} className="domain-card-item">
-              
-              {/* Image Banner Top */}
-              <div className="domain-card-banner">
-                <img src={item.image} alt={item.title} className="domain-banner-img" />
-                <div className="banner-tag-badge">
-                  <span>{item.bannerTag}</span>
-                </div>
-              </div>
-
-              {/* Card Body */}
-              <div className="domain-card-body">
-                <h3 className="domain-card-title">{item.title}</h3>
-
-                {/* Metadata Row: Enrolled count + Duration */}
-                <div className="domain-meta-row">
-                  <div className="domain-meta-item">
-                    <Users size={16} className="meta-icon" />
-                    <span>{item.applicants}</span>
+      <motion.div 
+        className="domains-grid-container"
+        layout
+      >
+        <AnimatePresence mode="popLayout">
+          {filteredInternships.length > 0 ? (
+            filteredInternships.map((item, index) => (
+              <motion.div 
+                key={item.id} 
+                className="domain-card-item"
+                layout
+                initial={{ opacity: 0, y: 20, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                whileHover={shouldReduceMotion ? {} : { y: -5, scale: 1.018 }}
+                transition={{ 
+                  duration: 0.4, 
+                  delay: Math.min(index * 0.04, 0.25),
+                  ease: [0.16, 1, 0.3, 1] 
+                }}
+              >
+                
+                {/* Image Banner Top */}
+                <div className="domain-card-banner">
+                  <motion.img 
+                    src={item.image} 
+                    alt={item.title} 
+                    className="domain-banner-img" 
+                    whileHover={shouldReduceMotion ? {} : { scale: 1.04 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  />
+                  <div className="banner-tag-badge">
+                    <span>{item.bannerTag}</span>
                   </div>
-                  <div className="domain-meta-item">
-                    <Clock size={16} className="meta-icon" />
-                    <span>{item.duration}</span>
-                  </div>
                 </div>
 
-                {/* Apply Button */}
-                <button 
-                  className="btn-domain-apply"
-                  onClick={() => onSelectInternship && onSelectInternship(item)}
-                >
-                  <span>Apply Now</span>
-                  <ArrowRight size={16} className="apply-arrow-icon" />
-                </button>
-              </div>
+                {/* Card Body */}
+                <div className="domain-card-body">
+                  <h3 className="domain-card-title">{item.title}</h3>
 
-            </div>
-          ))
-        ) : (
-          <div className="domains-empty-state">
-            <Search size={48} color="#94a3b8" style={{ marginBottom: '1rem' }} />
-            <h3>No internship domains found</h3>
-            <p>Try searching for keywords like "Frontend", "Python", "Data", or select another category.</p>
-          </div>
-        )}
-      </div>
+                  {/* Metadata Row: Enrolled count + Duration */}
+                  <div className="domain-meta-row">
+                    <div className="domain-meta-item">
+                      <Users size={16} className="meta-icon" />
+                      <span>{item.applicants}</span>
+                    </div>
+                    <div className="domain-meta-item">
+                      <Clock size={16} className="meta-icon" />
+                      <span>{item.duration}</span>
+                    </div>
+                  </div>
+
+                  {/* Apply Button */}
+                  <motion.button 
+                    className="btn-domain-apply"
+                    onClick={() => onSelectInternship && onSelectInternship(item)}
+                    whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+                    whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    <span>Apply Now</span>
+                    <ArrowRight size={16} className="apply-arrow-icon" />
+                  </motion.button>
+                </div>
+
+              </motion.div>
+            ))
+          ) : (
+            <motion.div 
+              className="domains-empty-state"
+              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.35 }}
+            >
+              <Search size={48} color="#94a3b8" style={{ marginBottom: '1rem' }} />
+              <h3>No internship domains found</h3>
+              <p>Try searching for keywords like "Frontend", "Python", "Data", or select another category.</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
     </div>
   );
 }
+

@@ -19,13 +19,12 @@
   cursor: pointer;
   margin-bottom: 2rem;
   box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
-  transition: all 0.25 ease;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .btn-back-nav:hover {
   background: var(--primary);
   color: #ffffff;
-  transform: translateX(-4px);
   box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
 }
 

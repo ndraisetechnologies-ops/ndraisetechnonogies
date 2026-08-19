@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { FadeIn, StaggerContainer, StaggerItem } from '../../components/Motion/MotionUtils';
 import { Star, Search, PlusCircle, Heart, Home, Send, Quote, CheckCircle2 } from 'lucide-react';
 import './StudentReviewsPage.css';
 
@@ -158,19 +160,21 @@ export default function StudentReviewsPage({ user, setCurrentView }) {
       <div className="reviews-container">
         
         {/* Header Section */}
-        <div className="reviews-hero">
-          <div className="community-voices-tag">
-            COMMUNITY VOICES
+        <FadeIn direction="up">
+          <div className="reviews-hero">
+            <div className="community-voices-tag">
+              COMMUNITY VOICES
+            </div>
+
+            <h1 className="reviews-title">
+              Student <span className="highlight-feedback">Feedback</span>
+            </h1>
+
+            <p className="reviews-subtitle">
+              See what our interns have to say about their journey with ND RAISE Technologies. Your experience matters to us.
+            </p>
           </div>
-
-          <h1 className="reviews-title">
-            Student <span className="highlight-feedback">Feedback</span>
-          </h1>
-
-          <p className="reviews-subtitle">
-            See what our interns have to say about their journey with ND RAISE Technologies. Your experience matters to us.
-          </p>
-        </div>
+        </FadeIn>
 
         {/* Toolbar: Search and Category Filter Chips */}
         <div className="reviews-toolbar">
@@ -198,48 +202,50 @@ export default function StudentReviewsPage({ user, setCurrentView }) {
           </div>
         </div>
 
-        {/* Reviews Cards Grid */}
-        <div className="reviews-grid">
+        {/* Reviews Grid */}
+        <StaggerContainer className="reviews-grid" staggerChildren={0.06}>
           {filteredReviews.map((rev) => (
-            <div key={rev.id} className="review-card">
-              {/* Top Double Quote Symbol */}
-              <div className="quote-icon-wrap">
-                <Quote size={28} className="quote-icon" />
-              </div>
-
-              {/* Quote Text */}
-              <p className="review-quote-text">
-                "{rev.quote}"
-              </p>
-
-              {/* Card Footer */}
-              <div className="review-card-footer">
-                {/* Author Info */}
-                <div className="reviewer-info">
-                  <div className="avatar-initial">
-                    {rev.initial}
-                  </div>
-                  <div className="reviewer-details">
-                    <h3 className="reviewer-name">{rev.name}</h3>
-                    <span className="reviewer-role">{rev.role}</span>
-                  </div>
+            <StaggerItem key={rev.id}>
+              <motion.div className="review-card" whileHover={{ y: -6, scale: 1.015 }}>
+                {/* Double Quote Symbol */}
+                <div className="quote-icon-wrap">
+                  <Quote size={28} className="quote-icon" />
                 </div>
 
-                {/* Rating Stars */}
-                <div className="rating-stars">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      size={14} 
-                      fill={i < rev.rating ? "#f59e0b" : "none"} 
-                      color={i < rev.rating ? "#f59e0b" : "#cbd5e1"} 
-                    />
-                  ))}
+                {/* Quote Text */}
+                <p className="review-quote-text">
+                  "{rev.quote}"
+                </p>
+
+                {/* Card Footer */}
+                <div className="review-card-footer">
+                  {/* Author Info */}
+                  <div className="reviewer-info">
+                    <div className="avatar-initial">
+                      {rev.initial}
+                    </div>
+                    <div className="reviewer-details">
+                      <h3 className="reviewer-name">{rev.name}</h3>
+                      <span className="reviewer-role">{rev.role}</span>
+                    </div>
+                  </div>
+
+                  {/* Rating Stars */}
+                  <div className="rating-stars">
+                    {[...Array(5)].map((_, i) => (
+                      <Star 
+                        key={i} 
+                        size={14} 
+                        fill={i < rev.rating ? "#f59e0b" : "none"} 
+                        color={i < rev.rating ? "#f59e0b" : "#cbd5e1"} 
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
 
         {filteredReviews.length === 0 && (
           <div className="no-reviews-msg">

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, X, ChevronDown, ArrowRight, Sun, Moon, UserCheck, ShieldCheck, Send, Award, HelpCircle, BookOpen, LogOut, LayoutDashboard, FileText, Star } from 'lucide-react';
+import { Menu, X, ChevronDown, Sun, Moon, LayoutDashboard, LogOut } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import './Navbar.css';
 
 export default function Navbar({
@@ -15,7 +16,6 @@ export default function Navbar({
   onOfferLetterClick,
   onCertificatesClick,
   onReviewsClick,
-  onPolicyClick,
   showToast
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -23,6 +23,7 @@ export default function Navbar({
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
   const navMenuRef = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -56,10 +57,7 @@ export default function Navbar({
     {
       id: 'skill-courses',
       label: 'Skill Courses',
-      hasDropdown: true,
-      options: [
-        { label: '📚 Browse Courses', actionType: 'browse-courses' },
-      ]
+      hasDropdown: false
     },
     {
       id: 'career-tools',
@@ -141,10 +139,53 @@ export default function Navbar({
     setMobileOpen(false);
   };
 
+  const navDropdownVariants = {
+    hidden: { opacity: 0, x: '-50%', y: shouldReduceMotion ? 0 : -8, scale: 0.97 },
+    visible: { 
+      opacity: 1, 
+      x: '-50%',
+      y: 0, 
+      scale: 1,
+      transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] } 
+    },
+    exit: { 
+      opacity: 0, 
+      x: '-50%',
+      y: shouldReduceMotion ? 0 : -6, 
+      scale: 0.97,
+      transition: { duration: 0.15, ease: 'easeIn' } 
+    }
+  };
+
+  const userDropdownVariants = {
+    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : -8, scale: 0.97 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] } 
+    },
+    exit: { 
+      opacity: 0, 
+      y: shouldReduceMotion ? 0 : -6, 
+      scale: 0.97,
+      transition: { duration: 0.15, ease: 'easeIn' } 
+    }
+  };
+
   return (
-    <header className="navbar-container">
+    <motion.header 
+      className="navbar-container"
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+    >
       {/* 1. Logo */}
-      <div className="nav-brand navbar-logo">
+      <div 
+        className="nav-brand navbar-logo" 
+        onClick={() => { setCurrentView('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+        style={{ cursor: 'pointer' }}
+      >
         <div className="brand-logo-badge logo-badge">
           <img src="/logo.jpg" alt="ND Rais Technologies Logo" className="brand-logo-img logo-img" />
         </div>
@@ -152,7 +193,7 @@ export default function Navbar({
           <div className="brand-title logo-title">
             ND <span>Raise</span><span className="brand-tech-word"> Technologies</span>
           </div>
-          <div className="brand-tagline logo-subtitle">ISO 9001:2015 CERTIFIED PLATFORM</div>
+          <div className="brand-tagline logo-subtitle">LEARN • BUILD • GROW</div>
         </div>
       </div>
 
@@ -160,7 +201,7 @@ export default function Navbar({
       <nav ref={navMenuRef} className={`nav-pill-wrapper nav-menu ${mobileOpen ? 'mobile-open open' : ''}`}>
         <ul className="nav-pill-list nav-list">
           {menuItems.map((item) => {
-            const isActive = currentView === item.id;
+            const isActive = currentView === item.id || (item.id === 'skill-courses' && currentView === 'browse-courses');
             return (
               <li
                 key={item.id}
@@ -193,27 +234,42 @@ export default function Navbar({
                   }}
                 >
                   <span>{item.label}</span>
-                  {item.hasDropdown && <ChevronDown size={14} className={`chevron-icon dropdown-chevron ${activeDropdown === item.id ? 'rotate' : ''}`} />}
+                  {item.hasDropdown && (
+                    <ChevronDown 
+                      size={14} 
+                      className={`chevron-icon dropdown-chevron ${activeDropdown === item.id ? 'rotate' : ''}`} 
+                      style={{ transition: 'transform 0.2s ease' }}
+                    />
+                  )}
                 </a>
 
-                {/* Dropdown Menu */}
-                {item.hasDropdown && (
-                  <div className={`nav-dropdown-menu dropdown-menu ${activeDropdown === item.id ? 'open' : ''}`}>
-                    {item.options.map((opt, idx) => (
-                      <a
-                        key={idx}
-                        href="#option"
-                        className="dropdown-item"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleNavClick(opt);
-                        }}
-                      >
-                        {opt.label}
-                      </a>
-                    ))}
-                  </div>
-                )}
+                {/* Animated Dropdown Menu */}
+                <AnimatePresence>
+                  {item.hasDropdown && activeDropdown === item.id && (
+                    <motion.div
+                      key={`dropdown-${item.id}`}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      variants={navDropdownVariants}
+                      className="nav-dropdown-menu dropdown-menu open"
+                    >
+                      {item.options.map((opt, idx) => (
+                        <a
+                          key={idx}
+                          href="#option"
+                          className="dropdown-item"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleNavClick(opt);
+                          }}
+                        >
+                          {opt.label}
+                        </a>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </li>
             );
           })}
@@ -223,132 +279,113 @@ export default function Navbar({
       {/* 3. Right Action Items */}
       <div className="nav-actions">
         {/* Theme Switcher Button */}
-        <button
+        <motion.button
           className="theme-toggle-btn"
           onClick={toggleTheme}
           title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
           aria-label="Toggle Theme"
+          whileHover={shouldReduceMotion ? {} : { scale: 1.08 }}
+          whileTap={shouldReduceMotion ? {} : { scale: 0.92 }}
         >
           {theme === 'dark' ? (
             <Sun size={19} className="theme-icon sun-icon" />
           ) : (
             <Moon size={19} className="theme-icon moon-icon" />
           )}
-        </button>
+        </motion.button>
 
         {user ? (
           <div className="user-profile-wrapper" ref={userMenuRef}>
-            <button
+            <motion.button
               type="button"
               className="user-profile-pill"
               onClick={() => setUserMenuOpen(!userMenuOpen)}
+              whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
             >
               <div className="user-avatar-circle">
                 <img src={user.avatar || (['admin', 'super_admin'].includes(user.role?.toLowerCase()) ? "/admin-avatar.svg" : "/student-avatar.svg")} alt="User Avatar" className="user-avatar-icon" />
               </div>
               <span className="user-profile-name">{user.name || 'User'}</span>
-              <ChevronDown size={14} className={`user-chevron ${userMenuOpen ? 'open' : ''}`} />
-            </button>
+              <ChevronDown size={14} className={`user-chevron ${userMenuOpen ? 'open' : ''}`} style={{ transition: 'transform 0.2s ease' }} />
+            </motion.button>
 
-            {userMenuOpen && (
-              <div className="user-profile-dropdown">
-                <div className="dropdown-user-header">
-                  <div className="user-avatar-circle header-avatar">
-                    <img src={user.avatar || (['admin', 'super_admin'].includes(user.role?.toLowerCase()) ? "/admin-avatar.svg" : "/student-avatar.svg")} alt="User Avatar" className="user-avatar-icon" />
+            <AnimatePresence>
+              {userMenuOpen && (
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  variants={userDropdownVariants}
+                  className="user-profile-dropdown"
+                  style={{ display: 'block' }}
+                >
+                  <div className="dropdown-user-header">
+                    <div className="user-avatar-circle header-avatar">
+                      <img src={user.avatar || (['admin', 'super_admin'].includes(user.role?.toLowerCase()) ? "/admin-avatar.svg" : "/student-avatar.svg")} alt="User Avatar" className="user-avatar-icon" />
+                    </div>
+                    <div className="user-info-text">
+                      <div className="info-name">{user.name || 'User'}</div>
+                      <div className="info-email">{user.email || 'user@ndtech.com'}</div>
+                    </div>
                   </div>
-                  <div className="user-info-text">
-                    <div className="info-name">{user.name || 'User'}</div>
-                    <div className="info-email">{user.email || 'user@ndtech.com'}</div>
-                  </div>
-                </div>
 
-                <div className="user-dropdown-divider" />
+                  <div className="user-dropdown-divider" />
 
-                {['admin', 'super_admin'].includes(user.role?.toLowerCase()) ? (
+                  {['admin', 'super_admin'].includes(user.role?.toLowerCase()) ? (
+                    <button
+                      type="button"
+                      className="user-dropdown-item"
+                      style={{ color: '#38bdf8', fontWeight: '600' }}
+                      onClick={() => {
+                        setCurrentView('admin-dashboard');
+                        setUserMenuOpen(false);
+                      }}
+                    >
+                      <LayoutDashboard size={16} />
+                      <span>Admin Dashboard</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="user-dropdown-item"
+                      onClick={() => {
+                        setCurrentView('student-dashboard');
+                        setUserMenuOpen(false);
+                      }}
+                    >
+                      <LayoutDashboard size={16} />
+                      <span>Student Dashboard</span>
+                    </button>
+                  )}
+
+                  <div className="user-dropdown-divider" />
+
                   <button
                     type="button"
-                    className="user-dropdown-item"
-                    style={{ color: '#38bdf8', fontWeight: '600' }}
+                    className="user-dropdown-item logout-btn"
                     onClick={() => {
-                      setCurrentView('admin-dashboard');
                       setUserMenuOpen(false);
+                      onLogout();
                     }}
                   >
-                    <LayoutDashboard size={16} />
-                    <span>Admin Dashboard</span>
+                    <LogOut size={16} />
+                    <span>Sign Out</span>
                   </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="user-dropdown-item"
-                    onClick={() => {
-                      setCurrentView('student-dashboard');
-                      setUserMenuOpen(false);
-                    }}
-                  >
-                    <LayoutDashboard size={16} />
-                    <span>Student Dashboard</span>
-                  </button>
-                )}
-
-                {/* <button 
-                  type="button"
-                  className="user-dropdown-item" 
-                  onClick={() => {
-                    if (onCertificatesClick) onCertificatesClick();
-                    else setCurrentView('my-certificates');
-                    setUserMenuOpen(false);
-                  }}
-                >
-                  <Award size={16} />
-                  <span>My Certificates</span>
-                </button> */}
-
-                {/* <button 
-                  type="button"
-                  className="user-dropdown-item" 
-                  onClick={() => {
-                    if (onOfferLetterClick) onOfferLetterClick();
-                    setUserMenuOpen(false);
-                  }}
-                >
-                  <FileText size={16} />
-                  <span>Download Offer Letter</span>
-                </button> */}
-
-                {/* <button 
-                  type="button"
-                  className="user-dropdown-item" 
-                  onClick={() => {
-                    if (onReviewsClick) onReviewsClick();
-                    else setCurrentView('reviews');
-                    setUserMenuOpen(false);
-                  }}
-                >
-                  <Star size={16} color="#f59e0b" />
-                  <span>Student Reviews</span>
-                </button> */}
-                <div className="user-dropdown-divider" />
-
-                <button
-                  type="button"
-                  className="user-dropdown-item logout-btn"
-                  onClick={() => {
-                    setUserMenuOpen(false);
-                    onLogout();
-                  }}
-                >
-                  <LogOut size={16} />
-                  <span>Sign Out</span>
-                </button>
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         ) : (
           <div className="auth-buttons-group">
-            <button className="btn-secondary nav-login-btn" onClick={() => openAuthModal('login')}>
+            <motion.button 
+              className="btn-secondary nav-login-btn" 
+              onClick={() => openAuthModal('login')}
+              whileHover={shouldReduceMotion ? {} : { scale: 1.04 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}
+            >
               Sign In
-            </button>
+            </motion.button>
           </div>
         )}
 
@@ -362,6 +399,6 @@ export default function Navbar({
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
-    </header>
+    </motion.header>
   );
 }

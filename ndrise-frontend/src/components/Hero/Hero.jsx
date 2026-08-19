@@ -1,49 +1,167 @@
-import React from 'react';
-import { ArrowRight, Play, BookOpen, Code2, TrendingUp, Sparkles, Award, CheckCircle2, Send } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, Play, BookOpen, Code2, TrendingUp, Sparkles, Award, CheckCircle2 } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 import './Hero.css';
 
 export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick }) {
+  const shouldReduceMotion = useReducedMotion();
+
+  const phrases = [
+    { text: 'Build Skills.', className: 'title-line-1' },
+    { text: 'Build Projects.', className: 'title-line-2' },
+    { text: 'Build Your Future.', className: 'title-line-3' }
+  ];
+
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+
+    const currentPhrase = phrases[phraseIndex].text;
+
+    let timerDelay = 60; // Typing speed: 60ms
+
+    if (isDeleting) {
+      timerDelay = 40; // Deleting speed: 40ms
+    }
+
+    if (!isDeleting && displayText === currentPhrase) {
+      timerDelay = 1000; // Pause after typing: 1000ms
+    } else if (isDeleting && displayText === '') {
+      timerDelay = 300; // Pause between phrases: 300ms
+    }
+
+    const timer = setTimeout(() => {
+      if (!isDeleting && displayText === currentPhrase) {
+        setIsDeleting(true);
+      } else if (isDeleting && displayText === '') {
+        setIsDeleting(false);
+        setPhraseIndex((prev) => (prev + 1) % phrases.length);
+      } else if (isDeleting) {
+        setDisplayText(currentPhrase.slice(0, displayText.length - 1));
+      } else {
+        setDisplayText(currentPhrase.slice(0, displayText.length + 1));
+      }
+    }, timerDelay);
+
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, phraseIndex, shouldReduceMotion]);
+
   const scrollToHowItWorks = () => {
     const el = document.getElementById('how-it-works');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Stagger container for text reveal sequence
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: shouldReduceMotion ? 0 : 0.1,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: shouldReduceMotion ? 0 : 20,
+      scale: shouldReduceMotion ? 1 : 0.98
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: shouldReduceMotion ? 0.2 : 0.6,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
+  };
+
+  const floatingAnimation = (yOffset = -6, duration = 3.5, delay = 0) => {
+    if (shouldReduceMotion) return {};
+    return {
+      animate: {
+        y: [0, yOffset, 0],
+      },
+      transition: {
+        duration,
+        repeat: Infinity,
+        repeatType: 'reverse',
+        ease: 'easeInOut',
+        delay,
+      },
+    };
+  };
+
   return (
     <section className="hero-section">
-      <div className="hero-content">
+      {/* Left Column Staggered Entrance */}
+      <motion.div 
+        className="hero-content"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {/* Top Tag Pill */}
-        <div className="hero-badge-tag">
+        <motion.div variants={itemVariants} className="hero-badge-tag">
           <Sparkles size={14} className="sparkle-icon" />
           <span>LEARN • BUILD • GROW</span>
-        </div>
+        </motion.div>
 
-        {/* 3-Line Headline Title */}
-        <h1 className="hero-title">
-          <span className="title-line title-line-1">Build Skills.</span>
-          <span className="title-line title-line-2">Build Projects.</span>
-          <span className="title-line title-line-3">Build Your Future.</span>
-        </h1>
+        {/* Headline Title with Continuous Looping Typewriter */}
+        <motion.h1 variants={itemVariants} className="hero-title hero-title-animated">
+          {shouldReduceMotion ? (
+            <>
+              <span className="title-line title-line-1">Build Skills.</span>
+              <span className="title-line title-line-2">Build Projects.</span>
+              <span className="title-line title-line-3">Build Your Future.</span>
+            </>
+          ) : (
+            <span className={`title-line ${phrases[phraseIndex].className}`}>
+              {displayText || '\u00A0'}
+              <span className="typewriter-cursor" aria-hidden="true" />
+            </span>
+          )}
+        </motion.h1>
 
         {/* Subdescription */}
-        <p className="hero-description">
+        <motion.p variants={itemVariants} className="hero-description">
           ND Raise Technologies helps students gain practical experience through structured internships, real-world projects and industry-focused learning.
-        </p>
+        </motion.p>
 
         {/* Action Buttons */}
-        <div className="hero-buttons">
-          <button className="btn-primary hero-btn-main" onClick={onExploreClick}>
+        <motion.div variants={itemVariants} className="hero-buttons">
+          <motion.button 
+            className="btn-primary hero-btn-main" 
+            onClick={onExploreClick}
+            whileHover={shouldReduceMotion ? {} : { scale: 1.03, y: -2 }}
+            whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+            transition={{ duration: 0.2 }}
+          >
             <span>Explore Internships</span>
             <ArrowRight size={18} />
-          </button>
+          </motion.button>
 
-          <button className="btn-secondary hero-btn-sub" onClick={scrollToHowItWorks}>
+          <motion.button 
+            className="btn-secondary hero-btn-sub" 
+            onClick={scrollToHowItWorks}
+            whileHover={shouldReduceMotion ? {} : { scale: 1.03, y: -2 }}
+            whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+            transition={{ duration: 0.2 }}
+          >
             <span>How It Works</span>
             <Play size={13} fill="currentColor" style={{ marginLeft: '2px' }} />
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
 
         {/* Feature Highlights Strip */}
-        <div className="hero-features-strip">
+        <motion.div variants={itemVariants} className="hero-features-strip">
           <div className="strip-item">
             <span className="strip-dot green"></span>
             <span>100% Free Virtual Tracks</span>
@@ -56,11 +174,16 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
             <span className="strip-dot purple"></span>
             <span>Verifiable QR Certificate & LOR</span>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Right Side 3D Visual Stage */}
-      <div className="hero-visual-3d-stage">
+      <motion.div 
+        className="hero-visual-3d-stage"
+        initial={{ opacity: 0, scale: 0.94, y: 25 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+      >
         {/* Multi-layered background ambient glow spotlights */}
         <div className="hero-3d-spotlight spotlight-cyan"></div>
         <div className="hero-3d-spotlight spotlight-purple"></div>
@@ -120,41 +243,56 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
 
           </div>
 
-          {/* Floating 3D Micro Chips */}
-          <div className="hero-3d-micro-chip chip-certificate">
+          {/* Floating 3D Micro Chips with subtle independent motion */}
+          <motion.div 
+            className="hero-3d-micro-chip chip-certificate"
+            {...floatingAnimation(-7, 4, 0)}
+          >
             <CheckCircle2 size={16} className="chip-icon green" />
             <div className="chip-text">
               <strong>Verifiable Certificate</strong>
               <span>Instant QR Verification</span>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="hero-3d-micro-chip chip-rating">
+          <motion.div 
+            className="hero-3d-micro-chip chip-rating"
+            {...floatingAnimation(-6, 4.5, 0.5)}
+          >
             <Award size={16} className="chip-icon amber" />
             <div className="chip-text">
               <strong>100% Free Virtual Track</strong>
               <span>No Hidden Charges</span>
             </div>
-          </div>
+          </motion.div>
 
           {/* Floating Action Pill Badges (Front 3D Layer) */}
-          <div className="hero-pill-badge-3d pill-learn-3d">
+          <motion.div 
+            className="hero-pill-badge-3d pill-learn-3d"
+            {...floatingAnimation(-5, 3.8, 0.2)}
+          >
             <BookOpen size={16} className="pill-icon-3d cyan" />
             <span>LEARN</span>
-          </div>
+          </motion.div>
 
-          <div className="hero-pill-badge-3d pill-build-3d">
+          <motion.div 
+            className="hero-pill-badge-3d pill-build-3d"
+            {...floatingAnimation(-6, 4.2, 0.7)}
+          >
             <Code2 size={16} className="pill-icon-3d purple" />
             <span>BUILD</span>
-          </div>
+          </motion.div>
 
-          <div className="hero-pill-badge-3d pill-grow-3d">
+          <motion.div 
+            className="hero-pill-badge-3d pill-grow-3d"
+            {...floatingAnimation(-5, 3.6, 1.1)}
+          >
             <TrendingUp size={16} className="pill-icon-3d emerald" />
             <span>GROW</span>
-          </div>
+          </motion.div>
 
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
-import { X, CheckCircle, Send } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Send, Briefcase, User, Phone, Mail, GraduationCap, BookOpen, Lock } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import './Modals.css';
 
 import { internshipAPI } from '../../services/apiClient';
 
 export default function ApplyModal({ isOpen, internship, onClose, onSubmitSuccess }) {
+  const [fullName, setFullName] = useState('Nikhil Kumar');
+  const [phone, setPhone] = useState('+91 98765 43210');
+  const [email, setEmail] = useState('nikhilkumar25@gmail.com');
   const [college, setCollege] = useState('IIT Madras');
   const [degree, setDegree] = useState('B.Tech Computer Science');
-  const [phone, setPhone] = useState('+91 98765 43210');
+  const shouldReduceMotion = useReducedMotion();
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  if (!isOpen || !internship) return null;
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +42,6 @@ export default function ApplyModal({ isOpen, internship, onClose, onSubmitSucces
         setErrorMsg(res.error || 'Failed to submit application.');
       }
     } catch (err) {
-      // If already applied or fallback
       if (err.message && err.message.includes('already submitted')) {
         onSubmitSuccess(`You have already registered for ${internship.title}. Check your student dashboard.`);
         onClose();
@@ -45,62 +55,149 @@ export default function ApplyModal({ isOpen, internship, onClose, onSubmitSucces
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>
-          <X size={18} />
-        </button>
+    <AnimatePresence>
+      {isOpen && internship && (
+        <motion.div 
+          className="modal-overlay" 
+          onClick={onClose}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          <motion.div 
+            className="modal-content apply-modal-themed" 
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 10 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <motion.button 
+              className="modal-close" 
+              onClick={onClose}
+              whileHover={shouldReduceMotion ? {} : { scale: 1.1, rotate: 90 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.9 }}
+              transition={{ duration: 0.2 }}
+            >
+              <X size={18} />
+            </motion.button>
 
-        <div className="modal-header">
-          <div className="badge badge-purple" style={{ marginBottom: '0.75rem' }}>
-            Apply For Internship
-          </div>
-          <h3 className="modal-title">{internship.title}</h3>
-          <p className="modal-subtitle">
-            {internship.duration} | {internship.level}
-          </p>
-        </div>
+            {/* Header Section */}
+            <div className="apply-modal-header">
+              <div className="apply-modal-icon-wrap">
+                <Briefcase size={24} />
+              </div>
+              <div className="apply-modal-header-text">
+                <h3 className="apply-modal-title">{internship.title}</h3>
+                <p className="apply-modal-subtitle">
+                  {internship.duration || '4 Weeks'} Internship Program
+                </p>
+              </div>
+            </div>
 
-        <form className="modal-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label">College / University</label>
-            <input
-              type="text"
-              className="form-input"
-              value={college}
-              onChange={(e) => setCollege(e.target.value)}
-              required
-            />
-          </div>
+            <form className="modal-form" onSubmit={handleSubmit}>
+              {/* Row 1: Full Name & Phone Number */}
+              <div className="form-row-2">
+                <div className="form-group">
+                  <label className="form-label">Full Name</label>
+                  <div className="input-with-icon">
+                    <User size={18} className="input-icon" />
+                    <input
+                      type="text"
+                      className="form-input icon-input"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="Full Name"
+                      required
+                    />
+                  </div>
+                </div>
 
-          <div className="form-group">
-            <label className="form-label">Degree / Stream</label>
-            <input
-              type="text"
-              className="form-input"
-              value={degree}
-              onChange={(e) => setDegree(e.target.value)}
-              required
-            />
-          </div>
+                <div className="form-group">
+                  <label className="form-label">Phone Number</label>
+                  <div className="input-with-icon">
+                    <Phone size={18} className="input-icon" />
+                    <input
+                      type="text"
+                      className="form-input icon-input"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+91 98765 43210"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
 
-          <div className="form-group">
-            <label className="form-label">Phone Number</label>
-            <input
-              type="text"
-              className="form-input"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
-          </div>
+              {/* Row 2: Email Address */}
+              <div className="form-group">
+                <label className="form-label">Email Address</label>
+                <div className="input-with-icon">
+                  <Mail size={18} className="input-icon" />
+                  <input
+                    type="email"
+                    className="form-input icon-input"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email Address"
+                    required
+                  />
+                </div>
+              </div>
 
-          <button type="submit" className="btn-primary form-submit-btn">
-            <Send size={18} />
-            <span>Submit Application</span>
-          </button>
-        </form>
-      </div>
-    </div>
+              {/* Row 3: College / University */}
+              <div className="form-group">
+                <label className="form-label">College / University</label>
+                <div className="input-with-icon">
+                  <GraduationCap size={18} className="input-icon" />
+                  <input
+                    type="text"
+                    className="form-input icon-input"
+                    value={college}
+                    onChange={(e) => setCollege(e.target.value)}
+                    placeholder="College / University"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Row 4: Branch / Stream */}
+              <div className="form-group">
+                <label className="form-label">Branch </label>
+                <div className="input-with-icon">
+                  <BookOpen size={18} className="input-icon" />
+                  <input
+                    type="text"
+                    className="form-input icon-input"
+                    value={degree}
+                    onChange={(e) => setDegree(e.target.value)}
+                    placeholder="Branch / Stream"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <motion.button 
+                type="submit" 
+                className="apply-modal-submit-btn"
+                whileHover={shouldReduceMotion ? {} : { scale: 1.015 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+              >
+                <Send size={16} />
+                <span>Apply for {internship.title} Internship</span>
+              </motion.button>
+
+              {/* Footer Note */}
+              <div className="apply-modal-footer-note">
+                <Lock size={13} />
+                <span>Your information is secure and confidential.</span>
+              </div>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

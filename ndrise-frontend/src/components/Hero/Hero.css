@@ -48,10 +48,12 @@
   margin-bottom: 1.5rem;
   letter-spacing: -0.035em;
   font-family: var(--font-heading);
+  min-height: 1.15em;
 }
 
 .hero-title .title-line {
-  display: block;
+  display: inline-block;
+  min-height: 1.12em;
 }
 
 /* Light Theme (White Background) */
@@ -86,6 +88,25 @@
   background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Blinking Typewriter Cursor */
+.typewriter-cursor {
+  display: inline-block;
+  width: 3.5px;
+  height: 0.82em;
+  background-color: #38bdf8;
+  margin-left: 3px;
+  vertical-align: baseline;
+  border-radius: 2px;
+  -webkit-text-fill-color: initial;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+  animation: typewriter-blink 0.75s step-end infinite;
+}
+
+@keyframes typewriter-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 /* 3. Subdescription */

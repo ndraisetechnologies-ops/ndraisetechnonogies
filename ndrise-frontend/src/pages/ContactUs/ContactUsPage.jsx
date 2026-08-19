@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { FadeIn, StaggerContainer, StaggerItem } from '../../components/Motion/MotionUtils';
 import { MapPin, Mail, Phone, Send, CheckCircle2 } from 'lucide-react';
 import './ContactUsPage.css';
 
@@ -27,64 +29,72 @@ export default function ContactUsPage({ user, setCurrentView }) {
       <div className="contact-container">
         
         {/* Header Section */}
-        <div className="contact-hero">
-          <div className="contact-tag">
-            CONTACT US
+        <FadeIn direction="up">
+          <div className="contact-hero">
+            <div className="contact-tag">
+              CONTACT US
+            </div>
+
+            <h1 className="contact-title">
+              Let's Start a <span className="highlight-conversation">Conversation</span>
+            </h1>
+
+            <p className="contact-subtitle">
+              Have questions about our internships or courses? We're here to help you accelerate your tech career.
+            </p>
           </div>
-
-          <h1 className="contact-title">
-            Let's Start a <span className="highlight-conversation">Conversation</span>
-          </h1>
-
-          <p className="contact-subtitle">
-            Have questions about our internships or courses? We're here to help you accelerate your tech career.
-          </p>
-        </div>
+        </FadeIn>
 
         {/* Main Content Layout */}
         <div className="contact-content-grid">
           
           {/* Left Column: Contact Info Cards */}
-          <div className="contact-info-cards">
+          <StaggerContainer className="contact-info-cards" staggerChildren={0.08}>
             
             {/* Card 1: Visit Us */}
-            <div className="info-card">
-              <div className="info-icon-badge">
-                <MapPin size={20} color="#00acc1" />
-              </div>
-              <div className="info-card-text">
-                <h3 className="info-card-title">Visit Us</h3>
-                <p className="info-card-detail">Lucknow, Uttar Pradesh, India</p>
-              </div>
-            </div>
+            <StaggerItem>
+              <motion.div className="info-card" whileHover={{ y: -5, scale: 1.015 }}>
+                <div className="info-icon-badge">
+                  <MapPin size={20} color="#00acc1" />
+                </div>
+                <div className="info-card-text">
+                  <h3 className="info-card-title">Visit Us</h3>
+                  <p className="info-card-detail">Lucknow, Uttar Pradesh, India</p>
+                </div>
+              </motion.div>
+            </StaggerItem>
 
             {/* Card 2: Email Us */}
-            <div className="info-card">
-              <div className="info-icon-badge">
-                <Mail size={20} color="#00acc1" />
-              </div>
-              <div className="info-card-text">
-                <h3 className="info-card-title">Email Us</h3>
-                <a href="mailto:support@ndraisetechnologies.com" className="info-card-link">
-                  support@ndraisetechnologies.com
-                </a>
-              </div>
-            </div>
+            <StaggerItem>
+              <motion.div className="info-card" whileHover={{ y: -5, scale: 1.015 }}>
+                <div className="info-icon-badge">
+                  <Mail size={20} color="#00acc1" />
+                </div>
+                <div className="info-card-text">
+                  <h3 className="info-card-title">Email Us</h3>
+                  <a href="mailto:support@ndraisetechnologies.com" className="info-card-link">
+                    support@ndraisetechnologies.com
+                  </a>
+                </div>
+              </motion.div>
+            </StaggerItem>
 
             {/* Card 3: Call Us */}
-            <div className="info-card">
-              <div className="info-icon-badge">
-                <Phone size={20} color="#00acc1" />
-              </div>
-              <div className="info-card-text">
-                <h3 className="info-card-title">Call Us</h3>
-                <a href="tel:+915223369892" className="info-card-link">
-                  +91 522 3369892
-                </a>
-              </div>
-            </div>
+            <StaggerItem>
+              <motion.div className="info-card" whileHover={{ y: -5, scale: 1.015 }}>
+                <div className="info-icon-badge">
+                  <Phone size={20} color="#00acc1" />
+                </div>
+                <div className="info-card-text">
+                  <h3 className="info-card-title">Call Us</h3>
+                  <a href="tel:+915223369892" className="info-card-link">
+                    +91 522 3369892
+                  </a>
+                </div>
+              </motion.div>
+            </StaggerItem>
 
-          </div>
+          </StaggerContainer>
 
           {/* Right Column: Send Us a Message Form */}
           <div className="contact-form-card">

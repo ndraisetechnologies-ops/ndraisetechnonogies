@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { FadeIn, StaggerContainer, StaggerItem } from '../../components/Motion/MotionUtils';
 import { 
   Search, Code, BarChart2, Smartphone, Shield, Layout, 
   Database, Cloud, Clock, CheckCircle2, XCircle, ArrowRight, 
@@ -1797,82 +1799,98 @@ export default function BrowseCoursesPage({ onSelectCourse, user, onRequireAuth 
         ) : (
           /* TEST RESULT SUMMARY SCREEN */
           <div className="test-result-container">
-            <div className="result-hero-card">
-              <div className="result-score-badge">
-                <Award size={54} color={scoreResult.percentage >= 60 ? "#10b981" : "#3b82f6"} />
-              </div>
+            <FadeIn direction="up">
+              <div className="result-hero-card">
+                <div className="result-score-badge">
+                  <Award size={54} color={scoreResult.percentage >= 60 ? "#10b981" : "#3b82f6"} />
+                </div>
 
-              <h1 className="result-main-title">
-                {scoreResult.percentage >= 60 ? "Congratulations! Test Passed 🎉" : "Knowledge Assessment Completed 💡"}
-              </h1>
+                <h1 className="result-main-title">
+                  {scoreResult.percentage >= 60 ? "Congratulations! Test Passed 🎉" : "Knowledge Assessment Completed 💡"}
+                </h1>
 
-              <p className="result-sub-desc">
-                You evaluated your skills in <strong>{activeTestCourse.title}</strong> by answering 15 comprehensive questions.
-              </p>
+                <p className="result-sub-desc">
+                  You evaluated your skills in <strong>{activeTestCourse.title}</strong> by answering 15 comprehensive questions.
+                </p>
 
-              {/* Score Display Card */}
-              <div className="score-hero-box">
-                <div className="score-big-number">{scoreResult.percentage}%</div>
-                <div className="score-fraction">{scoreResult.correctCount} / {scoreResult.total} Correct Answers</div>
-                <div className="score-status-chip">
-                  {scoreResult.percentage >= 60 ? "VERIFIED PROFICIENT" : "KEEP LEARNING"}
+                {/* Score Display Card */}
+                <div className="score-hero-box">
+                  <div className="score-big-number">{scoreResult.percentage}%</div>
+                  <div className="score-fraction">{scoreResult.correctCount} / {scoreResult.total} Correct Answers</div>
+                  <div className="score-status-chip">
+                    {scoreResult.percentage >= 60 ? "VERIFIED PROFICIENT" : "KEEP LEARNING"}
+                  </div>
+                </div>
+
+                <div className="result-action-buttons">
+                  <motion.button 
+                    className="btn-secondary" 
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => {
+                      setCurrentQIndex(0);
+                      setUserAnswers({});
+                      setIsTestSubmitted(false);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                  >
+                    <RotateCcw size={18} />
+                    <span>Retake Test</span>
+                  </motion.button>
+                  <motion.button 
+                    className="btn-primary" 
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={handleExitTest}
+                  >
+                    <CheckCircle2 size={18} />
+                    <span>Back to All Courses</span>
+                  </motion.button>
                 </div>
               </div>
-
-              <div className="result-action-buttons">
-                <button className="btn-secondary" onClick={() => {
-                  setCurrentQIndex(0);
-                  setUserAnswers({});
-                  setIsTestSubmitted(false);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}>
-                  <RotateCcw size={18} />
-                  <span>Retake Test</span>
-                </button>
-                <button className="btn-primary" onClick={handleExitTest}>
-                  <CheckCircle2 size={18} />
-                  <span>Back to All Courses</span>
-                </button>
-              </div>
-            </div>
+            </FadeIn>
 
             {/* Detailed Question Review List */}
-            <div className="result-questions-review">
-              <h3 className="review-section-title">Detailed Question Breakdown</h3>
+            <FadeIn direction="up" delay={0.15}>
+              <div className="result-questions-review">
+                <h3 className="review-section-title">Detailed Question Breakdown</h3>
 
-              <div className="review-cards-list">
-                {questions.map((q, idx) => {
-                  const userAns = userAnswers[idx];
-                  const isRight = userAns === q.correct;
+                <StaggerContainer className="review-cards-list" staggerChildren={0.05}>
+                  {questions.map((q, idx) => {
+                    const userAns = userAnswers[idx];
+                    const isRight = userAns === q.correct;
 
-                  return (
-                    <div key={q.id || idx} className={`review-card ${isRight ? 'review-right' : 'review-wrong'}`}>
-                      <div className="review-q-header">
-                        <span className="review-q-num">Q{idx + 1}</span>
-                        <h4>{q.question}</h4>
-                        <span className={`review-status-tag ${isRight ? 'tag-correct' : 'tag-wrong'}`}>
-                          {isRight ? '✓ Correct' : '✕ Incorrect'}
-                        </span>
-                      </div>
+                    return (
+                      <StaggerItem key={q.id || idx}>
+                        <div className={`review-card ${isRight ? 'review-right' : 'review-wrong'}`}>
+                          <div className="review-q-header">
+                            <span className="review-q-num">Q{idx + 1}</span>
+                            <h4>{q.question}</h4>
+                            <span className={`review-status-tag ${isRight ? 'tag-correct' : 'tag-wrong'}`}>
+                              {isRight ? '✓ Correct' : '✕ Incorrect'}
+                            </span>
+                          </div>
 
-                      <div className="review-options-summary">
-                        <p>
-                          <strong>Your Answer:</strong> {userAns !== undefined ? `${String.fromCharCode(65 + userAns)}: ${q.options[userAns]}` : 'Not Answered'}
-                        </p>
-                        {!isRight && (
-                          <p className="correct-ans-highlight">
-                            <strong>Correct Answer:</strong> {String.fromCharCode(65 + q.correct)}: {q.options[q.correct]}
-                          </p>
-                        )}
-                        <p className="review-exp-text">
-                          <strong>Explanation:</strong> {q.explanation}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
+                          <div className="review-options-summary">
+                            <p>
+                              <strong>Your Answer:</strong> {userAns !== undefined ? `${String.fromCharCode(65 + userAns)}: ${q.options[userAns]}` : 'Not Answered'}
+                            </p>
+                            {!isRight && (
+                              <p className="correct-ans-highlight">
+                                <strong>Correct Answer:</strong> {String.fromCharCode(65 + q.correct)}: {q.options[q.correct]}
+                              </p>
+                            )}
+                            <p className="review-exp-text">
+                              <strong>Explanation:</strong> {q.explanation}
+                            </p>
+                          </div>
+                        </div>
+                      </StaggerItem>
+                    );
+                  })}
+                </StaggerContainer>
               </div>
-            </div>
+            </FadeIn>
 
           </div>
         )}
@@ -1887,106 +1905,112 @@ export default function BrowseCoursesPage({ onSelectCourse, user, onRequireAuth 
   return (
     <div className="browse-courses-page">
       {/* Header Container */}
-      <div className="courses-header-container">
-        <h1 className="courses-main-title">
-          Skill Verification <span className="blue-title-highlight">Tests</span>
-        </h1>
-        <p className="courses-sub-title">
-          Test your technical knowledge across 15 interactive questions per domain. Receive instant answer feedback and earn verified credentials.
-        </p>
+      <FadeIn direction="up">
+        <div className="courses-header-container">
+          <h1 className="courses-main-title">
+            Skill Verification <span className="blue-title-highlight">Tests</span>
+          </h1>
+          <p className="courses-sub-title">
+            Test your technical knowledge across 15 interactive questions per domain. Receive instant answer feedback and earn verified credentials.
+          </p>
 
-        {/* Search Bar Wrapper */}
-        <div className="search-bar-wrapper">
-          <div className="search-bar-input-group">
-            <Search className="search-bar-icon" size={20} />
-            <input 
-              type="text" 
-              className="search-bar-field"
-              placeholder="Search by technology (e.g. Web Dev, Python, Java, SQL, Cyber)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            {searchQuery && (
-              <button className="search-clear-btn" onClick={() => setSearchQuery('')}>
-                ✕
+          {/* Search Bar Wrapper */}
+          <div className="search-bar-wrapper">
+            <div className="search-bar-input-group">
+              <Search className="search-bar-icon" size={20} />
+              <input 
+                type="text" 
+                className="search-bar-field"
+                placeholder="Search by technology (e.g. Web Dev, Python, Java, SQL, Cyber)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button className="search-clear-btn" onClick={() => setSearchQuery('')}>
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="category-pills-row">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                className={`cat-pill ${selectedCategory === cat ? 'active' : ''}`}
+                onClick={() => setSelectedCategory(cat)}
+              >
+                {cat}
               </button>
-            )}
+            ))}
           </div>
         </div>
-
-        {/* Category Filter Pills */}
-        <div className="category-pills-row">
-          {categories.map(cat => (
-            <button
-              key={cat}
-              className={`cat-pill ${selectedCategory === cat ? 'active' : ''}`}
-              onClick={() => setSelectedCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      </div>
+      </FadeIn>
 
       {/* Courses Cards Grid */}
-      <div className="courses-grid-container">
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map(course => (
-            <div key={course.id} className="course-card-item">
-              
-              {/* Card Header Bar */}
-              <div className="card-top-bar">
-                <div className="course-icon-circle" style={{ background: course.iconBg }}>
-                  {getIcon(course.iconType, course.iconColor)}
+      {filteredCourses.length > 0 ? (
+        <StaggerContainer className="courses-grid-container" staggerChildren={0.08}>
+          {filteredCourses.map(course => (
+            <StaggerItem key={course.id}>
+              <motion.div 
+                className="course-card-item"
+                whileHover={{ y: -6, scale: 1.015, transition: { duration: 0.25, ease: 'easeOut' } }}
+              >
+                {/* Card Header Bar */}
+                <div className="card-top-bar">
+                  <div className="course-icon-circle" style={{ background: course.iconBg }}>
+                    {getIcon(course.iconType, course.iconColor)}
+                  </div>
+                  <span className={`level-pill-badge level-${course.levelType}`}>
+                    {course.level}
+                  </span>
                 </div>
-                <span className={`level-pill-badge level-${course.levelType}`}>
-                  {course.level}
-                </span>
-              </div>
 
-              {/* Title & Desc */}
-              <div className="course-category-tag">{course.category}</div>
-              <h3 className="course-card-title">{course.title}</h3>
-              <p className="course-card-description">{course.description}</p>
+                {/* Title & Desc */}
+                <div className="course-category-tag">{course.category}</div>
+                <h3 className="course-card-title">{course.title}</h3>
+                <p className="course-card-description">{course.description}</p>
 
-              {/* Metadata Details */}
-              <div className="course-meta-details">
-                <div className="meta-info-item">
-                  <Clock size={15} className="meta-info-icon" />
-                  <span>{course.duration}</span>
+                {/* Metadata Details */}
+                <div className="course-meta-details">
+                  <div className="meta-info-item">
+                    <Clock size={15} className="meta-info-icon" />
+                    <span>{course.duration}</span>
+                  </div>
+                  <div className="meta-info-item">
+                    <HelpCircle size={15} className="meta-info-icon" />
+                    <span>{course.questions}</span>
+                  </div>
+                  <div className="meta-info-item">
+                    <CheckCircle2 size={15} className="meta-info-icon" />
+                    <span>{course.passScore}</span>
+                  </div>
                 </div>
-                <div className="meta-info-item">
-                  <HelpCircle size={15} className="meta-info-icon" />
-                  <span>{course.questions}</span>
+
+                {/* Action Button */}
+                <div className="course-card-footer">
+                  <motion.button 
+                    className="btn-start-course"
+                    onClick={() => handleStartTest(course)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span>Start Test</span>
+                    <ArrowRight size={16} className="start-arrow" />
+                  </motion.button>
                 </div>
-                <div className="meta-info-item">
-                  <CheckCircle2 size={15} className="meta-info-icon" />
-                  <span>{course.passScore}</span>
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <div className="course-card-footer">
-                <button 
-                  className="btn-start-course"
-                  onClick={() => handleStartTest(course)}
-                >
-                  <span>Start Test</span>
-                  <ArrowRight size={16} className="start-arrow" />
-                </button>
-              </div>
-
-            </div>
-          ))
-        ) : (
-          <div className="courses-empty-state">
-            <Search size={48} color="#94a3b8" style={{ marginBottom: '1rem' }} />
-            <h3>No skill tests found</h3>
-            <p>Try searching for keywords like "Python", "Java", "SQL", or select another category.</p>
-          </div>
-        )}
-      </div>
-
+              </motion.div>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+      ) : (
+        <div className="courses-empty-state">
+          <Search size={48} color="#94a3b8" style={{ marginBottom: '1rem' }} />
+          <h3>No skill tests found</h3>
+          <p>Try searching for keywords like "Python", "Java", "SQL", or select another category.</p>
+        </div>
+      )}
     </div>
   );
 }

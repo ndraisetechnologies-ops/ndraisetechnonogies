@@ -2,6 +2,7 @@ import {
   LayoutDashboard, Users, Briefcase, GraduationCap, Award, DollarSign, 
   FileSpreadsheet, Settings, LogOut, BarChart3, Layers, Menu, X, Shield, ShieldAlert, History, ExternalLink, Plus, Trash2, UserPlus, UserCheck, Calendar, RotateCcw
 } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { submissionAPI, internshipAPI } from '../../services/apiClient';
 import './AdminDashboard.css';
@@ -55,7 +56,7 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
     { id: 'students', label: 'Students', icon: Users },
     { id: 'internships', label: 'Internships', icon: Briefcase },
     { id: 'courses', label: 'Courses', icon: GraduationCap },
-    { id: 'assignments', label: 'Assignments', icon: FileSpreadsheet },
+    { id: 'assignments', label: 'Assignments', icon: Award },
     { id: 'certificates', label: 'Certificates', icon: Award },
     ...(isSuperAdmin ? [
       { id: 'users', label: 'User & Roles', icon: Shield },
@@ -204,12 +205,18 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
       </div>
 
       {/* Overlay Backdrop for Mobile Drawer */}
-      {sidebarOpen && (
-        <div 
-          className="admin-sidebar-overlay"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div 
+            className="admin-sidebar-overlay"
+            onClick={() => setSidebarOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
       <aside className={`admin-sidebar ${sidebarOpen ? 'mobile-open' : ''}`}>
@@ -228,24 +235,33 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
         <ul className="dashboard-menu">
           {menuItems.map(item => {
             const Icon = item.icon;
+            const isActive = activeMenu === item.id;
             return (
-              <li
+              <motion.li
                 key={item.id}
-                className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
+                className={`menu-item ${isActive ? 'active' : ''}`}
                 onClick={() => {
                   setActiveMenu(item.id);
                   setSidebarOpen(false);
                 }}
+                whileHover={shouldReduceMotion ? {} : { x: 4 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
               >
                 <Icon size={18} />
                 <span>{item.label}</span>
-              </li>
+              </motion.li>
             );
           })}
-          <li className="menu-item" onClick={onLogout} style={{ marginTop: 'auto', color: '#f87171' }}>
+          <motion.li 
+            className="menu-item" 
+            onClick={onLogout} 
+            style={{ marginTop: 'auto', color: '#f87171' }}
+            whileHover={shouldReduceMotion ? {} : { x: 4 }}
+            whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+          >
             <LogOut size={18} />
             <span>Sign Out</span>
-          </li>
+          </motion.li>
         </ul>
       </aside>
 
@@ -284,28 +300,39 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
               Exit to Website
             </button>
           </div>
-        </div>
+        </FadeIn>
 
         {message && (
-          <div style={{ background: 'rgba(52, 211, 153, 0.15)', border: '1px solid rgba(52, 211, 153, 0.4)', color: 'var(--accent-green)', padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.85rem' }}>
+          <motion.div 
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{ background: 'rgba(52, 211, 153, 0.15)', border: '1px solid rgba(52, 211, 153, 0.4)', color: 'var(--accent-green)', padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.85rem' }}
+          >
             {message}
-          </div>
+          </motion.div>
         )}
 
         {/* TAB 1: DASHBOARD OVERVIEW */}
         {activeMenu === 'dashboard' && (
           <>
             {/* 4 Metrics Cards */}
-            <div className="admin-metrics">
-              <div className="glass-panel admin-card">
-                <div className="admin-card-icon" style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8' }}>
-                  <Users size={24} />
-                </div>
-                <div>
-                  <div className="admin-card-number">{metrics.totalStudents.toLocaleString()}</div>
-                  <div className="admin-card-label">Total Students</div>
-                </div>
-              </div>
+            <StaggerContainer className="admin-metrics" staggerChildren={0.08}>
+              <StaggerItem>
+                <motion.div 
+                  className="glass-panel admin-card"
+                  whileHover={shouldReduceMotion ? {} : { y: -3, scale: 1.015 }}
+                >
+                  <div className="admin-card-icon" style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8' }}>
+                    <Users size={24} />
+                  </div>
+                  <div>
+                    <div className="admin-card-number">
+                      <AnimatedNumber value={metrics.totalStudents} />
+                    </div>
+                    <div className="admin-card-label">Total Students</div>
+                  </div>
+                </motion.div>
+              </StaggerItem>
 
               <div className="glass-panel admin-card">
                 <div className="admin-card-icon" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8' }}>
@@ -317,15 +344,22 @@ export default function AdminDashboard({ user, setCurrentView, onLogout }) {
                 </div>
               </div>
 
-              <div className="glass-panel admin-card">
-                <div className="admin-card-icon" style={{ background: 'rgba(52, 211, 153, 0.15)', color: '#34d399' }}>
-                  <GraduationCap size={24} />
-                </div>
-                <div>
-                  <div className="admin-card-number">{metrics.completedInternships.toLocaleString()}</div>
-                  <div className="admin-card-label">Completed Internships</div>
-                </div>
-              </div>
+              <StaggerItem>
+                <motion.div 
+                  className="glass-panel admin-card"
+                  whileHover={shouldReduceMotion ? {} : { y: -3, scale: 1.015 }}
+                >
+                  <div className="admin-card-icon" style={{ background: 'rgba(52, 211, 153, 0.15)', color: '#34d399' }}>
+                    <GraduationCap size={24} />
+                  </div>
+                  <div>
+                    <div className="admin-card-number">
+                      <AnimatedNumber value={metrics.completedInternships} />
+                    </div>
+                    <div className="admin-card-label">Completed Internships</div>
+                  </div>
+                </motion.div>
+              </StaggerItem>
 
               <div className="glass-panel admin-card">
                 <div className="admin-card-icon" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24' }}>

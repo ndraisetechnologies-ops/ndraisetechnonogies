@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { FadeIn, StaggerContainer, StaggerItem } from '../../components/Motion/MotionUtils';
 import { 
   Brain, Target, Award, Code, UserCheck, Users, FileText, CheckCircle2, 
   AlertCircle, ArrowRight, RefreshCw, Sparkles, HelpCircle, Star, ShieldAlert, 
@@ -105,159 +107,165 @@ export default function InterviewPrepPage({ setCurrentView, user, onRequireAuth 
     <div className="interview-prep-page">
       <div className="interview-container">
         
-        {/* 1. Hero Header */}
-        <div className="interview-hero">
-          <div className="hero-badge">
-            <Sparkles size={14} className="sparkle-icon" />
-            <span>AI-POWERED INTERVIEW PRACTICE</span>
+        {/* 1. Page Header */}
+        <FadeIn direction="up">
+          <div className="interview-hero">
+            <div className="hero-badge">
+              <Sparkles size={14} className="sparkle-icon" />
+              <span>AI INTERVIEW PRACTICE & READINESS</span>
+            </div>
+            <h1 className="hero-title">
+              Interview <span className="blue-highlight-text">Preparation</span>
+            </h1>
+            <p className="hero-subtitle font-medium">
+              Practice technical questions, improve your interview answers, and build confidence before you meet recruiters.
+            </p>
+
+            {viewState === 'dashboard' && (
+              <motion.button 
+                type="button" 
+                className="btn-primary hero-cta-btn"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  const el = document.getElementById('setup-card-section');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <span>Start Preparation →</span>
+              </motion.button>
+            )}
           </div>
-
-          <h1 className="hero-title">
-            Interview <span className="blue-highlight-text">Preparation</span>
-          </h1>
-
-          <p className="hero-subtitle">
-            Prepare smarter for your next internship or job interview.
-          </p>
-
-          <p className="hero-desc">
-            Practice technical questions, improve your interview answers, and build confidence before you meet recruiters.
-          </p>
-
-          {viewState === 'dashboard' && (
-            <button 
-              type="button" 
-              className="btn-primary hero-cta-btn"
-              onClick={() => {
-                const el = document.getElementById('setup-card-section');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              <span>Start Preparation →</span>
-            </button>
-          )}
-        </div>
+        </FadeIn>
 
         {/* 2. Main Dashboard & Readiness View */}
         {viewState === 'dashboard' && (
           <div className="dashboard-content-stack animate-fade-in">
             
             {/* Top Readiness & Progress Bar Row */}
-            <div className="readiness-overview-grid">
-              
-              {/* Readiness Score Card */}
-              <div className="section-card glass-panel readiness-card">
-                <div className="card-top-tag">NDRISE PREPARATION INDICATOR</div>
-                <h3 className="readiness-card-title">Interview Readiness</h3>
-
-                <div className="readiness-score-row">
-                  <div className="score-badge-circle">
-                    <span className="score-num">{readinessScore}</span>
-                    <span className="score-max">/ 100</span>
-                  </div>
-                  <div className="score-status-info">
-                    <span className="status-label">Good Progress</span>
-                    <p className="status-desc">
-                      Your answer structure and technical keyword alignment are improving. Keep practicing!
-                    </p>
-                  </div>
-                </div>
-
-                <div className="disclaimer-note">
-                  <ShieldAlert size={14} />
-                  <span>
-                    This is an NDRise preparation indicator based on your practice activity and answers. It is not a prediction of interview outcomes.
-                  </span>
-                </div>
-              </div>
-
-              {/* Progress & Stats Card */}
-              <div className="section-card glass-panel stats-card">
-                <h3 className="card-section-title">Practice Metrics</h3>
+            <FadeIn direction="up" delay={0.1}>
+              <div className="readiness-overview-grid">
                 
-                <div className="stats-row">
-                  <div className="stat-item-box">
-                    <div className="stat-icon-wrap icon-flame">
-                      <Flame size={20} />
+                {/* Readiness Score Card */}
+                <div className="section-card glass-panel readiness-card">
+                  <div className="card-top-tag">NDRISE PREPARATION INDICATOR</div>
+                  <h3 className="readiness-card-title">Interview Readiness</h3>
+
+                  <div className="readiness-score-row">
+                    <div className="score-badge-circle">
+                      <span className="score-num">{readinessScore}</span>
+                      <span className="score-max">/ 100</span>
                     </div>
-                    <div>
-                      <div className="stat-val">{streakDays} Days</div>
-                      <div className="stat-lbl">Current Streak</div>
+                    <div className="score-status-info">
+                      <span className="status-label">Good Progress</span>
+                      <p className="status-desc">
+                        Your answer structure and technical keyword alignment are improving. Keep practicing!
+                      </p>
                     </div>
                   </div>
 
-                  <div className="stat-item-box">
-                    <div className="stat-icon-wrap icon-check">
-                      <CheckCircle2 size={20} />
-                    </div>
-                    <div>
-                      <div className="stat-val">{questionsPracticed}</div>
-                      <div className="stat-lbl">Questions Practiced</div>
-                    </div>
+                  <div className="disclaimer-note">
+                    <ShieldAlert size={14} />
+                    <span>
+                      This is an NDRise preparation indicator based on your practice activity and answers. It is not a prediction of interview outcomes.
+                    </span>
                   </div>
                 </div>
 
-                <div className="category-progress-list">
-                  <div className="prog-item">
-                    <div className="prog-label"><span>Technical Questions</span><strong>32 / 50</strong></div>
-                    <div className="prog-bar"><div className="prog-fill" style={{ width: '64%' }}></div></div>
-                  </div>
-                  <div className="prog-item">
-                    <div className="prog-label"><span>HR Questions</span><strong>18 / 30</strong></div>
-                    <div className="prog-bar"><div className="prog-fill" style={{ width: '60%' }}></div></div>
-                  </div>
-                  <div className="prog-item">
-                    <div className="prog-label"><span>Behavioral Questions</span><strong>12 / 20</strong></div>
-                    <div className="prog-bar"><div className="prog-fill" style={{ width: '60%' }}></div></div>
-                  </div>
-                </div>
+                {/* Progress & Stats Card */}
+                <div className="section-card glass-panel stats-card">
+                  <h3 className="card-section-title">Practice Metrics</h3>
+                  
+                  <div className="stats-row">
+                    <div className="stat-item-box">
+                      <div className="stat-icon-wrap icon-flame">
+                        <Flame size={20} />
+                      </div>
+                      <div>
+                        <div className="stat-val">{streakDays} Days</div>
+                        <div className="stat-lbl">Current Streak</div>
+                      </div>
+                    </div>
 
+                    <div className="stat-item-box">
+                      <div className="stat-icon-wrap icon-check">
+                        <CheckCircle2 size={20} />
+                      </div>
+                      <div>
+                        <div className="stat-val">{questionsPracticed}</div>
+                        <div className="stat-lbl">Questions Practiced</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="category-progress-list">
+                    <div className="prog-item">
+                      <div className="prog-label"><span>Technical Questions</span><strong>32 / 50</strong></div>
+                      <div className="prog-bar"><div className="prog-fill" style={{ width: '64%' }}></div></div>
+                    </div>
+                    <div className="prog-item">
+                      <div className="prog-label"><span>HR Questions</span><strong>18 / 30</strong></div>
+                      <div className="prog-bar"><div className="prog-fill" style={{ width: '60%' }}></div></div>
+                    </div>
+                    <div className="prog-item">
+                      <div className="prog-label"><span>Behavioral Questions</span><strong>12 / 20</strong></div>
+                      <div className="prog-bar"><div className="prog-fill" style={{ width: '60%' }}></div></div>
+                    </div>
+                  </div>
+
+                </div>
               </div>
-            </div>
+            </FadeIn>
 
             {/* Daily Practice & Question of the Day Banner */}
-            <div className="daily-practice-grid">
-              
-              <div className="daily-card glass-panel">
-                <div className="daily-header">
-                  <Flame size={22} color="#f59e0b" />
-                  <h4>Daily Interview Practice</h4>
-                </div>
-                <p className="daily-text">Practice 5 targeted questions today to maintain your streak.</p>
-                <div className="daily-meta">
-                  <span>⚡ 5 Questions</span>
-                  <span>⏱ ~10 Minutes</span>
-                </div>
-                <button 
-                  type="button" 
-                  className="btn-secondary btn-daily-action"
-                  onClick={() => handleSelectCategory('Technical')}
-                >
-                  <span>Start Today's Practice →</span>
-                </button>
-              </div>
+            <FadeIn direction="up" delay={0.15}>
+              <div className="daily-practice-grid">
+                
+                <motion.div className="daily-card glass-panel" whileHover={{ y: -4, scale: 1.01 }}>
+                  <div className="daily-header">
+                    <Flame size={22} color="#f59e0b" />
+                    <h4>Daily Interview Practice</h4>
+                  </div>
+                  <p className="daily-text">Practice 5 targeted questions today to maintain your streak.</p>
+                  <div className="daily-meta">
+                    <span>⚡ 5 Questions</span>
+                    <span>⏱ ~10 Minutes</span>
+                  </div>
+                  <motion.button 
+                    type="button" 
+                    className="btn-secondary btn-daily-action"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleSelectCategory('Technical')}
+                  >
+                    <span>Start Today's Practice →</span>
+                  </motion.button>
+                </motion.div>
 
-              <div className="qotd-card glass-panel">
-                <div className="qotd-header">
-                  <Lightbulb size={22} color="#38bdf8" />
-                  <h4>Question of the Day</h4>
-                </div>
-                <p className="qotd-question">"{QUESTION_OF_THE_DAY.question}"</p>
-                <p className="qotd-hint">Hint: {QUESTION_OF_THE_DAY.hint}</p>
-                <button 
-                  type="button" 
-                  className="btn-primary btn-qotd-action"
-                  onClick={() => {
-                    setActiveQuestions([QUESTION_OF_THE_DAY]);
-                    setCurrentIndex(0);
-                    setViewState('practice');
-                  }}
-                >
-                  <span>Practice Answer →</span>
-                </button>
-              </div>
+                <motion.div className="qotd-card glass-panel" whileHover={{ y: -4, scale: 1.01 }}>
+                  <div className="qotd-header">
+                    <Lightbulb size={22} color="#38bdf8" />
+                    <h4>Question of the Day</h4>
+                  </div>
+                  <p className="qotd-question">"{QUESTION_OF_THE_DAY.question}"</p>
+                  <p className="qotd-hint">Hint: {QUESTION_OF_THE_DAY.hint}</p>
+                  <motion.button 
+                    type="button" 
+                    className="btn-primary btn-qotd-action"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      setActiveQuestions([QUESTION_OF_THE_DAY]);
+                      setCurrentIndex(0);
+                      setViewState('practice');
+                    }}
+                  >
+                    <span>Practice Answer →</span>
+                  </motion.button>
+                </motion.div>
 
-            </div>
+              </div>
+            </FadeIn>
 
             {/* Preparation Setup Card */}
             <div className="section-card glass-panel setup-card" id="setup-card-section">
