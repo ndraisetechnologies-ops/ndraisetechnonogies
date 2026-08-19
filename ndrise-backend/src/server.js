@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const internshipRoutes = require('./routes/internshipRoutes');
 const submissionRoutes = require('./routes/submissionRoutes');
 const studentRoutes = require('./routes/studentRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,6 +32,7 @@ app.get('/api/health', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api', internshipRoutes);
 app.use('/api', submissionRoutes);
 app.use('/api/student', studentRoutes);
