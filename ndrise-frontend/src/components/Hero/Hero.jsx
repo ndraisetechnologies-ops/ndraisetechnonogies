@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Play, BookOpen, Code2, TrendingUp, Sparkles, Award, CheckCircle2 } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import './Hero.css';
@@ -7,54 +7,97 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
   const shouldReduceMotion = useReducedMotion();
 
   const phrases = [
-    { text: 'Build Skills.', className: 'title-line-1' },
-    { text: 'Build Projects.', className: 'title-line-2' },
-    { text: 'Build Your Future.', className: 'title-line-3' }
+    { prefix: 'Build ', highlight: 'Skills.' },
+    { prefix: 'Build ', highlight: 'Projects.' },
+    { prefix: 'Build Your ', highlight: 'Future.' }
   ];
 
   const [phraseIndex, setPhraseIndex] = useState(0);
-  const [displayText, setDisplayText] = useState('');
+  const [charCount, setCharCount] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Mouse tilt tracking for 3D stage
+  const stageRef = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    if (shouldReduceMotion || window.innerWidth < 1024 || !stageRef.current) return;
+    const rect = stageRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const rotateY = ((e.clientX - centerX) / (rect.width / 2)) * 6; // max 6 deg
+    const rotateX = -((e.clientY - centerY) / (rect.height / 2)) * 6; // max 6 deg
+    setTilt({ x: rotateX, y: rotateY });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+  };
+
+  // Typewriter Loop
   useEffect(() => {
     if (shouldReduceMotion) return;
 
-    const currentPhrase = phrases[phraseIndex].text;
+    const currentObj = phrases[phraseIndex];
+    const fullText = `${currentObj.prefix}${currentObj.highlight}`;
 
-    let timerDelay = 60; // Typing speed: 60ms
+    let speed = isDeleting ? 35 : 60; // 60ms reveal, 35ms delete
 
-    if (isDeleting) {
-      timerDelay = 40; // Deleting speed: 40ms
-    }
-
-    if (!isDeleting && displayText === currentPhrase) {
-      timerDelay = 1000; // Pause after typing: 1000ms
-    } else if (isDeleting && displayText === '') {
-      timerDelay = 300; // Pause between phrases: 300ms
+    if (!isDeleting && charCount === fullText.length) {
+      // Pause after completing phrase: 2s for final phrase, 1.2s for others
+      const pauseDuration = phraseIndex === phrases.length - 1 ? 2000 : 1200;
+      const timeout = setTimeout(() => setIsDeleting(true), pauseDuration);
+      return () => clearTimeout(timeout);
+    } else if (isDeleting && charCount === 0) {
+      setIsDeleting(false);
+      setPhraseIndex((prev) => (prev + 1) % phrases.length);
+      return;
     }
 
     const timer = setTimeout(() => {
-      if (!isDeleting && displayText === currentPhrase) {
-        setIsDeleting(true);
-      } else if (isDeleting && displayText === '') {
-        setIsDeleting(false);
-        setPhraseIndex((prev) => (prev + 1) % phrases.length);
-      } else if (isDeleting) {
-        setDisplayText(currentPhrase.slice(0, displayText.length - 1));
-      } else {
-        setDisplayText(currentPhrase.slice(0, displayText.length + 1));
-      }
-    }, timerDelay);
+      setCharCount((prev) => prev + (isDeleting ? -1 : 1));
+    }, speed);
 
     return () => clearTimeout(timer);
-  }, [displayText, isDeleting, phraseIndex, shouldReduceMotion]);
+  }, [charCount, isDeleting, phraseIndex, shouldReduceMotion]);
 
   const scrollToHowItWorks = () => {
     const el = document.getElementById('how-it-works');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Stagger container for text reveal sequence
+  // Helper to render typed text with gradient highlight on "Future."
+  const renderTypedText = () => {
+    const currentObj = phrases[phraseIndex];
+    const fullText = `${currentObj.prefix}${currentObj.highlight}`;
+    const visibleSub = fullText.slice(0, charCount);
+
+    const prefixLen = currentObj.prefix.length;
+
+    if (visibleSub.length <= prefixLen) {
+      return (
+        <>
+          <span>{visibleSub}</span>
+          <span className="typewriter-cursor" aria-hidden="true" />
+        </>
+      );
+    }
+
+    const typedPrefix = visibleSub.slice(0, prefixLen);
+    const typedHighlight = visibleSub.slice(prefixLen);
+    const isFinalWord = phraseIndex === 2;
+
+    return (
+      <>
+        <span>{typedPrefix}</span>
+        <span className={isFinalWord ? 'hero-gradient-future' : 'hero-highlight-word'}>
+          {typedHighlight}
+        </span>
+        <span className="typewriter-cursor" aria-hidden="true" />
+      </>
+    );
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -78,12 +121,12 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
       scale: 1,
       transition: {
         duration: shouldReduceMotion ? 0.2 : 0.6,
-        ease: [0.22, 1, 0.36, 1],
+        ease: [0.16, 1, 0.3, 1],
       },
     },
   };
 
-  const floatingAnimation = (yOffset = -6, duration = 3.5, delay = 0) => {
+  const floatingAnimation = (yOffset = -8, duration = 4, delay = 0) => {
     if (shouldReduceMotion) return {};
     return {
       animate: {
@@ -101,38 +144,43 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
 
   return (
     <section className="hero-section">
-      {/* Left Column Staggered Entrance */}
+      {/* Background Ambient Spotlights */}
+      <div className="hero-ambient-bg">
+        <div className="ambient-spotlight spotlight-blue" />
+        <div className="ambient-spotlight spotlight-purple" />
+        <div className="ambient-spotlight spotlight-cyan" />
+      </div>
+
+      {/* Left Content Column */}
       <motion.div 
         className="hero-content"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {/* Top Tag Pill */}
+        {/* Top Badge Pill */}
         <motion.div variants={itemVariants} className="hero-badge-tag">
           <Sparkles size={14} className="sparkle-icon" />
           <span>LEARN • BUILD • GROW</span>
         </motion.div>
 
-        {/* Headline Title with Continuous Looping Typewriter */}
+        {/* Headline Title with Continuous Typewriter Animation */}
         <motion.h1 variants={itemVariants} className="hero-title hero-title-animated">
           {shouldReduceMotion ? (
             <>
-              <span className="title-line title-line-1">Build Skills.</span>
-              <span className="title-line title-line-2">Build Projects.</span>
-              <span className="title-line title-line-3">Build Your Future.</span>
+              <span className="title-static">Build Skills. Build Projects. </span>
+              <span className="hero-gradient-future">Build Your Future.</span>
             </>
           ) : (
-            <span className={`title-line ${phrases[phraseIndex].className}`}>
-              {displayText || '\u00A0'}
-              <span className="typewriter-cursor" aria-hidden="true" />
+            <span className="typewriter-line">
+              {renderTypedText()}
             </span>
           )}
         </motion.h1>
 
-        {/* Subdescription */}
+        {/* Description */}
         <motion.p variants={itemVariants} className="hero-description">
-          ND Raise Technologies helps students gain practical experience through structured internships, real-world projects and industry-focused learning.
+          ND Raise Technologies helps engineering and tech students gain practical experience through structured virtual internships, real-world industry projects, and verifiable credentials.
         </motion.p>
 
         {/* Action Buttons */}
@@ -177,24 +225,27 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
         </motion.div>
       </motion.div>
 
-      {/* Right Side 3D Visual Stage */}
+      {/* Right Side 3D Visual Stage with Parallax Tilt */}
       <motion.div 
+        ref={stageRef}
         className="hero-visual-3d-stage"
-        initial={{ opacity: 0, scale: 0.94, y: 25 }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        initial={{ opacity: 0, scale: 0.95, y: 25 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
       >
-        {/* Multi-layered background ambient glow spotlights */}
-        <div className="hero-3d-spotlight spotlight-cyan"></div>
-        <div className="hero-3d-spotlight spotlight-purple"></div>
-
-        {/* 3D Tilted Card Wrapper */}
-        <div className="hero-3d-card-wrapper">
-          
-          {/* Main IDE / Workspace Card (Middle 3D Layer) */}
-          <div className="hero-3d-ide-window">
-            
-            {/* Header bar with controls & live URL */}
+        {/* 3D Container with Dynamic Tilt */}
+        <div 
+          className="hero-3d-card-wrapper"
+          style={{
+            transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+            transition: 'transform 0.15s ease-out'
+          }}
+        >
+          {/* Main IDE Window Layer */}
+          <div className="hero-3d-ide-window glass-panel">
+            {/* Header bar */}
             <div className="ide-header-bar">
               <div className="ide-dots">
                 <span className="ide-dot dot-close"></span>
@@ -202,28 +253,30 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
                 <span className="ide-dot dot-max"></span>
               </div>
               <div className="ide-url-pill">
-                <span>ndrise.tech/internships</span>
+                <span>ndraisetechnologies.com/internships</span>
               </div>
               <div className="ide-live-badge">
                 <span className="pulse-green-dot"></span> LIVE TRACK
               </div>
             </div>
 
-            {/* IDE Workspace Inner */}
+            {/* IDE Workspace Inner Content */}
             <div className="ide-body-content">
               {/* Logo Banner Container */}
               <div className="ide-logo-header">
-                <img src="/logo.jpg" alt="NDRaise Technologies" className="ide-logo-img" />
+                <div className="ide-logo-badge">
+                  <img src="/logo.jpg" alt="ND Raise Technologies" className="ide-logo-img" />
+                </div>
                 <div className="ide-logo-text">
-                  <span className="ide-logo-title">NDRaise Technologies</span>
-                  <span className="ide-logo-sub">Virtual Career Accelerator</span>
+                  <span className="ide-logo-title">ND Raise Technologies</span>
+                  <span className="ide-logo-sub">Virtual Tech Platform</span>
                 </div>
               </div>
 
-              {/* Simulated Code & Progress Block */}
+              {/* Code Snippet Block */}
               <div className="ide-code-block">
                 <div className="code-line">
-                  <span className="code-keyword">const</span> <span className="code-var">internship</span> = <span className="code-function">await</span> <span className="code-var">ndrise</span>.<span className="code-method">enroll</span>(&#123;
+                  <span className="code-keyword">const</span> <span className="code-var">internship</span> = <span className="code-function">await</span> <span className="code-var">ndraise</span>.<span className="code-method">enroll</span>(&#123;
                 </div>
                 <div className="code-line code-indent">
                   <span className="code-prop">track</span>: <span className="code-string">"Full Stack Development"</span>,
@@ -240,13 +293,12 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
                 <div className="code-line">&#125;);</div>
               </div>
             </div>
-
           </div>
 
-          {/* Floating 3D Micro Chips with subtle independent motion */}
+          {/* Micro Floating Badges */}
           <motion.div 
             className="hero-3d-micro-chip chip-certificate"
-            {...floatingAnimation(-7, 4, 0)}
+            {...floatingAnimation(-7, 4.2, 0)}
           >
             <CheckCircle2 size={16} className="chip-icon green" />
             <div className="chip-text">
@@ -257,7 +309,7 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
 
           <motion.div 
             className="hero-3d-micro-chip chip-rating"
-            {...floatingAnimation(-6, 4.5, 0.5)}
+            {...floatingAnimation(-6, 4.8, 0.4)}
           >
             <Award size={16} className="chip-icon amber" />
             <div className="chip-text">
@@ -266,10 +318,10 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
             </div>
           </motion.div>
 
-          {/* Floating Action Pill Badges (Front 3D Layer) */}
+          {/* Floating Action Pill Badges: LEARN, BUILD, GROW */}
           <motion.div 
             className="hero-pill-badge-3d pill-learn-3d"
-            {...floatingAnimation(-5, 3.8, 0.2)}
+            {...floatingAnimation(-5, 3.8, 0.1)}
           >
             <BookOpen size={16} className="pill-icon-3d cyan" />
             <span>LEARN</span>
@@ -277,7 +329,7 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
 
           <motion.div 
             className="hero-pill-badge-3d pill-build-3d"
-            {...floatingAnimation(-6, 4.2, 0.7)}
+            {...floatingAnimation(-6, 4.2, 0.6)}
           >
             <Code2 size={16} className="pill-icon-3d purple" />
             <span>BUILD</span>
@@ -290,7 +342,6 @@ export default function Hero({ onExploreClick, onVerifyClick, onSubmitTaskClick 
             <TrendingUp size={16} className="pill-icon-3d emerald" />
             <span>GROW</span>
           </motion.div>
-
         </div>
       </motion.div>
     </section>

@@ -56,8 +56,14 @@ export default function AuthPage({ initialMode = 'login', onAuthSuccess, onGoHom
         }
       } else if (mode === 'admin-login') {
         const res = await authAPI.adminLogin({ email, password });
-        if (res.token) setAuthToken(res.token);
         if (res.success && res.user) {
+          const userRole = (res.user.role || '').toUpperCase();
+          if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
+            setAuthToken(null);
+            setErrorMessage('Access denied: Student accounts cannot log in through the Admin Security Portal.');
+            return;
+          }
+          if (res.token) setAuthToken(res.token);
           if (showToast) showToast('Welcome Admin!');
           onAuthSuccess(res.user);
         } else {
@@ -86,10 +92,16 @@ export default function AuthPage({ initialMode = 'login', onAuthSuccess, onGoHom
           }
         }
       } else {
-        // Standard Login
+        // Standard Student Login
         const res = await authAPI.login({ email, password });
-        if (res.token) setAuthToken(res.token);
         if (res.success && res.user) {
+          const userRole = (res.user.role || '').toUpperCase();
+          if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
+            setAuthToken(null);
+            setErrorMessage('Admin accounts must log in via the Admin Security Portal.');
+            return;
+          }
+          if (res.token) setAuthToken(res.token);
           if (showToast) showToast(`Welcome back, ${res.user.name}!`);
           onAuthSuccess(res.user);
         } else {
@@ -116,8 +128,14 @@ export default function AuthPage({ initialMode = 'login', onAuthSuccess, onGoHom
         avatar: '/student-avatar.svg'
       });
 
-      if (res.token) setAuthToken(res.token);
       if (res.success && res.user) {
+        const userRole = (res.user.role || '').toUpperCase();
+        if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
+          setAuthToken(null);
+          setErrorMessage('Admin accounts must log in via the Admin Security Portal.');
+          return;
+        }
+        if (res.token) setAuthToken(res.token);
         if (showToast) showToast(`Signed in with Google as ${res.user.email}`);
         onAuthSuccess(res.user);
       } else {
@@ -135,6 +153,13 @@ export default function AuthPage({ initialMode = 'login', onAuthSuccess, onGoHom
   return (
     <div className="auth-full-page">
       
+      {/* Ambient Radial Glow Spotlights matching site theme */}
+      <div className="auth-ambient-bg">
+        <div className="ambient-spotlight spotlight-blue" />
+        <div className="ambient-spotlight spotlight-purple" />
+        <div className="ambient-spotlight spotlight-cyan" />
+      </div>
+
       {/* Floating Back to Home Button */}
       <button className="auth-floating-back-btn" onClick={onGoHome}>
         <ArrowLeft size={16} />

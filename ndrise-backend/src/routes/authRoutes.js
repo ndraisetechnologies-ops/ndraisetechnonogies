@@ -138,7 +138,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// POST /api/auth/login
+// POST /api/auth/login (Student Login Portal Only)
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -158,6 +158,15 @@ router.post('/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ success: false, error: 'Invalid email or password.' });
+    }
+
+    // Role Guard: Reject Admin / Super Admin accounts on Student Login
+    const userRole = (user.role || '').toUpperCase();
+    if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
+      return res.status(403).json({
+        success: false,
+        error: 'Admin accounts must log in via the Admin Security Portal.'
+      });
     }
 
     const token = jwt.sign(
@@ -185,7 +194,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// POST /api/auth/admin-login
+// POST /api/auth/admin-login (Admin Security Portal Only)
 router.post('/admin-login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -198,8 +207,12 @@ router.post('/admin-login', async (req, res) => {
       where: { email: email.toLowerCase() }
     });
 
-    if (!user || user.role !== 'ADMIN') {
-      return res.status(401).json({ success: false, error: 'Invalid admin credentials.' });
+    const userRole = (user?.role || '').toUpperCase();
+    if (!user || (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN')) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: Student accounts cannot log in through the Admin Security Portal.'
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -356,6 +369,15 @@ router.post('/google', async (req, res) => {
           role: 'STUDENT',
           avatar: avatar || '/student-avatar.svg'
         }
+      });
+    }
+
+    // Role Guard: Admin users cannot log in via student Google auth
+    const userRole = (user.role || '').toUpperCase();
+    if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
+      return res.status(403).json({
+        success: false,
+        error: 'Admin accounts must log in via the Admin Security Portal.'
       });
     }
 

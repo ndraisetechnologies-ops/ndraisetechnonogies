@@ -27,6 +27,7 @@ import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
 import TaskSubmissionModal from './components/Modals/TaskSubmissionModal';
 import OfferLetterModal from './components/Modals/OfferLetterModal';
 import PolicyModal from './components/Modals/PolicyModal';
+import CustomCursor from './components/Motion/CustomCursor';
 import { CheckCircle2 } from 'lucide-react';
 import { authAPI, setAuthToken } from './services/apiClient';
 import { PageTransition } from './components/Motion/MotionUtils';
@@ -65,8 +66,7 @@ export default function App() {
     // 1. Admin Dashboard Route Protection
     if (currentView === 'admin-dashboard') {
       if (!user) {
-        setCurrentView('home');
-        setAuthModal({ isOpen: true, mode: 'login' });
+        setCurrentView('admin-login');
         showToast('Authentication required to access Admin Dashboard');
       } else if (!isAdminUser) {
         setCurrentView('student-dashboard');
@@ -77,8 +77,7 @@ export default function App() {
     // 2. Student Dashboard Route Protection
     if (currentView === 'student-dashboard') {
       if (!user) {
-        setCurrentView('home');
-        setAuthModal({ isOpen: true, mode: 'login' });
+        setCurrentView('login');
       } else if (isAdminUser) {
         setCurrentView('admin-dashboard');
       }
@@ -205,6 +204,9 @@ export default function App() {
 
   return (
     <div className="app-container">
+      {/* Desktop Custom Ambient Cursor */}
+      <CustomCursor />
+
       {/* Main Navbar */}
       {currentView !== 'student-dashboard' && currentView !== 'admin-dashboard' && !isAuthView && (
         <Navbar 

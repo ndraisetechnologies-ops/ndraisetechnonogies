@@ -103,12 +103,12 @@ export default function Footer({ setCurrentView, user, onAuthClick }) {
               </div>
               <span>Lucknow, Uttar Pradesh, India</span>
             </li>
-            <li>
+            {/* <li>
               <div className="contact-icon-badge">
                 <Phone size={18} color="#00acc1" />
               </div>
               <a href="tel:+915223369892">+91 522 3369892</a>
-            </li>
+            </li> */}
             <li>
               <div className="contact-icon-badge">
                 <Mail size={18} color="#00acc1" />

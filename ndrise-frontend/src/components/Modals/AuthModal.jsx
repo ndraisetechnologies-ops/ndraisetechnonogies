@@ -33,11 +33,25 @@ export default function AuthModal({ isOpen, mode, onClose, onLoginSuccess }) {
         res = await authAPI.login({ email, password });
       }
 
-      if (res.token) {
-        setAuthToken(res.token);
-      }
-
       if (res.success && res.user) {
+        const userRole = (res.user.role || '').toUpperCase();
+
+        if (currentMode === 'admin-login' && userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
+          setAuthToken(null);
+          setErrorMessage('Access denied: Student accounts cannot log in through the Admin Security Portal.');
+          return;
+        }
+
+        if (currentMode !== 'admin-login' && (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN')) {
+          setAuthToken(null);
+          setErrorMessage('Admin accounts must log in via the Admin Security Portal.');
+          return;
+        }
+
+        if (res.token) {
+          setAuthToken(res.token);
+        }
+
         onLoginSuccess(res.user);
         onClose();
       } else {

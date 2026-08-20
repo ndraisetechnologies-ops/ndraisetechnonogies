@@ -145,13 +145,6 @@ export default function AnimatedCharacters({ focusedField, textLength = 0, showP
         </div>
 
       </div>
-
-      {/* Shy / Privacy indicator bubble when typing or toggling password */}
-      {isPassword && (
-        <div className="privacy-badge">
-          <span>🙈 No Peeking!</span>
-        </div>
-      )}
     </div>
   );
 }

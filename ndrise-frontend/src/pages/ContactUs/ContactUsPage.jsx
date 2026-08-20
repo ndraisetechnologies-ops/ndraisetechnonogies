@@ -80,7 +80,7 @@ export default function ContactUsPage({ user, setCurrentView }) {
             </StaggerItem>
 
             {/* Card 3: Call Us */}
-            <StaggerItem>
+            {/* <StaggerItem>
               <motion.div className="info-card" whileHover={{ y: -5, scale: 1.015 }}>
                 <div className="info-icon-badge">
                   <Phone size={20} color="#00acc1" />
@@ -92,7 +92,7 @@ export default function ContactUsPage({ user, setCurrentView }) {
                   </a>
                 </div>
               </motion.div>
-            </StaggerItem>
+            </StaggerItem> */}
 
           </StaggerContainer>
 

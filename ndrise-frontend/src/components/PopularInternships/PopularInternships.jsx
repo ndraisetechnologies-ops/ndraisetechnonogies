@@ -9,12 +9,22 @@ export default function PopularInternships({ onSelectInternship, onViewAllClick,
   const featured = ALL_INTERNSHIPS.slice(0, 4);
   const shouldReduceMotion = useReducedMotion();
 
+  const handleMouseMove = (e) => {
+    if (shouldReduceMotion) return;
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    card.style.setProperty('--mouse-x', `${x}%`);
+    card.style.setProperty('--mouse-y', `${y}%`);
+  };
+
   return (
-    <section className="popular-section">
+    <section className="popular-section" id="virtual-domains">
       <FadeIn direction="up">
         <div className="popular-header">
           <div>
-            <div className="popular-subtitle-tag">
+            <div className="popular-subtitle-tag badge-cyan">
               <Sparkles size={14} /> FEATURED VIRTUAL TRACKS
             </div>
             <h2 className="popular-title">Explore <span>Featured Domains</span></h2>
@@ -39,7 +49,8 @@ export default function PopularInternships({ onSelectInternship, onViewAllClick,
           return (
             <StaggerItem key={item.id}>
               <motion.div 
-                className="internship-card"
+                className="internship-card glass-panel"
+                onMouseMove={handleMouseMove}
                 style={{
                   '--accent-color': iconColor,
                   '--glow-color': glowColor,
@@ -48,9 +59,9 @@ export default function PopularInternships({ onSelectInternship, onViewAllClick,
                   shouldReduceMotion
                     ? {}
                     : {
-                        y: -4,
-                        scale: 1.01,
-                        transition: { duration: 0.25, ease: 'easeOut' },
+                        y: -7,
+                        scale: 1.015,
+                        transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] },
                       }
                 }
                 whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}

@@ -1,0 +1,227 @@
+/* Adaptive Premium Custom Cursor System */
+
+:root, [data-theme="dark"] {
+  --cursor-dot-color: #ffffff;
+  --cursor-ring-color: rgba(255, 255, 255, 0.4);
+  --cursor-ring-bg: rgba(6, 182, 212, 0.05);
+  --cursor-glow-color: rgba(6, 182, 212, 0.35);
+  --cursor-glow-secondary: rgba(139, 92, 246, 0.25);
+}
+
+[data-theme="light"] {
+  --cursor-dot-color: #0f172a;
+  --cursor-ring-color: rgba(37, 99, 235, 0.45);
+  --cursor-ring-bg: rgba(37, 99, 235, 0.05);
+  --cursor-glow-color: rgba(37, 99, 235, 0.35);
+  --cursor-glow-secondary: rgba(124, 58, 237, 0.2);
+}
+
+.custom-cursor-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+}
+
+/* Central Cursor Dot */
+.custom-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  margin-left: -3.5px;
+  border-radius: 50%;
+  background-color: var(--cursor-dot-color);
+  box-shadow: 0 0 10px var(--cursor-glow-color);
+  pointer-events: none;
+  will-change: transform;
+  transition: width 0.2s ease, height 0.2s ease, margin 0.2s ease, background-color 0.3s ease, opacity 0.2s ease;
+  z-index: 100001;
+}
+
+/* Outer Precision Ring */
+.custom-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  margin-top: -16px;
+  margin-left: -16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--cursor-ring-color);
+  background: var(--cursor-ring-bg);
+  box-shadow: 0 0 18px var(--cursor-glow-color);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  pointer-events: none;
+  will-change: transform;
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              height 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              margin 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.3s ease, 
+              background 0.3s ease, 
+              box-shadow 0.3s ease,
+              opacity 0.2s ease;
+  z-index: 100000;
+}
+
+/* --- CURSOR STATES --- */
+
+/* State: BUTTON (Magnetic Hover) */
+.custom-cursor-container.state-button .custom-cursor-ring {
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  margin-left: -22px;
+  border-color: var(--cursor-glow-color);
+  background: var(--cursor-ring-bg);
+  box-shadow: 0 0 26px var(--cursor-glow-color);
+}
+
+.custom-cursor-container.state-button .custom-cursor-dot {
+  width: 9px;
+  height: 9px;
+  margin-top: -4.5px;
+  margin-left: -4.5px;
+  box-shadow: 0 0 14px var(--cursor-glow-color);
+}
+
+/* State: LINK */
+.custom-cursor-container.state-link .custom-cursor-ring {
+  width: 38px;
+  height: 38px;
+  margin-top: -19px;
+  margin-left: -19px;
+  border-color: var(--cursor-glow-color);
+  box-shadow: 0 0 22px var(--cursor-glow-color);
+}
+
+/* State: CARD */
+.custom-cursor-container.state-card .custom-cursor-ring {
+  width: 36px;
+  height: 36px;
+  margin-top: -18px;
+  margin-left: -18px;
+  border-color: var(--cursor-ring-color);
+}
+
+/* State: HERO */
+.custom-cursor-container.state-hero .custom-cursor-ring {
+  width: 42px;
+  height: 42px;
+  margin-top: -21px;
+  margin-left: -21px;
+  box-shadow: 0 0 30px var(--cursor-glow-color), 0 0 15px var(--cursor-glow-secondary);
+}
+
+/* State: INPUT (Minimal cursor for typing) */
+.custom-cursor-container.state-input .custom-cursor-ring {
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  margin-left: -7px;
+  opacity: 0.25;
+  border-width: 1px;
+}
+
+.custom-cursor-container.state-input .custom-cursor-dot {
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  margin-left: -2px;
+  opacity: 0.6;
+}
+
+/* --- PREMIUM CARD CURSOR RADIAL LIGHT SPOTLIGHT --- */
+.internship-card,
+.stat-card,
+.project-card,
+.certificate-card,
+.testimonial-card,
+.glass-panel,
+.info-card,
+.contact-form-card,
+.hero-card,
+.step-journey-card,
+.hero-3d-ide-window,
+[data-cursor-card] {
+  position: relative;
+}
+
+.internship-card::before,
+.stat-card::before,
+.project-card::before,
+.certificate-card::before,
+.testimonial-card::before,
+.glass-panel::before,
+.info-card::before,
+.contact-form-card::before,
+.hero-card::before,
+.step-journey-card::before,
+.hero-3d-ide-window::before,
+[data-cursor-card]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    280px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(37, 99, 235, 0.14) 0%,
+    rgba(124, 58, 237, 0.08) 50%,
+    transparent 80%
+  );
+  opacity: var(--mouse-opacity, 0);
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  z-index: 1;
+}
+
+[data-theme="dark"] .internship-card::before,
+[data-theme="dark"] .stat-card::before,
+[data-theme="dark"] .project-card::before,
+[data-theme="dark"] .certificate-card::before,
+[data-theme="dark"] .testimonial-card::before,
+[data-theme="dark"] .glass-panel::before,
+[data-theme="dark"] .info-card::before,
+[data-theme="dark"] .contact-form-card::before,
+[data-theme="dark"] .hero-card::before,
+[data-theme="dark"] .step-journey-card::before,
+[data-theme="dark"] .hero-3d-ide-window::before,
+[data-theme="dark"] [data-cursor-card]::before {
+  background: radial-gradient(
+    280px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(6, 182, 212, 0.15) 0%,
+    rgba(139, 92, 246, 0.1) 50%,
+    transparent 80%
+  );
+}
+
+/* --- MAGNETIC BUTTON SMOOTH TRANSITION RESET --- */
+button,
+.btn-primary,
+.btn-secondary,
+.auth-primary-btn,
+.btn-google-auth-pill,
+.auth-floating-back-btn,
+[role="button"] {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+button svg,
+.btn-primary svg,
+.btn-secondary svg,
+[role="button"] svg {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- TOUCH DEVICES & REDUCED MOTION SAFETY --- */
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .custom-cursor-container {
+    display: none !important;
+  }
+}

@@ -1,0 +1,289 @@
+/* Verifiable Learning Architecture Section - Adaptive Light & Dark Theme */
+
+.dark-proof-section {
+  position: relative;
+  background: var(--bg-dark, #070B16);
+  color: var(--text-main, #f8fafc);
+  padding: 6rem 3.5rem;
+  margin: 2rem 0;
+  overflow: hidden;
+  border-top: 1px solid var(--border-light, rgba(255, 255, 255, 0.08));
+  border-bottom: 1px solid var(--border-light, rgba(255, 255, 255, 0.08));
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="light"] .dark-proof-section {
+  background: var(--bg-dark, #F7F9FC);
+  color: var(--text-main, #0f172a);
+}
+
+.dark-proof-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.dark-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.25;
+  transition: opacity 0.3s ease, background 0.3s ease;
+}
+
+.dark-glow-blue {
+  width: 500px;
+  height: 500px;
+  background: #2563eb;
+  top: -15%;
+  left: 15%;
+}
+
+.dark-glow-purple {
+  width: 450px;
+  height: 450px;
+  background: #8b5cf6;
+  bottom: -15%;
+  right: 15%;
+}
+
+[data-theme="light"] .dark-glow-blue {
+  background: rgba(37, 99, 235, 0.12);
+  opacity: 0.6;
+}
+
+[data-theme="light"] .dark-glow-purple {
+  background: rgba(139, 92, 246, 0.1);
+  opacity: 0.6;
+}
+
+.dark-proof-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.dark-proof-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 4.5rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dark-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1.1rem;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 9999px;
+  color: #38bdf8;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+[data-theme="light"] .dark-badge {
+  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.25);
+  color: #2563eb;
+}
+
+.dark-title {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: var(--text-main, #ffffff);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1.15rem;
+}
+
+[data-theme="light"] .dark-title {
+  color: #0f172a;
+}
+
+.dark-title span {
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .dark-title span {
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark-desc {
+  font-size: 1.05rem;
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.65;
+}
+
+[data-theme="light"] .dark-desc {
+  color: #475569;
+}
+
+/* System Node Grid */
+.proof-system-stage {
+  width: 100%;
+}
+
+.proof-nodes-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: relative;
+}
+
+.proof-node-card {
+  flex: 1;
+  background: var(--bg-card, rgba(15, 23, 42, 0.85));
+  border: 1px solid var(--border-light, rgba(255, 255, 255, 0.1));
+  border-radius: 20px;
+  padding: 2rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  box-shadow: var(--shadow-card, 0 15px 35px rgba(0, 0, 0, 0.4));
+  backdrop-filter: blur(16px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] .proof-node-card {
+  background: #ffffff;
+  border-color: rgba(203, 213, 225, 0.8);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.proof-node-card:hover {
+  border-color: var(--border-glow, rgba(56, 189, 248, 0.4));
+  box-shadow: var(--shadow-elevated, 0 20px 45px rgba(0, 0, 0, 0.5));
+}
+
+[data-theme="light"] .proof-node-card:hover {
+  border-color: rgba(37, 99, 235, 0.4);
+  box-shadow: 0 15px 35px rgba(37, 99, 235, 0.12);
+}
+
+.pulse-node-dot {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.proof-node-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  border: 1px solid;
+  transition: transform 0.3s ease;
+}
+
+.proof-node-card:hover .proof-node-icon {
+  transform: scale(1.1) rotate(4deg);
+}
+
+.proof-node-step {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-dark, #64748b);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.35rem;
+}
+
+.proof-node-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-main, #ffffff);
+  margin-bottom: 0.35rem;
+}
+
+[data-theme="light"] .proof-node-title {
+  color: #0f172a;
+}
+
+.proof-node-sub {
+  font-size: 0.84rem;
+  color: var(--text-muted, #94a3b8);
+}
+
+[data-theme="light"] .proof-node-sub {
+  color: #64748b;
+}
+
+/* Thin Animated Connection Lines */
+.proof-connector-line {
+  position: relative;
+  width: 60px;
+  height: 2px;
+  background: var(--border-light, rgba(255, 255, 255, 0.12));
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+[data-theme="light"] .proof-connector-line {
+  background: rgba(203, 213, 225, 0.8);
+}
+
+.line-pulse-node {
+  position: absolute;
+  top: 0;
+  left: -20px;
+  width: 20px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+  animation: pulseLine 2.5s infinite linear;
+}
+
+[data-theme="light"] .line-pulse-node {
+  background: linear-gradient(90deg, transparent, #2563eb, transparent);
+}
+
+@keyframes pulseLine {
+  0% { left: -20px; }
+  100% { left: 100%; }
+}
+
+@media (max-width: 1024px) {
+  .proof-nodes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .proof-connector-line {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .dark-proof-section {
+    padding: 4rem 1.25rem;
+  }
+
+  .dark-title {
+    font-size: 2.3rem;
+  }
+
+  .proof-nodes-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,148 +1,190 @@
+/* How It Works Journey Section */
+
 .how-it-works-section {
-  padding: 5rem 2rem;
-  max-width: 1300px;
+  padding: 5rem 3.5rem;
+  max-width: 1400px;
   margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
 .how-it-works-header {
   text-align: center;
-  max-width: 700px;
-  margin: 0 auto 3.5rem;
-}
-
-.section-badge {
-  display: inline-flex;
+  max-width: 680px;
+  margin: 0 auto 4rem auto;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 1rem;
-  background: rgba(99, 102, 241, 0.12);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  border-radius: var(--radius-full);
-  color: var(--primary);
-  font-size: 0.78rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
 }
 
 .section-title {
+  font-family: var(--font-heading);
   font-size: 2.5rem;
   font-weight: 800;
   color: var(--text-main);
-  margin-bottom: 0.75rem;
+  margin: 0.85rem 0 1rem 0;
+  letter-spacing: -0.02em;
 }
 
 .section-title span {
-  background: linear-gradient(135deg, #38bdf8, #818cf8);
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .section-desc {
+  font-size: 1rem;
   color: var(--text-muted);
-  font-size: 0.95rem;
   line-height: 1.6;
 }
 
-.steps-grid {
+/* Journey Layout Container */
+.journey-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Connecting Line Background */
+.connecting-line-bg {
+  position: absolute;
+  top: 42px;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: var(--border-light);
+  border-radius: 4px;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.connecting-line-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8 0%, #818cf8 50%, #34d399 100%);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+}
+
+.steps-journey-grid {
+  position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
-  align-items: stretch;
 }
 
-.steps-grid > * {
+.step-journey-card {
+  padding: 1.75rem 1.4rem;
   display: flex;
   flex-direction: column;
-  height: 100%;
-}
-
-.step-card {
-  padding: 2rem 1.5rem;
-  border-radius: var(--radius-xl);
+  align-items: flex-start;
+  position: relative;
   background: var(--bg-card);
   border: 1px solid var(--border-light);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  transition: all 0.3s ease;
-  position: relative;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
 }
 
-.step-card:hover {
-  transform: translateY(-6px);
-  border-color: var(--border-glow);
-  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
-}
-
-.step-top {
+.step-node-header {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
   margin-bottom: 1.25rem;
 }
 
+.step-number-pill {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid;
+  background: var(--bg-dark);
+  letter-spacing: 0.05em;
+}
+
 .step-icon-wrap {
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.step-journey-card:hover .step-icon-wrap {
+  transform: scale(1.08) rotate(4deg);
 }
 
 .step-card-title {
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-main);
-  margin-bottom: 0.6rem;
-  min-height: 2.9rem;
-  display: flex;
-  align-items: flex-start;
-  line-height: 1.35;
+  margin-bottom: 0.65rem;
+  line-height: 1.3;
 }
 
 .step-card-desc {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.55;
+  margin-bottom: 1.5rem;
   flex: 1;
-  margin-bottom: 1.25rem;
 }
 
 .step-action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   background: transparent;
   border: none;
   color: var(--primary);
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
   padding: 0;
-  transition: all 0.2s ease;
-  margin-top: auto;
+  transition: color 0.2s ease;
 }
 
 .step-action-btn:hover {
-  color: #38bdf8;
-  gap: 0.6rem;
+  color: var(--nav-link-active);
 }
 
+/* Tablet & Mobile Vertical Timeline */
 @media (max-width: 1024px) {
-  .steps-grid {
+  .steps-journey-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .step-card-title {
-    min-height: auto;
+
+  .connecting-line-bg {
+    display: none;
   }
 }
 
 @media (max-width: 640px) {
-  .steps-grid {
-    grid-template-columns: 1fr;
+  .how-it-works-section {
+    padding: 3rem 1.25rem;
   }
-  .step-card-title {
-    min-height: auto;
+
+  .section-title {
+    font-size: 1.95rem;
+  }
+
+  .steps-journey-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  /* Vertical connecting line for mobile */
+  .connecting-line-bg {
+    display: block;
+    top: 50px;
+    bottom: 50px;
+    left: 36px;
+    right: auto;
+    width: 3px;
+    height: auto;
   }
 }

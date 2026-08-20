@@ -21,9 +21,24 @@ export default function Navbar({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  
   const userMenuRef = useRef(null);
   const navMenuRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
+
+  // Scroll listener for top vs compact floating navbar transition
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 30) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -175,7 +190,7 @@ export default function Navbar({
 
   return (
     <motion.header 
-      className="navbar-container"
+      className={`navbar-container ${scrolled ? 'navbar-scrolled' : ''}`}
       initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -187,7 +202,7 @@ export default function Navbar({
         style={{ cursor: 'pointer' }}
       >
         <div className="brand-logo-badge logo-badge">
-          <img src="/logo.jpg" alt="ND Rais Technologies Logo" className="brand-logo-img logo-img" />
+          <img src="/logo.jpg" alt="ND Raise Technologies Logo" className="brand-logo-img logo-img" />
         </div>
         <div className="brand-text logo-text-group">
           <div className="brand-title logo-title">
@@ -239,6 +254,15 @@ export default function Navbar({
                       size={14} 
                       className={`chevron-icon dropdown-chevron ${activeDropdown === item.id ? 'rotate' : ''}`} 
                       style={{ transition: 'transform 0.2s ease' }}
+                    />
+                  )}
+
+                  {/* Active Page Indicator */}
+                  {isActive && (
+                    <motion.span 
+                      className="nav-active-indicator"
+                      layoutId="navActiveIndicator"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
                 </a>

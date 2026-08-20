@@ -1,48 +1,45 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
-import { FadeIn, StaggerContainer, StaggerItem } from '../Motion/MotionUtils';
+import { Building2, GraduationCap } from 'lucide-react';
+import { FadeIn } from '../Motion/MotionUtils';
 import './CollegeSection.css';
 
+const COLLEGES = [
+  { id: 'iitm', name: 'IIT Madras', tag: 'IIT' },
+  { id: 'bits', name: 'BITS Pilani', tag: 'BITS' },
+  { id: 'dtu', name: 'DTU Delhi', tag: 'DTU' },
+  { id: 'vjti', name: 'VJTI Mumbai', tag: 'VJTI' },
+  { id: 'iitb', name: 'IIT Bombay', tag: 'IIT' },
+  { id: 'srm', name: 'SRM Institute', tag: 'SRM' },
+  { id: 'nitt', name: 'NIT Trichy', tag: 'NIT' },
+  { id: 'nift', name: 'NIFT Delhi', tag: 'NIFT' },
+  { id: 'amrita', name: 'Amrita University', tag: 'AMR' },
+  { id: 'manipal', name: 'MAHE Manipal', tag: 'MAHE' }
+];
+
 export default function CollegeSection() {
-  const shouldReduceMotion = useReducedMotion();
-
-  const colleges = [
-    { id: 'iitm', name: 'IIT Madras', initials: 'IIT' },
-    { id: 'nitt', name: 'NIT Trichy', initials: 'NIT' },
-    { id: 'vit', name: 'NIT Vellore', initials: 'NIT' },
-    { id: 'srm', name: 'SRM Institute', initials: 'SRM' },
-    { id: 'amrita', name: 'Amrita University', initials: 'AMR' },
-    { id: 'manipal', name: 'Manipal University', initials: 'MAHE' }
-  ];
-
   return (
     <section className="college-section">
-      <FadeIn direction="up">
-        <h3 className="college-title">Trusted by Students from Top Colleges</h3>
-      </FadeIn>
+      <div className="college-container">
+        <FadeIn direction="up">
+          <div className="college-header">
+            <div className="college-subtitle-badge badge-blue">
+              <GraduationCap size={14} /> UNIVERSITY NETWORK
+            </div>
+            <h3 className="college-title">Trusted by 50,000+ Students From Top Colleges</h3>
+          </div>
+        </FadeIn>
 
-      <StaggerContainer className="college-grid" staggerChildren={0.06}>
-        {colleges.map((c) => (
-          <StaggerItem key={c.id}>
-            <motion.div 
-              className="college-badge"
-              whileHover={shouldReduceMotion ? {} : { scale: 1.05, y: -2 }}
-              whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
-            >
-              <div className="college-icon-circle">
-                {c.initials}
+        {/* Infinite Horizontal College Marquee */}
+        <div className="college-marquee-wrapper">
+          <div className="college-marquee-track">
+            {[...COLLEGES, ...COLLEGES].map((c, idx) => (
+              <div key={idx} className="college-marquee-card glass-panel">
+                <div className="college-tag-icon">{c.tag}</div>
+                <span className="college-name-text">{c.name}</span>
               </div>
-              <span>{c.name}</span>
-            </motion.div>
-          </StaggerItem>
-        ))}
-      </StaggerContainer>
-
-      <div className="college-pagination">
-        <div className="pagination-dot"></div>
-        <div className="pagination-dot active"></div>
-        <div className="pagination-dot"></div>
-        <div className="pagination-dot"></div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

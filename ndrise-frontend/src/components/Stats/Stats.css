@@ -1,7 +1,11 @@
+/* Statistics Section - Premium SaaS Layout */
+
 .stats-section {
+  padding: 3rem 3.5rem;
   max-width: 1400px;
-  margin: 0 auto 5rem;
-  padding: 0 4rem;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
 .stats-grid {
@@ -11,32 +15,55 @@
 }
 
 .stat-card {
-  padding: 1.75rem 1.5rem;
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  border-radius: var(--radius-md);
+  padding: 1.5rem 1.6rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 15px 35px -10px rgba(99, 102, 241, 0.25);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: var(--shadow-elevated);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
 }
 
 .stat-icon-wrapper {
-  width: 54px;
-  height: 54px;
-  border-radius: 14px;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid transparent;
   flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover .stat-icon-wrapper {
+  transform: scale(1.06);
 }
 
 .stat-info {
@@ -46,42 +73,42 @@
 
 .stat-number {
   font-family: var(--font-heading);
-  font-size: 1.85rem;
+  font-size: 2.1rem;
   font-weight: 800;
-  color: var(--text-main);
   line-height: 1.1;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-  transition: color 0.3s ease;
-}
-
-.stat-number.is-rolling {
-  color: #38bdf8;
-}
-
-.stat-number.is-static {
   color: var(--text-main);
+  letter-spacing: -0.02em;
 }
 
 .stat-label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  font-size: 0.88rem;
   font-weight: 500;
-  margin-top: 0.25rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
 }
 
+/* Responsive Grid Breakpoints */
 @media (max-width: 1024px) {
-  .stats-section {
-    padding: 0 1.5rem;
-    margin-bottom: 3rem;
-  }
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 640px) {
+  .stats-section {
+    padding: 2rem 1.25rem;
+  }
+
   .stats-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1.2rem;
+  }
+
+  .stat-number {
+    font-size: 1.75rem;
   }
 }

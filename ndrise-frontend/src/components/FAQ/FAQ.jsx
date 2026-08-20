@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { ChevronDown, HelpCircle, MessageSquare } from 'lucide-react';
+import { Plus, X, HelpCircle, MessageSquare } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { FadeIn } from '../Motion/MotionUtils';
 import './FAQ.css';
 
 const FAQ_ITEMS = [
@@ -31,6 +33,7 @@ const FAQ_ITEMS = [
 
 export default function FAQ() {
   const [openIdx, setOpenIdx] = useState(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const toggleFaq = (idx) => {
     setOpenIdx(openIdx === idx ? null : idx);
@@ -39,18 +42,20 @@ export default function FAQ() {
   return (
     <section className="faq-section" id="faqs">
       <div className="faq-container">
-        <div className="faq-header">
-          <div className="faq-tag">
-            <HelpCircle size={16} />
-            <span>FREQUENTLY ASKED QUESTIONS</span>
+        <FadeIn direction="up">
+          <div className="faq-header">
+            <div className="faq-tag badge-purple">
+              <HelpCircle size={15} />
+              <span>FREQUENTLY ASKED QUESTIONS</span>
+            </div>
+            <h2 className="faq-title">
+              Got Questions? <span>We’ve Got Answers</span>
+            </h2>
+            <p className="faq-subtitle">
+              Everything you need to know about ND Raise virtual internship tracks, task submissions, offer letters, and certificate verification.
+            </p>
           </div>
-          <h2 className="faq-title">
-            Got Questions? <span>We’ve Got Answers</span>
-          </h2>
-          <p className="faq-subtitle">
-            Everything you need to know about ND Raise virtual internship tracks, task submissions, offer letters, and certificate verification.
-          </p>
-        </div>
+        </FadeIn>
 
         <div className="faq-accordion-list">
           {FAQ_ITEMS.map((item, idx) => {
@@ -63,25 +68,41 @@ export default function FAQ() {
               >
                 <div className="faq-question-row">
                   <h3 className="faq-question">{item.question}</h3>
-                  <ChevronDown className={`faq-chevron ${isOpen ? 'rotate' : ''}`} size={20} />
-                </div>
-                {isOpen && (
-                  <div className="faq-answer-body animate-fade-in">
-                    <p>{item.answer}</p>
+                  <div className={`faq-toggle-btn ${isOpen ? 'open' : ''}`}>
+                    {isOpen ? <X size={18} /> : <Plus size={18} />}
                   </div>
-                )}
+                </div>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      key="content"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                      style={{ overflow: 'hidden' }}
+                    >
+                      <div className="faq-answer-body">
+                        <p>{item.answer}</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
         </div>
 
-        <div className="faq-contact-card glass-panel">
-          <MessageSquare size={24} color="#38bdf8" />
-          <div>
-            <div style={{ fontWeight: '700', color: 'var(--text-main)', fontSize: '0.95rem' }}>Still have questions?</div>
-            <div style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>Reach out to our student support team at support@ndraise.com</div>
+        <FadeIn direction="up" delay={0.2}>
+          <div className="faq-contact-card glass-panel">
+            <MessageSquare size={24} color="#38bdf8" />
+            <div>
+              <div style={{ fontWeight: '700', color: 'var(--text-main)', fontSize: '0.95rem' }}>Still have questions?</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.84rem' }}>Reach out to our student support team at support@ndraisetechnologies.com</div>
+            </div>
           </div>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );
