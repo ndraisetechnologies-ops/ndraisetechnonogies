@@ -7,8 +7,10 @@ dotenv.config();
 const authRoutes = require('./routes/authRoutes');
 const internshipRoutes = require('./routes/internshipRoutes');
 const submissionRoutes = require('./routes/submissionRoutes');
+const certificateRoutes = require('./routes/certificateRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const careerRoutes = require('./routes/careerRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -35,7 +37,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', internshipRoutes);
 app.use('/api', submissionRoutes);
+app.use('/api', certificateRoutes);
 app.use('/api/student', studentRoutes);
+app.use('/api', careerRoutes);
 
 // 404 Handler
 app.use((req, res) => {

@@ -250,6 +250,38 @@ export const initialEmailLogsData = [
     type: 'PAYMENT_REMINDER',
     status: 'QUEUED',
     sentAt: '2026-08-19T09:20:00Z'
+  },
+  {
+    id: 'EML-505',
+    recipient: 'sneha.reddy@example.com',
+    subject: 'Welcome to NDRise Virtual Internship Program',
+    type: 'WELCOME_EMAIL',
+    status: 'DELIVERED',
+    sentAt: '2026-08-19T14:15:00Z'
+  },
+  {
+    id: 'EML-506',
+    recipient: 'rohan.kumar@example.com',
+    subject: 'Action Required: Update GitHub Submission Link',
+    type: 'TASK_FEEDBACK',
+    status: 'FAILED',
+    sentAt: '2026-08-19T11:05:00Z'
+  },
+  {
+    id: 'EML-507',
+    recipient: 'meera.nair@example.com',
+    subject: 'Official Offer Letter Re-issued - NDRise Tech',
+    type: 'OFFER_LETTER',
+    status: 'DELIVERED',
+    sentAt: '2026-08-18T15:20:00Z'
+  },
+  {
+    id: 'EML-508',
+    recipient: 'amit.shah@example.com',
+    subject: 'Certificate Verification Code & Badge',
+    type: 'CERTIFICATE_ISSUED',
+    status: 'DELIVERED',
+    sentAt: '2026-08-14T08:45:00Z'
   }
 ];
 
@@ -333,6 +365,49 @@ export const systemHealthMetrics = {
   paymentGatewayStatus: 'ONLINE (Razorpay & UPI)',
   emailDeliveryRate: '99.4%'
 };
+
+export const initialNotificationsData = [
+  {
+    id: 'NOTIF-101',
+    title: 'New AI & Machine Learning Internship Track Launched!',
+    type: 'ANNOUNCEMENT',
+    targetAudience: 'All Registered Students',
+    message: 'Explore our latest 8-week AI & ML track covering Scikit-Learn model training, NLP, and neural networks. Enroll now for free!',
+    sentAt: '2026-08-19T14:30:00Z',
+    sentBy: 'NDRaise Support Portal',
+    reachCount: 12540
+  },
+  {
+    id: 'NOTIF-102',
+    title: 'Task 2 Submission Deadline Reminder',
+    type: 'REMINDER',
+    targetAudience: 'Active Internship Learners',
+    message: 'Friendly reminder to all Full Stack and Frontend learners: Please submit your Task 2 GitHub link by Friday 11:59 PM.',
+    sentAt: '2026-08-18T10:15:00Z',
+    sentBy: 'Lead Reviewer',
+    reachCount: 4120
+  },
+  {
+    id: 'NOTIF-103',
+    title: 'August Batch Official Offer Letters Dispatched',
+    type: 'DOCUMENT_UPDATE',
+    targetAudience: 'Active Internship Learners',
+    message: 'Your official internship offer letters for the August batch have been generated and sent to your registered email address.',
+    sentAt: '2026-08-15T09:00:00Z',
+    sentBy: 'NDRaise Admin Desk',
+    reachCount: 3890
+  },
+  {
+    id: 'NOTIF-104',
+    title: 'Platform Maintenance & System Upgrade Notice',
+    type: 'URGENT_ALERT',
+    targetAudience: 'All Registered Students',
+    message: 'The NDRise dashboard will undergo scheduled database optimization tonight between 2:00 AM and 4:00 AM IST.',
+    sentAt: '2026-08-10T18:00:00Z',
+    sentBy: 'System Super Admin',
+    reachCount: 12540
+  }
+];
 
 export const analyticsChartData = {
   monthlyRegistrations: [

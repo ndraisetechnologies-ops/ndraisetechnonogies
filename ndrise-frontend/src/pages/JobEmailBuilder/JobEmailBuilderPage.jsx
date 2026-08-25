@@ -6,11 +6,15 @@ import {
   Sparkles, CheckCircle2, AlertCircle, Copy, RefreshCw, Edit3, Trash2, 
   Download, ArrowRight, ShieldCheck, FileText, Check, AlertTriangle 
 } from 'lucide-react';
+import { careerAPI } from '../../services/apiClient';
 import { EMAIL_TYPES, TONE_OPTIONS, LENGTH_OPTIONS, generateJobEmail } from '../../services/jobEmail.service';
+import { consumeAiCredit } from '../../services/aiCreditsService';
+import AiLimitModal from '../../components/Modals/AiLimitModal';
 import './JobEmailBuilderPage.css';
 
 export default function JobEmailBuilderPage({ user, setCurrentView, onRequireAuth }) {
   const [selectedType, setSelectedType] = useState('internship-app');
+  const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
   
   // Form State
   const [formData, setFormData] = useState({
@@ -42,8 +46,11 @@ export default function JobEmailBuilderPage({ user, setCurrentView, onRequireAut
   // UI States
   const [isGenerating, setIsGenerating] = useState(false);
   const [copiedToast, setCopiedToast] = useState(false);
+  const [activeTab, setActiveTab] = useState('editor'); // 'editor' | 'preview'
   const [validationError, setValidationError] = useState('');
+  const [isSaved, setIsSaved] = useState(false);
 
+  const previewRef = useRef(null);
   const bodyTextareaRef = useRef(null);
 
   const handleInputChange = (field, value) => {
@@ -75,23 +82,56 @@ export default function JobEmailBuilderPage({ user, setCurrentView, onRequireAut
     }
     if (!validateForm()) return;
 
+    const creditStatus = consumeAiCredit(user?.email || 'guest');
+    if (!creditStatus.success) {
+      setIsLimitModalOpen(true);
+      return;
+    }
+
     setIsGenerating(true);
     setValidationError('');
 
-    setTimeout(() => {
+    careerAPI.generateEmail({
+      recipientRole: formData.recipientName,
+      companyName: formData.companyName,
+      jobTitle: formData.jobTitle,
+      studentSkills: formData.skills,
+      emailType: selectedType,
+      userNotes: formData.whyInterested
+    }).then((res) => {
+      if (res.success && res.data) {
+        const d = res.data;
+        const fullBody = `${d.salutation || 'Dear Hiring Team,'}\n\n${d.body}\n\n${d.callToAction || 'Looking forward to your response.'}\n\nBest regards,\n${formData.fullName}\n${formData.email} | ${formData.phone}`;
+        const result = {
+          subject: d.subject || `Application for ${formData.jobTitle}`,
+          body: fullBody,
+          followUp: d.followUpTemplate || 'Following up on my application.'
+        };
+        setGeneratedEmail(result);
+        setEditableSubject(result.subject);
+        setEditableBody(result.body);
+      } else {
+        const payload = { ...formData, emailType: selectedType };
+        const result = generateJobEmail(payload);
+        setGeneratedEmail(result);
+        setEditableSubject(result.subject);
+        setEditableBody(result.body);
+      }
+      setIsGenerating(false);
+    }).catch(() => {
       const payload = { ...formData, emailType: selectedType };
       const result = generateJobEmail(payload);
       setGeneratedEmail(result);
       setEditableSubject(result.subject);
       setEditableBody(result.body);
       setIsGenerating(false);
+    });
 
       // Scroll to preview on mobile
       if (window.innerWidth <= 900) {
         const el = document.getElementById('email-preview-section');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 600);
   };
 
   const handleCopyEmail = () => {
@@ -550,6 +590,13 @@ export default function JobEmailBuilderPage({ user, setCurrentView, onRequireAut
         </div>
 
       </div>
+
+      <AiLimitModal 
+        isOpen={isLimitModalOpen}
+        onClose={() => setIsLimitModalOpen(false)}
+        user={user}
+        onSuccess={() => handleGenerate()}
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   AlertCircle, ArrowRight, RefreshCw, Sparkles, HelpCircle, Star, ShieldAlert, 
   Check, Play, Lightbulb, ChevronRight, BarChart2, Flame, Layers 
 } from 'lucide-react';
+import { careerAPI } from '../../services/apiClient';
 import { 
   TARGET_ROLES, EXPERIENCE_LEVELS, INTERVIEW_TYPES, PREP_MODES, 
   INTERVIEW_CATEGORIES, STAR_FRAMEWORK, MOCK_QUESTIONS, QUESTION_OF_THE_DAY, getFilteredQuestions 
@@ -40,18 +41,37 @@ export default function InterviewPrepPage({ setCurrentView, user, onRequireAuth 
       if (onRequireAuth) onRequireAuth();
       return;
     }
+
     const filtered = getFilteredQuestions(selectedRole, interviewType, experienceLevel);
     const questionsToUse = filtered.length > 0 ? filtered : MOCK_QUESTIONS;
-    setActiveQuestions(questionsToUse);
+
+    careerAPI.generateInterviewPrep({
+      targetRole: selectedRole,
+      experienceLevel,
+      topic: `${interviewType} Questions & Concepts`
+    }).then((res) => {
+      if (res.success && res.data && Array.isArray(res.data.questions)) {
+        const aiQuestions = res.data.questions.map((q, idx) => ({
+          id: q.id || idx + 1,
+          question: q.question,
+          category: q.category || interviewType,
+          difficulty: q.difficulty || 'Medium',
+          company: 'Top Tech Companies',
+          hint: (q.keyConcepts || []).join(', ') || 'Focus on step-by-step problem solving.',
+          answer: q.modelAnswer || 'Structure your answer using situation, task, action, and result.'
+        }));
+        setActiveQuestions(aiQuestions);
+      } else {
+        setActiveQuestions(questionsToUse);
+      }
+    }).catch(() => {
+      setActiveQuestions(questionsToUse);
+    });
+
     setCurrentIndex(0);
     setUserAnswer('');
     setShowHint(false);
-
-    if (prepMode === 'Mock Interview') {
-      setViewState('practice');
-    } else {
-      setViewState('practice');
-    }
+    setViewState('practice');
     window.scrollTo({ top: 120, behavior: 'smooth' });
   };
 

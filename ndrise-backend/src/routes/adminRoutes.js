@@ -194,4 +194,38 @@ router.get('/audit-logs', verifyToken, isAdmin, async (req, res) => {
   }
 });
 
+const { sendOfferLetterEmail } = require('../utils/emailService');
+
+// POST /api/admin/offer-letters/send (Protected Admin - Issue Offer Letter and dispatch email)
+router.post('/offer-letters/send', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const { studentName, studentEmail, trackTitle, duration, stipend } = req.body;
+
+    if (!studentEmail) {
+      return res.status(400).json({ success: false, error: 'Student email is required.' });
+    }
+
+    const offerCode = `NDR-OFF-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const code = await sendOfferLetterEmail({
+      studentEmail,
+      studentName: studentName || 'Student',
+      trackTitle: trackTitle || 'Full Stack Web Development Internship',
+      offerCode,
+      duration: duration || '4 - 8 Weeks',
+      stipend: stipend || 'Performance Based'
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `Official Offer Letter (${code}) issued and email sent to ${studentEmail}!`,
+      offerCode: code,
+      issuedDate: new Date().toLocaleDateString()
+    });
+  } catch (error) {
+    console.error('Send offer letter error:', error);
+    return res.status(500).json({ success: false, error: 'Failed to issue and send offer letter.' });
+  }
+});
+
 module.exports = router;

@@ -17,6 +17,7 @@ import PrivacyPolicyPage from './pages/PrivacyPolicy/PrivacyPolicyPage';
 import CookiesPolicyPage from './pages/CookiesPolicy/CookiesPolicyPage';
 import BrowseCoursesPage from './pages/BrowseCourses/BrowseCoursesPage';
 import AtsScorePage from './pages/AtsScore/AtsScorePage';
+import JobSearchPage from './pages/JobSearch/JobSearchPage';
 import JobEmailBuilderPage from './pages/JobEmailBuilder/JobEmailBuilderPage';
 import InterviewPrepPage from './pages/InterviewPrep/InterviewPrepPage';
 import ProjectGuidelinesPage from './pages/ProjectGuidelines/ProjectGuidelinesPage';
@@ -32,16 +33,72 @@ import { authAPI, setAuthToken } from './services/apiClient';
 import { PageTransition } from './components/Motion/MotionUtils';
 import './App.css';
 
+const VIEW_TO_PATH = {
+  'home': '/',
+  'internships': '/internships',
+  'browse-courses': '/courses',
+  'ats-score': '/ats-score',
+  'job-email-builder': '/job-email-builder',
+  'interview-preparation': '/interview-preparation',
+  'project-guidelines': '/project-guidelines',
+  'detail': '/internship-detail',
+  'verify': '/verify',
+  'offer-letter': '/offer-letter',
+  'my-certificates': '/my-certificates',
+  'reviews': '/reviews',
+  'contact': '/contact',
+  'terms': '/terms',
+  'privacy': '/privacy',
+  'cookies': '/cookies',
+  'login': '/login',
+  'register': '/register',
+  'forgot-password': '/forgot-password',
+  'admin-login': '/admin-login',
+  'student-dashboard': '/student-dashboard',
+  'admin-dashboard': '/admin-dashboard'
+};
+
+const PATH_TO_VIEW = Object.entries(VIEW_TO_PATH).reduce((acc, [view, path]) => {
+  acc[path] = view;
+  return acc;
+}, {});
+
 export default function App() {
   const [currentView, setCurrentView] = useState(() => {
     const path = window.location.pathname.toLowerCase();
-    if (path.startsWith('/admin')) return 'admin-dashboard';
-    if (path.startsWith('/student')) return 'student-dashboard';
-    return 'home';
+    if (path === '/admin-login') return 'admin-login';
+    if (path === '/admin-dashboard' || path.startsWith('/admin')) return 'admin-dashboard';
+    if (path === '/student-dashboard' || path.startsWith('/student')) return 'student-dashboard';
+    if (path === '/login') return 'login';
+    if (path === '/register') return 'register';
+    if (path === '/internships') return 'internships';
+    if (path === '/courses') return 'browse-courses';
+    if (path === '/verify') return 'verify';
+    return PATH_TO_VIEW[path] || 'home';
   });
   const [selectedInternship, setSelectedInternship] = useState(ALL_INTERNSHIPS[0]);
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
+
+  // Synchronize browser address bar URL with currentView
+  useEffect(() => {
+    const targetPath = VIEW_TO_PATH[currentView] || '/';
+    if (window.location.pathname.toLowerCase() !== targetPath.toLowerCase()) {
+      window.history.pushState({ view: currentView }, '', targetPath);
+    }
+  }, [currentView]);
+
+  // Listen for browser Back & Forward navigation buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.toLowerCase();
+      const matchedView = PATH_TO_VIEW[path] || 'home';
+      setCurrentView(matchedView);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Check backend session state on mount
   useEffect(() => {
@@ -290,9 +347,9 @@ export default function App() {
             </PageTransition>
           )}
 
-          {currentView === 'job-email-builder' && (
-            <PageTransition keyId="job-email-builder">
-              <JobEmailBuilderPage 
+          {(currentView === 'job-email-builder' || currentView === 'job-search') && (
+            <PageTransition keyId="job-search">
+              <JobSearchPage 
                 setCurrentView={setCurrentView}
                 user={user}
                 onRequireAuth={() => setCurrentView('register')}

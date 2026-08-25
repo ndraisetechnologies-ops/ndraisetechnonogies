@@ -80,7 +80,7 @@ export default function Navbar({
       hasDropdown: true,
       options: [
         { label: '🎯 Check ATS Score', actionType: 'ats-score' },
-        { label: '✉️ Job Email Builder', actionType: 'email-builder' },
+        { label: '🔍 AI Skill Job Finder', actionType: 'email-builder' },
         { label: '🧠 Interview Preparation', actionType: 'interview-prep' },
       ]
     },
