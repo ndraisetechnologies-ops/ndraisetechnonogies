@@ -3,9 +3,12 @@
 .popular-section {
   padding: 5rem 3.5rem;
   max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   position: relative;
   z-index: 2;
+  overflow: hidden;
 }
 
 .popular-header {
@@ -243,6 +246,11 @@
 @media (max-width: 640px) {
   .popular-section {
     padding: 3rem 1.25rem;
+  }
+
+  .card-header-row {
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   .popular-header {

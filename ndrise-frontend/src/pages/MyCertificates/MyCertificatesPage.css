@@ -2,10 +2,15 @@
   min-height: calc(100vh - 120px);
   padding: 4rem 1.5rem 6rem;
   background: var(--bg-dark);
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .certificates-container {
   max-width: 1200px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
 }
 
@@ -17,6 +22,8 @@
   margin-bottom: 2.5rem;
   gap: 1.5rem;
   flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .my-certs-title {
@@ -26,12 +33,14 @@
   font-family: 'Georgia', serif;
   margin-bottom: 0.5rem;
   letter-spacing: -0.025em;
+  word-break: break-word;
 }
 
 .my-certs-subtitle {
   color: var(--text-muted);
   font-size: 1.05rem;
   line-height: 1.5;
+  word-break: break-word;
 }
 
 /* Top Right Stat Card (Matching Reference Image) */
@@ -44,7 +53,8 @@
   gap: 2rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   border: 1px solid #e2e8f0;
-  min-width: 220px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .stat-card-label {
@@ -71,6 +81,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 /* Search Bar */
@@ -83,6 +94,8 @@
   margin-bottom: 2rem;
   gap: 1rem;
   flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .search-input-wrap {
@@ -90,11 +103,14 @@
   align-items: center;
   gap: 0.75rem;
   flex: 1;
-  min-width: 280px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .search-icon {
   color: var(--text-muted);
+  flex-shrink: 0;
 }
 
 .certs-search-input {
@@ -103,12 +119,15 @@
   color: var(--text-main);
   font-size: 0.95rem;
   width: 100%;
+  min-width: 0;
   outline: none;
+  text-overflow: ellipsis;
 }
 
 .search-meta {
   font-size: 0.85rem;
   color: var(--text-muted);
+  white-space: nowrap;
 }
 
 /* EMPTY STATE CARD - MATCHING REFERENCE IMAGE 100% */
@@ -120,6 +139,8 @@
   border: 1px solid #e2e8f0;
   text-align: center;
   max-width: 720px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
 }
 
@@ -141,6 +162,7 @@
   font-family: 'Georgia', serif;
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
+  word-break: break-word;
 }
 
 .empty-subtitle {
@@ -149,6 +171,7 @@
   max-width: 520px;
   margin: 0 auto 2.25rem;
   line-height: 1.6;
+  word-break: break-word;
 }
 
 .start-assessing-btn {
@@ -177,6 +200,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   gap: 1.75rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .certificate-card {
@@ -186,6 +211,8 @@
   flex-direction: column;
   justify-content: space-between;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .certificate-card:hover {
@@ -199,6 +226,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .verified-tag {
@@ -225,6 +254,7 @@
   color: var(--text-main);
   margin-bottom: 1rem;
   line-height: 1.35;
+  word-break: break-word;
 }
 
 .cert-details-list {
@@ -234,6 +264,7 @@
   flex-direction: column;
   gap: 0.4rem;
   margin-bottom: 1.25rem;
+  word-break: break-word;
 }
 
 .skills-chips {
@@ -292,11 +323,34 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .my-certificates-page {
-    padding: 2rem 0.85rem 4rem;
+    padding: 1.5rem 0.85rem 4rem;
   }
 
+  .certs-search-bar {
+    padding: 0.85rem 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+
+  .search-input-wrap {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .certs-search-input {
+    font-size: 0.85rem;
+  }
+
+  .search-meta {
+    font-size: 0.8rem;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
   .my-certs-title {
     font-size: 1.65rem;
   }

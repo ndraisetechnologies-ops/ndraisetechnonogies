@@ -38,12 +38,9 @@
 
 /* Infinite Horizontal Marquee */
 .college-marquee-wrapper {
-  width: 100vw;
+  width: 100%;
+  max-width: 100%;
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
   overflow: hidden;
   padding: 0.75rem 0;
   mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);

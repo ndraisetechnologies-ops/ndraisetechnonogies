@@ -3,9 +3,12 @@
 .cert-showcase-section {
   padding: 5.5rem 3.5rem;
   max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   position: relative;
   z-index: 2;
+  overflow: hidden;
 }
 
 .cert-showcase-header {
@@ -381,18 +384,92 @@
 
 @media (max-width: 640px) {
   .cert-showcase-section {
-    padding: 3.5rem 1.25rem;
+    padding: 2.5rem 0.85rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   .cert-title {
-    font-size: 1.95rem;
+    font-size: clamp(1.45rem, 5vw, 1.95rem);
+  }
+
+  .cert-floating-verified-badge {
+    position: relative;
+    top: 0;
+    right: 0;
+    align-self: center;
+    margin: 0 auto 0.75rem auto;
+    font-size: 0.76rem;
+    padding: 0.35rem 0.85rem;
+  }
+
+  .cert-card-frame {
+    padding: 0.85rem;
+    border-radius: var(--radius-lg);
   }
 
   .cert-card-inner {
-    padding: 1rem;
+    padding: 0.85rem;
+    gap: 0.85rem;
+  }
+
+  .cert-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .cert-brand-logo {
+    gap: 0.55rem;
+    width: 100%;
+  }
+
+  .cert-brand-name {
+    font-size: 0.88rem;
+    word-break: break-word;
+  }
+
+  .cert-iso-tag {
+    font-size: 0.68rem;
+  }
+
+  .cert-id-badge {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.5rem;
+    align-self: flex-start;
+  }
+
+  .cert-main-heading {
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
   }
 
   .cert-recipient-name {
-    font-size: 1.35rem;
+    font-size: clamp(1.2rem, 5vw, 1.45rem);
+    word-break: break-word;
+  }
+
+  .cert-reason {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  .cert-card-footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.85rem;
+  }
+
+  .cert-meta-left {
+    align-items: center;
+    text-align: center;
+  }
+
+  .cert-trust-card {
+    padding: 1.25rem 1rem;
   }
 }

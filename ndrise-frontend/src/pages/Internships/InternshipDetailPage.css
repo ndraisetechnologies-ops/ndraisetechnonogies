@@ -1,7 +1,10 @@
 .detail-page {
   max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 2.5rem 4rem 6rem;
+  overflow-x: hidden;
 }
 
 /* High-visibility Back Navigation Button */
@@ -43,6 +46,8 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .detail-header-content {
@@ -142,12 +147,21 @@
   margin-bottom: 2.5rem;
   padding: 0.75rem 0;
   overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   position: sticky;
   top: 70px;
   z-index: 20;
   background: var(--bg-dark);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+}
+
+.detail-tabs-bar::-webkit-scrollbar {
+  display: none;
 }
 
 .detail-tab-btn {
@@ -161,6 +175,7 @@
   border-radius: var(--radius-full);
   transition: all 0.25s ease;
   white-space: nowrap;
+  flex-shrink: 0;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
@@ -182,12 +197,16 @@
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 2.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .detail-main-content {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .detail-sidebar-container {
@@ -206,6 +225,8 @@
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
   transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .detail-section-card:hover {
@@ -240,6 +261,7 @@
   line-height: 1.7;
   font-size: 1rem;
   margin-bottom: 1rem;
+  word-break: break-word;
 }
 
 /* Overview Mini Feature Cards */
@@ -385,6 +407,7 @@
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  flex-wrap: wrap;
 }
 
 .task-diff-tag {
@@ -403,12 +426,14 @@
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-main);
+  word-break: break-word;
 }
 
 .task-card-desc {
   font-size: 0.95rem;
   color: var(--text-muted);
   line-height: 1.5;
+  word-break: break-word;
 }
 
 .task-actions-row {
@@ -416,6 +441,7 @@
   align-items: center;
   gap: 1rem;
   margin-top: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .btn-task-action {
@@ -486,6 +512,7 @@
   font-weight: 700;
   font-size: 1.02rem;
   color: var(--text-main);
+  word-break: break-word;
 }
 
 .faq-answer {
@@ -495,6 +522,7 @@
   line-height: 1.6;
   border-top: 1px solid var(--border-light);
   padding-top: 0.85rem;
+  word-break: break-word;
 }
 
 /* Sidebar Info Rows */
@@ -511,6 +539,7 @@
   color: var(--text-main);
   font-weight: 600;
   font-size: 0.92rem;
+  word-break: break-word;
 }
 
 .skill-check-icon {
@@ -539,43 +568,145 @@
 
 @media (max-width: 1024px) {
   .detail-page {
-    padding: 1.75rem 1.5rem 4rem;
+    padding: 1.75rem 1.25rem 4rem;
+    width: 100%;
+    box-sizing: border-box;
   }
   .detail-header-banner {
     flex-direction: column;
-    padding: 2rem;
+    padding: 1.75rem 1.25rem;
     align-items: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .detail-header-content {
+    max-width: 100%;
+    width: 100%;
   }
   .detail-header-graphic {
     width: 100%;
-    height: 200px;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-height: 220px;
   }
   .detail-layout {
     grid-template-columns: 1fr;
   }
   .detail-sidebar-container {
     position: static;
+    width: 100%;
   }
   .overview-features-grid, .learn-skills-grid {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .detail-page {
-    padding: 1.25rem 0.85rem 3rem;
+    padding: 1.25rem 0.75rem 3rem;
+    width: 100%;
+    box-sizing: border-box;
   }
+
+  .btn-back-nav {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1.25rem;
+  }
+
   .detail-header-banner {
-    padding: 1.25rem;
+    padding: 1.1rem 0.85rem;
+    gap: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
   }
+
   .detail-title {
-    font-size: 1.75rem;
+    font-size: clamp(1.4rem, 5vw, 1.85rem);
+    line-height: 1.2;
+    word-break: break-word;
   }
+
+  .detail-badges {
+    gap: 0.4rem;
+  }
+
+  .badge {
+    font-size: 0.72rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .detail-header-desc {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+  }
+
   .detail-actions {
     flex-direction: column;
     width: 100%;
+    gap: 0.65rem;
   }
+
   .detail-actions button {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem 1.1rem;
+    font-size: 0.88rem;
+  }
+
+  .detail-tabs-bar {
+    padding: 0.5rem 0;
+    gap: 0.45rem;
+    margin-bottom: 1.5rem;
+    top: 60px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .detail-tab-btn {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+  }
+
+  .detail-section-card {
+    padding: 1.1rem 0.85rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .detail-section-title {
+    font-size: 1.2rem;
+  }
+
+  .feature-mini-card {
+    padding: 0.85rem;
+  }
+
+  .learn-skill-card {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.86rem;
+  }
+
+  .curriculum-card {
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1rem;
+  }
+
+  .task-detail-card {
+    padding: 1rem;
+  }
+
+  .task-actions-row {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.65rem;
+  }
+
+  .task-actions-row button {
     width: 100%;
     justify-content: center;
   }

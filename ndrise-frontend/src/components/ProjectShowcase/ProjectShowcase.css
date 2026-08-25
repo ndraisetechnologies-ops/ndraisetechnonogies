@@ -3,9 +3,12 @@
 .project-showcase-section {
   padding: 5.5rem 3.5rem;
   max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   position: relative;
   z-index: 2;
+  overflow: hidden;
 }
 
 .project-showcase-container {
@@ -224,6 +227,11 @@
 @media (max-width: 640px) {
   .project-showcase-section {
     padding: 3.5rem 1.25rem;
+  }
+
+  .project-card-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   .project-card {

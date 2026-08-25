@@ -60,7 +60,7 @@ export default function HowItWorks({ onApplyClick, onVerifyClick, onSubmitTaskCl
       <div className="how-it-works-container">
         <FadeIn direction="up">
           <div className="how-it-works-header">
-            <div className="section-badge badge-blue">
+            <div className="section-badge badge badge-blue">
               <Code2 size={15} />
               <span>ND RAISE VIRTUAL INTERNSHIP PROCESS</span>
             </div>

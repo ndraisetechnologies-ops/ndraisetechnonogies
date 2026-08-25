@@ -329,9 +329,22 @@
 
 @media (max-width: 900px) {
   .characters-stage {
-    min-height: 220px;
+    min-height: 160px;
+    height: 160px;
   }
   .characters-group {
-    transform: scale(0.85);
+    transform: scale(0.68);
+    transform-origin: center bottom;
+  }
+}
+
+@media (max-width: 640px) {
+  .characters-stage {
+    min-height: 120px;
+    height: 130px;
+  }
+  .characters-group {
+    transform: scale(0.52);
+    transform-origin: center bottom;
   }
 }

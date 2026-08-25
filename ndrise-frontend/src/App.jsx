@@ -27,7 +27,6 @@ import TaskGuidelinesModal from './components/Modals/TaskGuidelinesModal';
 import TaskSubmissionModal from './components/Modals/TaskSubmissionModal';
 import OfferLetterModal from './components/Modals/OfferLetterModal';
 import PolicyModal from './components/Modals/PolicyModal';
-import CustomCursor from './components/Motion/CustomCursor';
 import { CheckCircle2 } from 'lucide-react';
 import { authAPI, setAuthToken } from './services/apiClient';
 import { PageTransition } from './components/Motion/MotionUtils';
@@ -204,9 +203,6 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Desktop Custom Ambient Cursor */}
-      <CustomCursor />
-
       {/* Main Navbar */}
       {currentView !== 'student-dashboard' && currentView !== 'admin-dashboard' && !isAuthView && (
         <Navbar 
