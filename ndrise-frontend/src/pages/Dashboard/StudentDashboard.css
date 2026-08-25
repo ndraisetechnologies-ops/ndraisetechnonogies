@@ -173,6 +173,8 @@
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1.25rem;
   margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .summary-card {

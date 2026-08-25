@@ -51,7 +51,8 @@ export const internshipAPI = {
   apply: (payload) => request('/applications', { method: 'POST', body: JSON.stringify(payload) }),
   getMyApplications: () => request('/applications/my', { method: 'GET' }),
   createInternship: (payload) => request('/admin/internships', { method: 'POST', body: JSON.stringify(payload) }),
-  deleteInternship: (id) => request(`/admin/internships/${id}`, { method: 'DELETE' })
+  deleteInternship: (id) => request(`/admin/internships/${id}`, { method: 'DELETE' }),
+  sendOfferLetter: (payload) => request('/admin/offer-letters/send', { method: 'POST', body: JSON.stringify(payload) })
 };
 
 export const submissionAPI = {
@@ -66,4 +67,17 @@ export const submissionAPI = {
 
 export const studentAPI = {
   getDashboardMetrics: () => request('/student/dashboard', { method: 'GET' })
+};
+
+export const certificateAPI = {
+  claimCertificate: (payload) => request('/certificates/claim', { method: 'POST', body: JSON.stringify(payload) }),
+  getMyCertificates: () => request('/certificates/my', { method: 'GET' }),
+  getAllCertificates: () => request('/admin/certificates', { method: 'GET' })
+};
+
+export const careerAPI = {
+  analyzeATS: (payload) => request('/career/ats-score', { method: 'POST', body: JSON.stringify(payload) }),
+  generateEmail: (payload) => request('/career/job-email', { method: 'POST', body: JSON.stringify(payload) }),
+  generateInterviewPrep: (payload) => request('/career/interview-prep', { method: 'POST', body: JSON.stringify(payload) }),
+  searchJobs: (payload) => request('/career/job-search', { method: 'POST', body: JSON.stringify(payload) })
 };
