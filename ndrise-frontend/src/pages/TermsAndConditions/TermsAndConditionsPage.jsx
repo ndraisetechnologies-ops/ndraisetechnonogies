@@ -110,11 +110,6 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
               </button>
             ))}
           </nav>
-
-          <button onClick={handlePrint} className="print-btn">
-            <Printer size={15} />
-            <span>Print Document</span>
-          </button>
         </aside>
 
         {/* Right Main Document Area */}
