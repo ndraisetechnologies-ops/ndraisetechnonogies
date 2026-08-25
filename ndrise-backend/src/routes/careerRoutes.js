@@ -6,21 +6,22 @@ const router = express.Router();
 // POST /api/career/ats-score (Public / Student - Scan Resume text against Job Description)
 router.post('/career/ats-score', async (req, res) => {
   try {
-    const { resumeText, jobDescription, targetRole } = req.body;
-    if (!resumeText || resumeText.trim().length < 20) {
+    const { resumeText, jobDescription, targetRole, filename, fileSize } = req.body;
+    if (!resumeText || resumeText.trim().length < 10) {
       return res.status(400).json({
         success: false,
-        error: 'Please provide valid resume content (at least 20 characters).'
+        error: 'Please provide valid resume content.'
       });
     }
 
-    const result = await analyzeResumeAts({ resumeText, jobDescription, targetRole });
+    const result = await analyzeResumeAts({ resumeText, jobDescription, targetRole, filename, fileSize });
     return res.json(result);
   } catch (error) {
     console.error('Career ATS Score route error:', error);
     return res.status(500).json({ success: false, error: 'Failed to process ATS score analysis.' });
   }
 });
+
 
 // POST /api/career/job-email (Public / Student - Generate Cold Email & Outreach)
 router.post('/career/job-email', async (req, res) => {

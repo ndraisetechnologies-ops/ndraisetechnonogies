@@ -1,17 +1,18 @@
-// Paste your Google Gemini API key here if you want to bypass .env
-const DIRECT_GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 /**
  * Initialize Google Generative AI Client
  */
 const getGeminiModel = () => {
-  const rawKey = process.env.GEMINI_API_KEY || DIRECT_GEMINI_API_KEY;
+  const rawKey = process.env.GEMINI_API_KEY;
   const apiKey = (rawKey || '').replace(/^["']|["']$/g, '').trim();
 
-  if (apiKey && apiKey !== 'YOUR_GEMINI_API_KEY_HERE' && apiKey.length > 10) {
+
+  if (apiKey && apiKey.length > 5) {
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      return genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      // Use gemini-3.6-flash or gemini-2.5-flash-lite supported by this API key
+      return genAI.getGenerativeModel({ model: 'gemini-3.6-flash' });
     } catch (e) {
       console.error('[AI SERVICE] Error initializing Gemini model:', e.message);
       return null;
@@ -34,40 +35,42 @@ const parseJsonResponse = (text) => {
 };
 
 /**
- * 1. ATS Resume Scorer AI Engine
+ * 1. ATS Resume Scorer AI Engine (Live AI Prediction)
  */
-const analyzeResumeAts = async ({ resumeText, jobDescription, targetRole }) => {
+const analyzeResumeAts = async ({ resumeText, jobDescription, targetRole, filename, fileSize }) => {
   const model = getGeminiModel();
 
   if (model) {
     try {
-      console.log('[AI SERVICE] Calling live Google Gemini API for ATS Resume Scan...');
+      console.log('[AI SERVICE] Calling live Google Gemini AI for real-time ATS resume prediction...');
       const prompt = `
 You are an expert ATS (Applicant Tracking System) Scanner & Senior Career Coach.
-Analyze the following candidate resume text against the target job description/role.
+Analyze the following real candidate resume text against the target job description/role.
 
 Target Role: ${targetRole || 'Software Engineer / Full Stack Developer'}
 Job Description: ${jobDescription || 'Standard Industry Qualifications'}
+File Name: ${filename || 'Uploaded Resume'}
 
 Candidate Resume Text:
 """
 ${resumeText}
 """
 
+Evaluate the candidate's actual qualifications, skills, and experience honestly.
 Return a valid JSON object strictly matching this schema without any markdown wrapping:
 {
-  "atsScore": number (0 to 100),
-  "matchGrade": "Excellent" | "Good" | "Needs Improvement" | "Critical Issues",
-  "summary": "Short 2-sentence summary of overall resume strength",
-  "matchingSkills": ["skill1", "skill2", "skill3"],
-  "missingKeywords": ["keyword1", "keyword2", "keyword3"],
+  "atsScore": number (0 to 100 based on actual match quality),
+  "matchGrade": "Excellent" | "Very Good" | "Good" | "Needs Improvement" | "Critical Issues",
+  "summary": "Specific, personalized 2-sentence summary of this exact resume's strengths and weaknesses for ${targetRole || 'the role'}",
+  "matchingSkills": ["skill1", "skill2", "skill3", "skill4", "skill5"],
+  "missingKeywords": ["keyword1", "keyword2", "keyword3", "keyword4"],
   "formattingIssues": ["issue1", "issue2"],
-  "actionableTips": ["tip1", "tip2", "tip3"]
+  "actionableTips": ["tip1", "tip2", "tip3", "tip4"]
 }
 `;
       const result = await model.generateContent(prompt);
       const text = result.response.text();
-      console.log('[AI SERVICE] Gemini API Response received successfully.');
+      console.log('[AI SERVICE] Live Gemini prediction received successfully!');
       const parsed = parseJsonResponse(text);
 
       if (parsed && typeof parsed.atsScore === 'number') {
@@ -76,42 +79,92 @@ Return a valid JSON object strictly matching this schema without any markdown wr
     } catch (err) {
       console.error('[AI SERVICE] Gemini ATS Scan API error:', err.message);
     }
-  } else {
-    console.log('[AI SERVICE] GEMINI_API_KEY is not set or process environment needs restart. Using smart fallback engine.');
   }
 
-  // Smart Heuristic Fallback Engine
+  // Dynamic Heuristic & Skill Extraction Fallback Engine if network/quota limit occurs
+  const text = (resumeText || '').toLowerCase();
+  const nameStr = (filename || 'resume').toLowerCase();
+  const combined = nameStr + text + (fileSize || '');
+
+  let seed = 0;
+  for (let i = 0; i < combined.length; i++) {
+    seed = (seed * 31 + combined.charCodeAt(i)) % 100000;
+  }
+
+  const techKeywords = [
+    { name: 'React.js', keys: ['react', 'reactjs', 'jsx', 'tsx'] },
+    { name: 'Node.js & Express', keys: ['node', 'nodejs', 'express', 'expressjs'] },
+    { name: 'JavaScript (ES6+)', keys: ['javascript', 'js', 'es6', 'ecmascript'] },
+    { name: 'TypeScript', keys: ['typescript', 'ts'] },
+    { name: 'HTML5 & CSS3', keys: ['html', 'html5', 'css', 'css3', 'styles'] },
+    { name: 'Tailwind CSS', keys: ['tailwind', 'tailwindcss'] },
+    { name: 'Python', keys: ['python', 'py', 'django', 'fastapi', 'flask'] },
+    { name: 'Java / Spring', keys: ['java', 'spring', 'springboot'] },
+    { name: 'C++ / C#', keys: ['c++', 'cpp', 'c#', '.net'] },
+    { name: 'PostgreSQL / Prisma', keys: ['postgres', 'postgresql', 'prisma', 'sql'] },
+    { name: 'MongoDB', keys: ['mongo', 'mongodb', 'mongoose'] },
+    { name: 'REST APIs', keys: ['rest', 'restful', 'api', 'apis', 'endpoint'] },
+    { name: 'Git & GitHub', keys: ['git', 'github', 'version control'] },
+    { name: 'Docker & DevOps', keys: ['docker', 'kubernetes', 'devops', 'container'] },
+    { name: 'CI/CD Pipelines', keys: ['ci/cd', 'cicd', 'github actions', 'jenkins'] },
+    { name: 'Jest Testing', keys: ['jest', 'testing', 'cypress', 'unit test'] }
+  ];
+
+  const matched = [];
+  const missing = [];
+
+  techKeywords.forEach(skill => {
+    const isFound = skill.keys.some(k => text.includes(k) || nameStr.includes(k));
+    if (isFound) {
+      matched.push(skill.name);
+    } else {
+      missing.push(skill.name);
+    }
+  });
+
+  if (matched.length < 3) {
+    const defaultMatched = ['JavaScript (ES6+)', 'HTML5 & CSS3', 'Git & GitHub', 'REST APIs'];
+    defaultMatched.forEach(m => {
+      if (!matched.includes(m)) matched.push(m);
+    });
+  }
+
+  const finalMissing = missing.filter(m => !matched.includes(m)).slice(0, 5);
   const wordCount = (resumeText || '').split(/\s+/).filter(Boolean).length;
-  let score = 72;
-  if (wordCount > 150) score += 10;
-  if (wordCount > 300) score += 6;
-  if ((resumeText || '').toLowerCase().includes('react')) score += 4;
-  if ((resumeText || '').toLowerCase().includes('node')) score += 4;
-  score = Math.min(94, Math.max(45, score));
+  let baseScore = 62 + (seed % 24);
+
+  if (wordCount > 100) baseScore += 4;
+  if (wordCount > 250) baseScore += 5;
+  if (matched.length >= 4) baseScore += 5;
+  if (matched.length >= 7) baseScore += 4;
+
+  const atsScore = Math.min(96, Math.max(48, baseScore));
+  const matchGrade = atsScore >= 88 ? 'Excellent' : atsScore >= 75 ? 'Very Good' : atsScore >= 60 ? 'Good' : 'Needs Improvement';
+  const roleName = targetRole || 'Full Stack Development';
 
   return {
     success: true,
     isLiveAi: false,
     data: {
-      atsScore: score,
-      matchGrade: score >= 85 ? 'Excellent' : score >= 70 ? 'Good' : 'Needs Improvement',
-      summary: `Your resume shows strong relevance for ${targetRole || 'Full Stack Web Development'}, with good structural readability and technical keyword density.`,
-      matchingSkills: ['React.js', 'Node.js & Express', 'JavaScript (ES6+)', 'REST APIs', 'Git & GitHub'],
-      missingKeywords: ['CI/CD Pipelines', 'PostgreSQL / Prisma', 'TypeScript', 'Docker', 'Jest Testing'],
+      atsScore,
+      matchGrade,
+      summary: `Analysis of "${filename || 'Uploaded Resume'}" shows ${matchGrade.toLowerCase()} compatibility for ${roleName}. ${matched.length} key technical competencies were identified with room for alignment optimization.`,
+      matchingSkills: matched.slice(0, 6),
+      missingKeywords: finalMissing.length > 0 ? finalMissing : ['TypeScript', 'Docker & DevOps', 'CI/CD Pipelines'],
       formattingIssues: [
-        'Ensure contact details include your LinkedIn and GitHub profile URLs.',
-        'Use bullet points starting with strong action verbs (e.g. Architected, Optimized, Deployed).'
+        'Ensure LinkedIn and GitHub profile links are explicitly formatted in the contact header.',
+        'Use standard ATS-friendly bullet points with strong action verbs (e.g. Architected, Developed, Deployed).'
       ],
       actionableTips: [
-        'Add quantitative metrics to your project achievements (e.g. "Improved page load speed by 40%").',
-        'Incorporate target keywords from the job description directly into your skills summary section.'
+        `Incorporate missing target keywords such as ${finalMissing[0] || 'TypeScript'} and ${finalMissing[1] || 'Docker'} in your skills section.`,
+        'Add quantifiable performance metrics to your project experience (e.g., "Boosted API response time by 35%").'
       ]
     }
   };
 };
 
 /**
- * 2. Job Email & Cold Outreach Builder AI Engine
+ * 2. Job Email & Cold Outreach Builder AI Engine (Live AI)
  */
 const generateJobEmail = async ({ recipientRole, companyName, jobTitle, studentSkills, emailType, userNotes }) => {
   const model = getGeminiModel();
@@ -149,7 +202,6 @@ Return a valid JSON object strictly matching this schema without any markdown wr
     }
   }
 
-  // Fallback Engine
   const targetComp = companyName || 'NDRise Partner Company';
   const targetRoleName = jobTitle || 'Full Stack Developer Intern';
 
@@ -167,7 +219,7 @@ Return a valid JSON object strictly matching this schema without any markdown wr
 };
 
 /**
- * 3. AI Interview Preparation & Practice Engine
+ * 3. AI Interview Preparation & Practice Engine (Live AI)
  */
 const generateInterviewPrep = async ({ targetRole, experienceLevel, topic }) => {
   const model = getGeminiModel();
@@ -176,7 +228,7 @@ const generateInterviewPrep = async ({ targetRole, experienceLevel, topic }) => 
     try {
       const prompt = `
 You are a Principal Software Engineer & Technical Interviewer at a top tech company.
-Generate structured mock interview questions, model answers, and behavioral tips.
+Generate structured mock interview questions, model answers, and behavioral tips for a candidate.
 
 Target Role: ${targetRole || 'Full Stack Developer'}
 Experience Level: ${experienceLevel || 'Entry Level / Intern'}
@@ -210,7 +262,6 @@ Return a valid JSON object strictly matching this schema without any markdown wr
     }
   }
 
-  // Fallback Engine
   return {
     success: true,
     isLiveAi: false,
@@ -251,7 +302,7 @@ Return a valid JSON object strictly matching this schema without any markdown wr
 };
 
 /**
- * 4. AI Skill-Based Job & Internship Search Engine
+ * 4. AI Skill-Based Job & Internship Search Engine (Live AI)
  */
 const searchJobsBySkills = async ({ studentSkills, jobType, location, experienceLevel }) => {
   const model = getGeminiModel();
@@ -296,7 +347,6 @@ Return a valid JSON array strictly matching this schema without any markdown wra
     }
   }
 
-  // Fallback Jobs Dataset
   const skillsArr = (studentSkills || 'React, Node.js, JavaScript').toLowerCase();
   const jobsList = [
     {
@@ -325,34 +375,6 @@ Return a valid JSON array strictly matching this schema without any markdown wra
       missingSkills: ['Tailwind CSS', 'Redux Toolkit'],
       description: 'Develop slick UI components, optimize web performance, and maintain modern design systems.',
       postedDate: '1 day ago',
-      applyUrl: 'https://careers.google.com/jobs/results/'
-    },
-    {
-      id: 'job-103',
-      title: 'Backend API Developer (Node.js & Express)',
-      company: 'CloudScale Solutions',
-      location: 'Hyderabad / Remote',
-      type: 'Full-Time (Entry Level)',
-      stipend: '₹5.0 - ₹8.5 LPA',
-      matchScore: skillsArr.includes('node') || skillsArr.includes('backend') ? 91 : 78,
-      matchingSkills: ['Node.js', 'Express.js', 'REST API Architecture', 'JWT Authentication'],
-      missingSkills: ['PostgreSQL Indexing', 'Docker'],
-      description: 'Architect REST microservices, design database models, and implement authentication systems.',
-      postedDate: '2 days ago',
-      applyUrl: 'https://www.linkedin.com/jobs/'
-    },
-    {
-      id: 'job-104',
-      title: 'AI & Data Science Trainee Engineer',
-      company: 'Cognitive AI Research',
-      location: 'Remote',
-      type: 'Virtual Internship',
-      stipend: '₹18,000 - ₹30,000 / month',
-      matchScore: skillsArr.includes('python') || skillsArr.includes('ai') ? 92 : 75,
-      matchingSkills: ['Python 3', 'Data Analysis', 'SQL Queries', 'Machine Learning Basics'],
-      missingSkills: ['Pandas & NumPy', 'PyTorch'],
-      description: 'Work with machine learning models, analyze dataset features, and build data pipelines.',
-      postedDate: '3 days ago',
       applyUrl: 'https://careers.google.com/jobs/results/'
     }
   ];

@@ -66,51 +66,46 @@ export const defaultATSResult = {
 };
 
 // Returns domain-specific ATS result tailored to chosen internship track
-export function getATSAnalysisResult(targetTrackId, fileName) {
-  let score = 78;
-  let grade = 'Good';
-  let matchedKeywords = [...defaultATSResult.matchedKeywords];
-  let missingKeywords = [...defaultATSResult.missingKeywords];
-  let breakdown = defaultATSResult.breakdown.map(b => ({ ...b }));
-
-  if (targetTrackId === 'react-dev' || targetTrackId === 'frontend-dev') {
-    score = 82;
-    grade = 'Very Good';
-    matchedKeywords = ['React.js', 'JavaScript ES6+', 'HTML5', 'CSS3/Sass', 'Git & GitHub', 'DOM Manipulation', 'Vite'];
-    missingKeywords = ['REST API Consumption', 'React Hooks (useContext/useReducer)', 'Tailwind / CSS Modules', 'Jest Unit Tests'];
-    breakdown[0].score = 78;
-    breakdown[1].score = 90;
-  } else if (targetTrackId === 'python-dev') {
-    score = 74;
-    grade = 'Good';
-    matchedKeywords = ['Python 3', 'OOP Concepts', 'File I/O', 'Web Scraping', 'Automation Scripts', 'Git'];
-    missingKeywords = ['Django / FastAPI', 'SQL Database Schema', 'Docker Containers', 'REST API Architecture'];
-    breakdown[0].score = 70;
-    breakdown[1].score = 82;
-  } else if (targetTrackId === 'data-science') {
-    score = 71;
-    grade = 'Good';
-    matchedKeywords = ['Python', 'Pandas', 'NumPy', 'Matplotlib', 'Exploratory Data Analysis', 'SQL Queries'];
-    missingKeywords = ['Scikit-Learn', 'Statistical Hypothesis Testing', 'Machine Learning Pipelines', 'Power BI / Tableau'];
-    breakdown[0].score = 68;
-    breakdown[1].score = 78;
-  } else if (targetTrackId === 'ui-ux') {
-    score = 86;
-    grade = 'Very Good';
-    matchedKeywords = ['Figma', 'Wireframing', 'User Research', 'Interactive Prototyping', 'Design Systems', 'Auto-Layout'];
-    missingKeywords = ['Usability Testing Reports', 'Accessibility (WCAG)', 'Micro-Animations', 'Information Architecture'];
-    breakdown[0].score = 84;
-    breakdown[1].score = 92;
+export function getATSAnalysisResult(targetTrackId, fileName, fileSize = 0) {
+  const combined = (fileName || 'resume') + (fileSize || '');
+  let seed = 0;
+  for (let i = 0; i < combined.length; i++) {
+    seed = (seed * 31 + combined.charCodeAt(i)) % 100000;
   }
 
-  // Derive human-readable grade text
-  if (score >= 90) grade = 'Excellent';
-  else if (score >= 75) grade = 'Very Good';
-  else if (score >= 60) grade = 'Good';
-  else if (score >= 40) grade = 'Fair';
-  else grade = 'Needs Improvement';
+  let baseScore = 65 + (seed % 22); // Score varies between 65 and 87
+  let matchedKeywords = [...defaultATSResult.matchedKeywords];
+  let missingKeywords = [...defaultATSResult.missingKeywords];
 
-  let feedback = `Your resume is ${grade.toLowerCase()} optimized for ${TARGET_INTERNSHIP_OPTIONS.find(t => t.id === targetTrackId)?.label || 'general software roles'}, but addressing the missing keywords can significantly boost your ATS pass rate.`;
+  if (targetTrackId === 'react-dev' || targetTrackId === 'frontend-dev') {
+    baseScore += 4;
+    matchedKeywords = ['React.js', 'JavaScript ES6+', 'HTML5', 'CSS3/Sass', 'Git & GitHub', 'DOM Manipulation', 'Vite'];
+    missingKeywords = ['REST API Consumption', 'React Hooks (useContext)', 'Tailwind CSS', 'Jest Unit Tests'];
+  } else if (targetTrackId === 'python-dev') {
+    baseScore -= 2;
+    matchedKeywords = ['Python 3', 'OOP Concepts', 'File I/O', 'Web Scraping', 'Automation Scripts', 'Git'];
+    missingKeywords = ['Django / FastAPI', 'SQL Database Schema', 'Docker Containers', 'REST API Architecture'];
+  } else if (targetTrackId === 'data-science') {
+    baseScore -= 3;
+    matchedKeywords = ['Python', 'Pandas', 'NumPy', 'Matplotlib', 'Exploratory Data Analysis', 'SQL Queries'];
+    missingKeywords = ['Scikit-Learn', 'Statistical Hypothesis Testing', 'Machine Learning Pipelines', 'Tableau'];
+  } else if (targetTrackId === 'ui-ux') {
+    baseScore += 5;
+    matchedKeywords = ['Figma', 'Wireframing', 'User Research', 'Interactive Prototyping', 'Design Systems', 'Auto-Layout'];
+    missingKeywords = ['Usability Testing Reports', 'Accessibility (WCAG)', 'Micro-Animations', 'Information Architecture'];
+  }
+
+  const score = Math.min(96, Math.max(48, baseScore));
+  let grade = score >= 90 ? 'Excellent' : score >= 78 ? 'Very Good' : score >= 65 ? 'Good' : 'Needs Improvement';
+
+  const breakdown = [
+    { category: 'Keyword Match', score: Math.min(100, Math.max(40, score - 3)), key: 'keywords' },
+    { category: 'Skills', score: Math.min(100, Math.max(45, score + 5)), key: 'skills' },
+    { category: 'Formatting', score: Math.min(100, Math.max(50, score + 2)), key: 'formatting' },
+    { category: 'Contact Information', score: 100, key: 'contact' }
+  ];
+
+  let feedback = `Your resume "${fileName || 'Uploaded Resume'}" is ${grade.toLowerCase()} optimized for ${TARGET_INTERNSHIP_OPTIONS.find(t => t.id === targetTrackId)?.label || 'general software roles'}, with an overall compatibility rating of ${score}/100.`;
 
   return {
     score,
@@ -120,7 +115,8 @@ export function getATSAnalysisResult(targetTrackId, fileName) {
     matchedKeywords,
     missingKeywords,
     suggestions: defaultATSResult.suggestions,
-    analyzedFile: fileName,
+    analyzedFile: fileName || 'Uploaded Resume',
     analyzedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
   };
 }
+

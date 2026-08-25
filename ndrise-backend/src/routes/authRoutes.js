@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('../lib/prisma');
 const { verifyToken } = require('../middleware/authMiddleware');
+const { loginLimiter, adminLoginLimiter } = require('../middleware/rateLimiter');
+const { logAuditEvent } = require('../middleware/auditLogger');
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'ndraise_super_secret_jwt_key_2026_change_in_production';
@@ -17,71 +19,13 @@ const setAuthCookie = (res, token) => {
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   });
 };
-// Auto-seed default Admin & Super Admin accounts into Neon PostgreSQL
-(async function seedDefaultAdmins() {
+
+const GENERIC_AUTH_ERROR = 'Invalid email or password.';
+
+// POST /api/auth/register (Student Registration)
+router.post('/register', loginLimiter, async (req, res, next) => {
   try {
-    const defaultAccounts = [
-      {
-        name: 'NDRise Admin',
-        email: 'admin@ndtech.com',
-        password: 'Admin123!',
-        role: 'ADMIN',
-        avatar: '/admin-avatar.svg'
-      },
-      {
-        name: 'NDRaise Admin',
-        email: 'admin@ndraise.com',
-        password: 'admin123',
-        role: 'ADMIN',
-        avatar: '/admin-avatar.svg'
-      },
-      {
-        name: 'NDRaise Super Admin',
-        email: 'superadmin@ndraise.com',
-        password: 'superadmin123',
-        role: 'SUPER_ADMIN',
-        avatar: '/admin-avatar.svg'
-      }
-    ];
-
-    for (const acc of defaultAccounts) {
-      const existing = await prisma.user.findUnique({
-        where: { email: acc.email }
-      });
-
-      const hashedPassword = await bcrypt.hash(acc.password, 10);
-
-      if (!existing) {
-        await prisma.user.create({
-          data: {
-            name: acc.name,
-            email: acc.email,
-            password: hashedPassword,
-            role: acc.role,
-            avatar: acc.avatar
-          }
-        });
-        console.log(`✅ Created default account in Neon PostgreSQL: ${acc.email} / ${acc.password} (${acc.role})`);
-      } else {
-        await prisma.user.update({
-          where: { email: acc.email },
-          data: {
-            password: hashedPassword,
-            role: acc.role
-          }
-        });
-        console.log(`✅ Updated account in Neon PostgreSQL: ${acc.email} / ${acc.password} (${acc.role})`);
-      }
-    }
-  } catch (err) {
-    console.error('Admin auto-seed error:', err);
-  }
-})();
-
-// POST /api/auth/register
-router.post('/register', async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ success: false, error: 'Name, email, and password are required.' });
@@ -91,24 +35,24 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Password must be at least 6 characters long.' });
     }
 
+    const normalizedEmail = email.toLowerCase().trim();
+
     const existingUser = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() }
+      where: { email: normalizedEmail }
     });
 
     if (existingUser) {
-      return res.status(400).json({ success: false, error: 'An account with this email already exists.' });
+      return res.status(400).json({ success: false, error: 'An account with this email address already exists.' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const userRole = (role && role.toUpperCase() === 'ADMIN') ? 'ADMIN' : 'STUDENT';
-
     const newUser = await prisma.user.create({
       data: {
-        name,
-        email: email.toLowerCase(),
+        name: name.trim(),
+        email: normalizedEmail,
         password: hashedPassword,
-        role: userRole,
+        role: 'STUDENT',
         avatar: '/student-avatar.svg'
       }
     });
@@ -120,6 +64,13 @@ router.post('/register', async (req, res) => {
     );
 
     setAuthCookie(res, token);
+
+    await logAuditEvent({
+      actorId: newUser.id,
+      actorEmail: newUser.email,
+      action: 'STUDENT_REGISTERED',
+      req
+    });
 
     return res.status(201).json({
       success: true,
@@ -133,13 +84,12 @@ router.post('/register', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Registration error:', error);
-    return res.status(500).json({ success: false, error: 'Failed to register account. Please try again.' });
+    next(error);
   }
 });
 
 // POST /api/auth/login (Student Login Portal Only)
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter, async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -147,21 +97,28 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Email and password are required.' });
     }
 
+    const normalizedEmail = email.toLowerCase().trim();
+
     const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() }
+      where: { email: normalizedEmail }
     });
 
     if (!user) {
-      return res.status(401).json({ success: false, error: 'Invalid email or password.' });
+      return res.status(401).json({ success: false, error: GENERIC_AUTH_ERROR });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ success: false, error: 'Invalid email or password.' });
+      await logAuditEvent({
+        actorEmail: normalizedEmail,
+        action: 'FAILED_LOGIN',
+        req,
+        metadata: { roleAttempted: user.role }
+      });
+      return res.status(401).json({ success: false, error: GENERIC_AUTH_ERROR });
     }
 
-    // Role Guard: Reject Admin / Super Admin accounts on Student Login
-    const userRole = (user.role || '').toUpperCase();
+    const userRole = String(user.role || '').toUpperCase();
     if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
       return res.status(403).json({
         success: false,
@@ -169,6 +126,12 @@ router.post('/login', async (req, res) => {
       });
     }
 
+    // Update last login timestamp
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastLogin: new Date() }
+    });
+
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       JWT_SECRET,
@@ -176,6 +139,14 @@ router.post('/login', async (req, res) => {
     );
 
     setAuthCookie(res, token);
+
+    await logAuditEvent({
+      actorId: user.id,
+      actorEmail: user.email,
+      action: 'USER_LOGIN',
+      req,
+      metadata: { role: user.role }
+    });
 
     return res.json({
       success: true,
@@ -189,13 +160,12 @@ router.post('/login', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
-    return res.status(500).json({ success: false, error: 'Login failed. Please try again.' });
+    next(error);
   }
 });
 
-// POST /api/auth/admin-login (Admin Security Portal Only)
-router.post('/admin-login', async (req, res) => {
+// POST /api/auth/admin-login (Admin Security Portal Only with Rate Limit & Lockout)
+router.post('/admin-login', adminLoginLimiter, async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -203,22 +173,75 @@ router.post('/admin-login', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Email and password are required.' });
     }
 
+    const normalizedEmail = email.toLowerCase().trim();
+
     const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() }
+      where: { email: normalizedEmail }
     });
 
-    const userRole = (user?.role || '').toUpperCase();
-    if (!user || (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN')) {
+    if (!user) {
+      return res.status(401).json({ success: false, error: GENERIC_AUTH_ERROR });
+    }
+
+    const userRole = String(user.role || '').toUpperCase();
+    if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
+      await logAuditEvent({
+        actorEmail: normalizedEmail,
+        action: 'UNAUTHORIZED_ADMIN_LOGIN_ATTEMPT',
+        req,
+        metadata: { role: user.role }
+      });
       return res.status(403).json({
         success: false,
-        error: 'Access denied: Student accounts cannot log in through the Admin Security Portal.'
+        error: 'Access denied. Account is not an administrator.'
+      });
+    }
+
+    // Account lockout check
+    if (user.lockoutUntil && new Date(user.lockoutUntil) > new Date()) {
+      return res.status(429).json({
+        success: false,
+        error: 'Account temporarily locked due to repeated failed login attempts. Try again later.'
       });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ success: false, error: 'Invalid admin credentials.' });
+      const newFailed = (user.failedLoginAttempts || 0) + 1;
+      let lockout = null;
+
+      if (newFailed >= 5) {
+        lockout = new Date(Date.now() + 15 * 60 * 1000); // 15 min lockout
+      }
+
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          failedLoginAttempts: newFailed,
+          lockoutUntil: lockout
+        }
+      });
+
+      await logAuditEvent({
+        actorId: user.id,
+        actorEmail: user.email,
+        action: 'FAILED_ADMIN_LOGIN',
+        req,
+        metadata: { failedAttempts: newFailed, lockedOut: !!lockout }
+      });
+
+      return res.status(401).json({ success: false, error: GENERIC_AUTH_ERROR });
     }
+
+    // Reset failed attempts & update last login on success
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        failedLoginAttempts: 0,
+        lockoutUntil: null,
+        lastLogin: new Date()
+      }
+    });
 
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
@@ -227,6 +250,14 @@ router.post('/admin-login', async (req, res) => {
     );
 
     setAuthCookie(res, token);
+
+    await logAuditEvent({
+      actorId: user.id,
+      actorEmail: user.email,
+      action: 'ADMIN_LOGIN_SUCCESS',
+      req,
+      metadata: { role: user.role }
+    });
 
     return res.json({
       success: true,
@@ -240,13 +271,12 @@ router.post('/admin-login', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Admin Login error:', error);
-    return res.status(500).json({ success: false, error: 'Admin login failed.' });
+    next(error);
   }
 });
 
-// GET /api/auth/me
-router.get('/me', verifyToken, async (req, res) => {
+// GET /api/auth/me (Current Session Verification)
+router.get('/me', verifyToken, async (req, res, next) => {
   try {
     const userId = String(req.user.id);
     const user = await prisma.user.findUnique({
@@ -257,7 +287,13 @@ router.get('/me', verifyToken, async (req, res) => {
         email: true,
         role: true,
         avatar: true,
-        createdAt: true
+        college: true,
+        degree: true,
+        graduationYear: true,
+        resumeUrl: true,
+        atsScore: true,
+        createdAt: true,
+        lastLogin: true
       }
     });
 
@@ -270,19 +306,28 @@ router.get('/me', verifyToken, async (req, res) => {
       user
     });
   } catch (error) {
-    console.error('Get user profile error:', error);
-    return res.status(500).json({ success: false, error: 'Failed to fetch user profile.' });
+    next(error);
   }
 });
 
-// POST /api/auth/logout
-router.post('/logout', (req, res) => {
+// POST /api/auth/logout (Session Invalidation)
+router.post('/logout', verifyToken, async (req, res) => {
   res.clearCookie('auth_token');
+
+  if (req.user) {
+    await logAuditEvent({
+      actorId: req.user.id,
+      actorEmail: req.user.email,
+      action: 'LOGOUT',
+      req
+    });
+  }
+
   return res.json({ success: true, message: 'Logged out successfully.' });
 });
 
 // POST /api/auth/forgot-password
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password', async (req, res, next) => {
   try {
     const { email } = req.body;
     if (!email) {
@@ -290,7 +335,7 @@ router.post('/forgot-password', async (req, res) => {
     }
 
     const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() }
+      where: { email: email.toLowerCase().trim() }
     });
 
     if (!user) {
@@ -305,13 +350,12 @@ router.post('/forgot-password', async (req, res) => {
       resetCode
     });
   } catch (error) {
-    console.error('Forgot password error:', error);
-    return res.status(500).json({ success: false, error: 'Failed to process forgot password request.' });
+    next(error);
   }
 });
 
 // POST /api/auth/reset-password
-router.post('/reset-password', async (req, res) => {
+router.post('/reset-password', async (req, res, next) => {
   try {
     const { email, newPassword } = req.body;
     if (!email || !newPassword) {
@@ -323,7 +367,7 @@ router.post('/reset-password', async (req, res) => {
     }
 
     const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() }
+      where: { email: email.toLowerCase().trim() }
     });
 
     if (!user) {
@@ -342,29 +386,30 @@ router.post('/reset-password', async (req, res) => {
       message: 'Password updated successfully! You can now log in with your new password.'
     });
   } catch (error) {
-    console.error('Reset password error:', error);
-    return res.status(500).json({ success: false, error: 'Failed to reset password.' });
+    next(error);
   }
 });
 
 // POST /api/auth/google
-router.post('/google', async (req, res) => {
+router.post('/google', async (req, res, next) => {
   try {
     const { email, name, avatar } = req.body;
     if (!email) {
       return res.status(400).json({ success: false, error: 'Google email is required.' });
     }
 
+    const normalizedEmail = email.toLowerCase().trim();
+
     let user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() }
+      where: { email: normalizedEmail }
     });
 
     if (!user) {
       const defaultPassword = await bcrypt.hash('GoogleAuth_' + Math.random(), 10);
       user = await prisma.user.create({
         data: {
-          name: name || email.split('@')[0],
-          email: email.toLowerCase(),
+          name: name || normalizedEmail.split('@')[0],
+          email: normalizedEmail,
           password: defaultPassword,
           role: 'STUDENT',
           avatar: avatar || '/student-avatar.svg'
@@ -372,8 +417,7 @@ router.post('/google', async (req, res) => {
       });
     }
 
-    // Role Guard: Admin users cannot log in via student Google auth
-    const userRole = (user.role || '').toUpperCase();
+    const userRole = String(user.role || '').toUpperCase();
     if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
       return res.status(403).json({
         success: false,
@@ -401,8 +445,7 @@ router.post('/google', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Google auth error:', error);
-    return res.status(500).json({ success: false, error: 'Google authentication failed.' });
+    next(error);
   }
 });
 

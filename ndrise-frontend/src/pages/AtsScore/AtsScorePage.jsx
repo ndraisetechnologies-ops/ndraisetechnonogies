@@ -101,53 +101,76 @@ export default function AtsScorePage({ setCurrentView, user, onRequireAuth }) {
 
     // Call backend careerAPI.analyzeATS in background
     const targetRole = targetInternship || 'Full Stack Web Development';
-    const resumeSnippet = `File Name: ${file.name}\nCandidate Target: ${targetRole}\nSkills: React.js, Node.js, JavaScript, HTML5, CSS3, REST APIs, Git, PostgreSQL, Web Development.`;
 
-    careerAPI.analyzeATS({
-      resumeText: resumeSnippet,
-      targetRole
-    }).then((res) => {
-      let finalResult = null;
-      if (res.success && res.data) {
-        const d = res.data;
-        const score = d.atsScore || 78;
-        const grade = d.matchGrade || (score >= 85 ? 'Excellent' : score >= 70 ? 'Good' : 'Needs Improvement');
+    const processAnalysis = (extractedText = '') => {
+      const resumeText = extractedText && extractedText.length > 20
+        ? `File Name: ${file.name}\nTarget Role: ${targetRole}\nContent:\n${extractedText}`
+        : `File Name: ${file.name}\nTarget Role: ${targetRole}\nFile Size: ${file.size} bytes.`;
 
-        finalResult = {
-          score,
-          grade,
-          feedback: d.summary || `Your resume shows strong relevance for ${targetRole}.`,
-          analyzedFile: file.name,
-          analyzedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-          matchedKeywords: d.matchingSkills || ['React.js', 'Node.js', 'JavaScript', 'REST APIs', 'Git'],
-          missingKeywords: d.missingKeywords || ['TypeScript', 'Docker', 'CI/CD Pipelines', 'Prisma'],
-          breakdown: [
-            { category: 'Keyword Match', score: Math.min(100, score + 4), key: 'keywords' },
-            { category: 'Skills', score: Math.min(100, score + 8), key: 'skills' },
-            { category: 'Formatting', score: 85, key: 'formatting' },
-            { category: 'Contact Information', score: 100, key: 'contact' }
-          ],
-          suggestions: (d.actionableTips || [
-            'Add quantitative metrics to your project achievements.',
-            'Incorporate target keywords from the job description directly into your skills summary.'
-          ]).map((tip, idx) => ({
-            id: idx + 1,
-            priority: idx === 0 ? 'High' : 'Medium',
-            title: `Improvement Action #${idx + 1}`,
-            description: tip
-          }))
-        };
-      } else {
-        finalResult = getATSAnalysisResult(targetInternship, file.name);
-      }
+      careerAPI.analyzeATS({
+        resumeText,
+        targetRole,
+        filename: file.name,
+        fileSize: file.size
+      }).then((res) => {
+        let finalResult = null;
+        if (res.success && res.data) {
+          const d = res.data;
+          const score = d.atsScore || 78;
+          const grade = d.matchGrade || (score >= 85 ? 'Excellent' : score >= 70 ? 'Good' : 'Needs Improvement');
 
-      setAnalysisResult(finalResult);
-      saveAtsScanToHistory(userEmail, finalResult);
-    }).catch(() => {
-      const fallbackResult = getATSAnalysisResult(targetInternship, file.name);
-      setAnalysisResult(fallbackResult);
-      saveAtsScanToHistory(userEmail, fallbackResult);
-    });
+          finalResult = {
+            score,
+            grade,
+            feedback: d.summary || `Your resume "${file.name}" shows relevance for ${targetRole}.`,
+            analyzedFile: file.name,
+            analyzedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            matchedKeywords: d.matchingSkills || ['React.js', 'JavaScript', 'REST APIs', 'Git'],
+            missingKeywords: d.missingKeywords || ['TypeScript', 'Docker', 'CI/CD Pipelines'],
+            breakdown: [
+              { category: 'Keyword Match', score: Math.min(100, Math.max(40, score - 2)), key: 'keywords' },
+              { category: 'Skills', score: Math.min(100, Math.max(45, score + 4)), key: 'skills' },
+              { category: 'Formatting', score: Math.min(100, Math.max(50, score + 2)), key: 'formatting' },
+              { category: 'Contact Information', score: 100, key: 'contact' }
+            ],
+            suggestions: (d.actionableTips || [
+              'Add quantitative metrics to your project achievements.',
+              'Incorporate target keywords from the job description directly into your skills summary.'
+            ]).map((tip, idx) => ({
+              id: idx + 1,
+              priority: idx === 0 ? 'High' : 'Medium',
+              title: `Improvement Action #${idx + 1}`,
+              description: tip
+            }))
+          };
+        } else {
+          finalResult = getATSAnalysisResult(targetInternship, file.name, file.size);
+        }
+
+        setAnalysisResult(finalResult);
+        saveAtsScanToHistory(userEmail, finalResult);
+      }).catch(() => {
+        const fallbackResult = getATSAnalysisResult(targetInternship, file.name, file.size);
+        setAnalysisResult(fallbackResult);
+        saveAtsScanToHistory(userEmail, fallbackResult);
+      });
+    };
+
+    if (file && typeof FileReader !== 'undefined') {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const raw = e.target?.result || '';
+        const cleanText = typeof raw === 'string' 
+          ? raw.replace(/[\x00-\x09\x0B-\x1F\x7F-\x9F]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 3000)
+          : '';
+        processAnalysis(cleanText);
+      };
+      reader.onerror = () => processAnalysis('');
+      reader.readAsText(file);
+    } else {
+      processAnalysis('');
+    }
+
 
     // Animated progress steps
     const interval = setInterval(() => {
