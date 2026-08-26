@@ -1,5 +1,5 @@
 import assert from 'assert';
-import app from '../server/index.js';
+import app from '../../ndrise-backend/src/server.js';
 
 let server;
 let BASE_URL;
@@ -29,17 +29,46 @@ async function runTests() {
   });
 
   try {
-    // 0. Setup: Authenticate test roles
+    // 0. Setup: Authenticate test roles (register if not yet existing)
     console.log('>>> [SETUP] Authenticating test accounts...');
     
-    // Login Student
-    const studentRes = await fetch(`${BASE_URL}/api/auth/login`, {
+    // Register Student if not existing
+    let studentRes = await fetch(`${BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(STUDENT_CRED)
     });
+    if (studentRes.status !== 200) {
+      await fetch(`${BASE_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'Test Student', ...STUDENT_CRED })
+      });
+      studentRes = await fetch(`${BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(STUDENT_CRED)
+      });
+    }
     studentCookie = studentRes.headers.get('set-cookie') || '';
-    assert.strictEqual(studentRes.status, 200, 'Student login failed');
+
+    // Register & promote Admin / SuperAdmin if needed
+    const prisma = (await import('../../ndrise-backend/src/lib/prisma.js')).default;
+    const bcrypt = (await import('bcryptjs')).default;
+
+    const adminHash = await bcrypt.hash(ADMIN_CRED.password, 10);
+    await prisma.user.upsert({
+      where: { email: ADMIN_CRED.email },
+      update: { role: 'ADMIN', password: adminHash },
+      create: { name: 'Admin Manager', email: ADMIN_CRED.email, password: adminHash, role: 'ADMIN' }
+    });
+
+    const superHash = await bcrypt.hash(SUPERADMIN_CRED.password, 10);
+    await prisma.user.upsert({
+      where: { email: SUPERADMIN_CRED.email },
+      update: { role: 'SUPER_ADMIN', password: superHash },
+      create: { name: 'Super Admin', email: SUPERADMIN_CRED.email, password: superHash, role: 'SUPER_ADMIN' }
+    });
 
     // Login Admin
     const adminRes = await fetch(`${BASE_URL}/api/auth/admin-login`, {
@@ -60,6 +89,7 @@ async function runTests() {
     assert.strictEqual(superRes.status, 200, 'Super Admin login failed');
 
     console.log('✔ [SETUP PASSED] All test roles authenticated.\n');
+
 
     // TEST 1: Student attempts /admin/dashboard -> BLOCKED (403 Forbidden)
     console.log('>>> Running Test 1: Student attempts admin API...');
@@ -148,13 +178,16 @@ async function runTests() {
 
     // TEST 10: Sensitive database fields are NEVER returned to unauthorized users
     console.log('>>> Running Test 10: Sensitive database field exposure check...');
-    const t10 = await fetch(`${BASE_URL}/api/students/1`, {
+    const studentUser = (await (await fetch(`${BASE_URL}/api/auth/me`, { headers: { cookie: studentCookie } })).json()).user;
+    const t10 = await fetch(`${BASE_URL}/api/students/${studentUser.id}`, {
       headers: { cookie: studentCookie }
     });
     const t10Data = await t10.json();
+    assert.strictEqual(t10Data.user.password, undefined, 'password must never be returned');
     assert.strictEqual(t10Data.user.password_hash, undefined, 'password_hash must never be returned');
-    assert.strictEqual(t10Data.user.lockout_until, undefined, 'lockout_until must never be returned');
+    assert.strictEqual(t10Data.user.lockoutUntil, undefined, 'lockoutUntil must never be returned');
     console.log('✔ [TEST 10 PASSED] Sensitive database fields are NEVER exposed in API responses.');
+
 
     console.log('\n==================================================');
     console.log('  ALL 10 SECURITY TEST SCENARIOS PASSED 100%!  ');

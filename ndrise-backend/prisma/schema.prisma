@@ -11,6 +11,8 @@ enum Role {
   STUDENT
   ADMIN
   SUPER_ADMIN
+  REVIEWER
+  SUPPORT
 }
 
 enum ApplicationStatus {
@@ -29,19 +31,32 @@ enum SubmissionStatus {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  name         String
-  email        String        @unique
-  password     String
-  role         Role          @default(STUDENT)
-  avatar       String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id                  String        @id @default(uuid())
+  name                String
+  email               String        @unique
+  password            String
+  role                Role          @default(STUDENT)
+  avatar              String?
+  lastLogin           DateTime?
+  failedLoginAttempts Int           @default(0)
+  lockoutUntil        DateTime?
+  college             String?
+  degree              String?
+  graduationYear      Int?
+  resumeUrl           String?
+  atsScore            Int?          @default(0)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
 
-  applications Application[]
-  testResults  TestResult[]
-  certificates Certificate[]
-  submissions  Submission[]
+  applications        Application[]
+  testResults         TestResult[]
+  certificates        Certificate[]
+  submissions         Submission[]
+  auditLogs           AuditLog[]
+  offerLetters        OfferLetter[]
+  payments            Payment[]
+  reviews             Review[]
+  notifications       Notification[]
 
   @@map("users")
 }
@@ -127,3 +142,75 @@ model Submission {
 
   @@map("submissions")
 }
+
+model AuditLog {
+  id             String   @id @default(uuid())
+  actorId        String?
+  actorEmail     String
+  action         String
+  targetResource String?
+  ipAddress      String?
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  actor          User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
+
+model OfferLetter {
+  id           String   @id @default(uuid())
+  offerCode    String   @unique
+  userId       String?
+  studentEmail String
+  studentName  String
+  trackTitle   String
+  duration     String?
+  stipend      String?
+  issuedAt     DateTime @default(now())
+
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("offer_letters")
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  userId        String
+  amount        Float
+  currency      String   @default("INR")
+  status        String   @default("SUCCESS")
+  paymentMethod String?
+  transactionId String?  @unique
+  createdAt     DateTime @default(now())
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  rating    Int      @default(5)
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+

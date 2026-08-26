@@ -1,7 +1,7 @@
-import rateLimit from 'express-rate-limit';
+const rateLimit = require('express-rate-limit');
 
 // Rate Limiting for Admin Login to prevent brute-force attacks
-export const adminLoginLimiter = rateLimit({
+const adminLoginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes window
   max: 5, // Maximum 5 failed attempts per 15 minutes per IP
   standardHeaders: true,
@@ -13,7 +13,7 @@ export const adminLoginLimiter = rateLimit({
 });
 
 // General Login Limiter
-export const loginLimiter = rateLimit({
+const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
   message: {
@@ -23,7 +23,7 @@ export const loginLimiter = rateLimit({
 });
 
 // General API Limiter
-export const apiLimiter = rateLimit({
+const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
   message: {
@@ -31,3 +31,9 @@ export const apiLimiter = rateLimit({
     error: 'Rate limit exceeded. Please try again later.'
   }
 });
+
+module.exports = {
+  adminLoginLimiter,
+  loginLimiter,
+  apiLimiter
+};
