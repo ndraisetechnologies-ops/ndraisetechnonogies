@@ -1,0 +1,614 @@
+/* Upgraded Student Dashboard Career Command Center CSS */
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  background: var(--bg-dark);
+  color: var(--text-main);
+}
+
+/* Categorized Sidebar Styling */
+.dashboard-sidebar {
+  width: 270px;
+  background: var(--bg-card, #ffffff);
+  border-right: 1px solid var(--border-light, #e2e8f0);
+  padding: 1.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(16px);
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+  z-index: 50;
+  transition: all 0.3s ease;
+}
+
+.sidebar-groups-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.sidebar-group-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--primary, #2563eb);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+  padding-left: 0.75rem;
+}
+
+.dashboard-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.7rem 0.95rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted, #475569);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-item:hover {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--text-main, #0f172a);
+}
+
+.menu-item.active {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--primary, #2563eb);
+  border-left: 3px solid var(--primary, #2563eb);
+}
+
+.logout-menu-item {
+  color: #ef4444 !important;
+}
+
+.logout-menu-item:hover {
+  background: rgba(239, 68, 68, 0.15) !important;
+}
+
+/* Main Content Area */
+.dashboard-main {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 2.25rem 2.5rem;
+}
+
+/* 1. Welcome Header */
+.dashboard-header {
+  padding: 2rem 2.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-light, #e2e8f0);
+  box-shadow: var(--shadow-card, 0 10px 30px -10px rgba(15, 23, 42, 0.08));
+}
+
+.welcome-text h1 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+  margin-bottom: 0.35rem;
+}
+
+.welcome-text p {
+  font-size: 0.92rem;
+  color: var(--text-muted, #475569);
+  margin-bottom: 0.85rem;
+}
+
+.header-meta-pills {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.meta-pill {
+  font-size: 0.8rem;
+  background: var(--bg-glass, #f1f5f9);
+  border: 1px solid var(--border-light, #cbd5e1);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  color: var(--text-muted, #475569);
+  font-weight: 600;
+}
+
+.meta-pill strong { color: var(--text-main, #0f172a); }
+
+.header-readiness-box {
+  width: 280px;
+  background: var(--bg-glass, #f8fafc);
+  border: 1px solid var(--border-light, #cbd5e1);
+  padding: 1.15rem;
+  border-radius: var(--radius-md);
+}
+
+.readiness-top-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  font-size: 0.82rem;
+}
+
+.readiness-label { font-weight: 600; color: var(--text-muted, #475569); }
+.readiness-percent { font-weight: 800; color: #10b981; font-size: 1rem; }
+
+.readiness-track {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.readiness-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8 0%, #10b981 100%);
+  border-radius: 4px;
+}
+
+/* 2. Career Overview Summary Cards */
+.career-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.summary-card {
+  padding: 1.35rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  text-align: left;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-light, #e2e8f0);
+  box-shadow: var(--shadow-card, 0 10px 30px -10px rgba(15, 23, 42, 0.05));
+}
+
+.summary-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary, #2563eb);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+}
+
+.summary-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.85rem;
+}
+
+.icon-blue { background: rgba(37, 99, 235, 0.1); color: var(--primary, #2563eb); }
+.icon-emerald { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+.icon-purple { background: rgba(124, 58, 237, 0.1); color: #7c3aed; }
+.icon-amber { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.icon-teal { background: rgba(13, 148, 136, 0.1); color: #0d9488; }
+.icon-sky { background: rgba(2, 132, 199, 0.1); color: #0284c7; }
+
+.summary-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted, #64748b);
+}
+
+.summary-num {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+  line-height: 1.1;
+  margin: 0.2rem 0;
+}
+
+.summary-subtext {
+  font-size: 0.76rem;
+  color: var(--text-muted, #64748b);
+  margin-bottom: 0.85rem;
+}
+
+.summary-link {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--primary, #2563eb);
+  margin-top: auto;
+}
+
+/* Side-by-Side Cards Layout Grid */
+.side-by-side-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem;
+  align-items: stretch;
+}
+
+.command-card {
+  padding: 1.75rem;
+  border-radius: var(--radius-lg);
+  text-align: left;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-light, #e2e8f0);
+  box-shadow: var(--shadow-card, 0 10px 30px -10px rgba(15, 23, 42, 0.05));
+  display: flex;
+  flex-direction: column;
+}
+
+.section-card-heading {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  margin-bottom: 1.25rem;
+}
+
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.btn-table-action {
+  background: none;
+  border: none;
+  color: var(--primary, #2563eb);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Test Performance Chart */
+.test-stats-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.test-stat-pill {
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+  background: var(--bg-glass, #f8fafc);
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light, #e2e8f0);
+  flex: 1 1 auto;
+}
+
+.test-stat-pill strong { color: var(--text-main, #0f172a); }
+
+.test-chart-container {
+  background: var(--bg-glass, #f8fafc);
+  border: 1px solid var(--border-light, #e2e8f0);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-top: auto;
+}
+
+.chart-title { font-size: 0.82rem; font-weight: 700; color: var(--text-muted, #64748b); margin-bottom: 1rem; }
+
+.chart-bars-flex {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 120px;
+  padding: 0 0.5rem;
+}
+
+.bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  height: 100%;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.bar-val { font-size: 0.72rem; font-weight: 700; color: var(--primary, #2563eb); }
+
+.bar-track {
+  width: 24px;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, #3b82f6 0%, #6366f1 100%);
+  border-radius: 4px;
+  transition: height 0.8s ease;
+}
+
+.bar-name { font-size: 0.7rem; color: var(--text-muted, #64748b); }
+
+/* ATS Section */
+.ats-widget-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1.25rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.ats-score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--bg-glass, #f8fafc);
+  border: 1px solid var(--border-light, #e2e8f0);
+  padding: 1.25rem 0.75rem;
+  border-radius: var(--radius-md);
+}
+
+.ats-num-badge {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--primary, #2563eb);
+  line-height: 1;
+  margin-bottom: 0.35rem;
+}
+
+.ats-grade-text strong { display: block; font-size: 0.9rem; color: var(--text-main, #0f172a); }
+.ats-grade-text span { font-size: 0.75rem; color: var(--text-muted, #64748b); }
+
+.ats-breakdown-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.ats-item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+}
+
+.ats-item-name { width: 100px; font-weight: 600; color: var(--text-main, #0f172a); font-size: 0.78rem; }
+.ats-item-track { flex: 1; height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; }
+.ats-item-fill { height: 100%; background: var(--primary, #2563eb); border-radius: 3px; }
+.ats-item-val { font-weight: 700; color: var(--primary, #2563eb); width: 32px; text-align: right; font-size: 0.78rem; }
+
+.ats-rec-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  padding: 0.85rem 1.15rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  flex-wrap: wrap;
+  color: var(--text-main, #0f172a);
+  margin-top: auto;
+}
+
+.btn-ats-cta { padding: 0.45rem 0.95rem !important; font-size: 0.78rem !important; }
+
+/* Assigned Projects Grid */
+.project-overview-bar {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.84rem;
+  color: var(--text-muted, #64748b);
+  margin-bottom: 1.25rem;
+}
+
+.project-overview-bar strong { color: var(--text-main, #0f172a); }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.project-mini-card {
+  background: var(--bg-glass, #f8fafc);
+  border: 1px solid var(--border-light, #e2e8f0);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+}
+
+.proj-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem; }
+.proj-title { font-size: 0.9rem; font-weight: 700; color: var(--text-main, #0f172a); }
+.proj-status { font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: var(--radius-full); }
+.status-comp { background: rgba(16, 185, 129, 0.12); color: #059669; }
+.status-prog { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+.proj-tech { font-size: 0.76rem; color: var(--text-muted, #64748b); display: block; margin-bottom: 0.85rem; }
+.proj-bar-track { height: 5px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; }
+.proj-bar-fill { height: 100%; background: #10b981; }
+
+/* Dark Theme Overrides */
+[data-theme="dark"] .dashboard-sidebar {
+  background: #0d1324;
+  border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .sidebar-group-title {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .menu-item {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .menu-item:hover {
+  background: rgba(56, 189, 248, 0.1);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .menu-item.active {
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
+  border-left-color: #38bdf8;
+}
+
+[data-theme="dark"] .dashboard-header,
+[data-theme="dark"] .summary-card,
+[data-theme="dark"] .command-card {
+  background: rgba(13, 19, 36, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .meta-pill,
+[data-theme="dark"] .header-readiness-box,
+[data-theme="dark"] .test-stat-pill,
+[data-theme="dark"] .test-chart-container,
+[data-theme="dark"] .ats-score-display,
+[data-theme="dark"] .project-mini-card {
+  background: rgba(13, 19, 36, 0.6);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .meta-pill strong,
+[data-theme="dark"] .summary-num,
+[data-theme="dark"] .test-stat-pill strong,
+[data-theme="dark"] .ats-grade-text strong,
+[data-theme="dark"] .ats-item-name,
+[data-theme="dark"] .project-overview-bar strong,
+[data-theme="dark"] .proj-title {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .readiness-track,
+[data-theme="dark"] .bar-track,
+[data-theme="dark"] .ats-item-track,
+[data-theme="dark"] .proj-bar-track {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Mobile Top Bar & Drawer Navigation */
+.dashboard-mobile-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.dashboard-menu-toggle {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 5, 12, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 101;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1024px) {
+  .side-by-side-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .dashboard-mobile-bar {
+    display: flex;
+  }
+
+  .dashboard-sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    bottom: 0;
+    width: 270px;
+    height: 100vh;
+    z-index: 102;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .dashboard-sidebar.mobile-open {
+    transform: translateX(280px);
+  }
+
+  .dashboard-main {
+    padding: 1.5rem;
+  }
+
+  .career-overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ats-widget-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-main {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .career-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-header {
+    padding: 1.25rem;
+  }
+
+  .header-readiness-box {
+    width: 100%;
+  }
+
+  .welcome-text h1 {
+    font-size: 1.45rem;
+  }
+}

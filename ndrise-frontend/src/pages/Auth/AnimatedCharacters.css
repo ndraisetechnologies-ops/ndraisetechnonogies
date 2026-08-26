@@ -1,0 +1,337 @@
+/* 3D Animated Characters Stage */
+.characters-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  user-select: none;
+}
+
+.stage-bg-glow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.28) 0%, rgba(124, 58, 237, 0.2) 45%, rgba(6, 182, 212, 0.1) 70%, transparent 80%);
+  filter: blur(50px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.characters-group {
+  position: relative;
+  width: 340px;
+  height: 320px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Individual Character Base */
+.character {
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: all 0.6s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.char-body {
+  position: relative;
+  transform-style: preserve-3d;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  transition: all 0.5s ease;
+}
+
+/* 1. PURPLE TALL BLOB */
+.char-purple {
+  left: 60px;
+  bottom: 40px;
+  z-index: 2;
+  animation: floatPurple 4s ease-in-out infinite alternate;
+}
+
+.purple-body {
+  width: 130px;
+  height: 240px;
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  border-radius: 120px 120px 30px 30px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.char-purple .char-face {
+  position: absolute;
+  top: 45px;
+  right: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.5s ease;
+}
+
+/* 2. ORANGE WIDE BLOB */
+.char-orange {
+  left: 10px;
+  bottom: 0px;
+  z-index: 3;
+  animation: floatOrange 3.5s ease-in-out infinite alternate;
+}
+
+.orange-body {
+  width: 170px;
+  height: 120px;
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+  border-radius: 120px 120px 20px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.char-orange .char-face {
+  position: absolute;
+  top: 35px;
+  right: 45px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.5s ease;
+}
+
+/* 3. BLACK CHARACTER */
+.char-black {
+  right: 90px;
+  bottom: 30px;
+  z-index: 4;
+  animation: floatBlack 4.2s ease-in-out infinite alternate;
+}
+
+.black-body {
+  width: 90px;
+  height: 150px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 24px 24px 10px 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+}
+
+.char-black .char-face {
+  position: absolute;
+  top: 25px;
+  left: 20px;
+  transition: all 0.5s ease;
+}
+
+/* 4. YELLOW BLOB */
+.char-yellow {
+  right: 25px;
+  bottom: 0px;
+  z-index: 3;
+  animation: floatYellow 3.8s ease-in-out infinite alternate;
+}
+
+.yellow-body {
+  width: 85px;
+  height: 130px;
+  background: linear-gradient(135deg, #eab308 0%, #facc15 100%);
+  border-radius: 80px 80px 20px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.char-yellow .char-face {
+  position: absolute;
+  top: 35px;
+  right: 15px;
+  transition: all 0.5s ease;
+}
+
+/* EYES & FACE ELEMENTS */
+.eyes-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s ease;
+}
+
+.eyes-container.blinking {
+  transform: scaleY(0.1);
+}
+
+.eye {
+  position: relative;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.eye-dot {
+  width: 10px;
+  height: 10px;
+  background: #0f172a;
+}
+
+.eye-white {
+  width: 14px;
+  height: 14px;
+  background: #ffffff;
+  border: 1.5px solid #0f172a;
+}
+
+.eye-white .pupil {
+  width: 6px;
+  height: 6px;
+  background: #0f172a;
+  border-radius: 50%;
+  transition: transform 0.08s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.eye-square {
+  width: 14px;
+  height: 14px;
+  background: #ffffff;
+  border-radius: 4px;
+}
+
+.eye-square .pupil {
+  width: 6px;
+  height: 6px;
+  background: #0f172a;
+  border-radius: 50%;
+  transition: transform 0.08s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mouth-dot {
+  width: 6px;
+  height: 6px;
+  background: #0f172a;
+  border-radius: 50%;
+}
+
+.mouth-small {
+  width: 8px;
+  height: 4px;
+  background: #0f172a;
+  border-radius: 0 0 8px 8px;
+}
+
+.side-eye-line {
+  width: 14px;
+  height: 4px;
+  background: #0f172a;
+  border-radius: 2px;
+}
+
+/* SHADOWS UNDER CHARACTERS */
+.char-shadow {
+  position: absolute;
+  bottom: -10px;
+  left: 10%;
+  width: 80%;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  filter: blur(4px);
+  z-index: -1;
+}
+
+/* IDLE ANIMATIONS */
+@keyframes floatPurple {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-8px) rotate(-1.5deg); }
+}
+
+@keyframes floatOrange {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-5px) rotate(1deg); }
+}
+
+@keyframes floatBlack {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes floatYellow {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-6px) rotate(-1deg); }
+}
+
+/* WATCHING EMAIL STATE */
+.mode-watching .char-purple {
+  transform: rotateY(15deg) rotateX(-5deg) translateX(12px) scale(1.03);
+}
+
+.mode-watching .char-orange {
+  transform: rotateY(15deg) translateX(10px) scale(1.02);
+}
+
+.mode-watching .char-black {
+  transform: rotateY(20deg) translateX(8px) translateY(-5px) scale(1.05);
+}
+
+.mode-watching .char-yellow {
+  transform: rotateY(15deg) translateX(6px);
+}
+
+/* TURNED AWAY (PASSWORD FOCUS STATE - PRIVACY MODE) */
+.mode-look-away .char-purple.turned-away {
+  transform: rotateY(-35deg) translateX(-25px);
+}
+
+.mode-look-away .char-orange.turned-away {
+  transform: rotateY(-30deg) translateX(-20px);
+}
+
+.mode-look-away .char-black.turned-away {
+  transform: rotateY(-40deg) translateX(-25px);
+}
+
+.mode-look-away .char-yellow.turned-away {
+  transform: rotateY(-30deg) translateX(-15px);
+}
+
+.mode-look-away .char-purple.turned-away .char-face,
+.mode-look-away .char-orange.turned-away .char-face,
+.mode-look-away .char-black.turned-away .char-face,
+.mode-look-away .char-yellow.turned-away .char-face {
+  opacity: 1;
+  transform: translateX(-14px);
+}
+
+/* PRIVACY BADGE */
+.privacy-badge {
+  position: absolute;
+  top: 15px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #f8fafc;
+  padding: 0.45rem 0.95rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: badgePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 10;
+}
+
+.peeking-badge {
+  background: rgba(37, 99, 235, 0.9);
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0.6) translateY(10px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@media (max-width: 900px) {
+  .characters-stage {
+    min-height: 220px;
+  }
+  .characters-group {
+    transform: scale(0.85);
+  }
+}

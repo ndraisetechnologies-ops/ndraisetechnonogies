@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="currentColor">
+  <!-- Cap / Mortarboard Diamond -->
+  <path d="M 500 40 L 892 165 L 500 310 L 108 165 Z" />
+  
+  <!-- Tassel on left side -->
+  <path d="M 124 185 L 118 410 C 95 440 85 470 78 510 L 190 510 C 183 470 173 440 150 410 L 144 185 Z" />
+  
+  <!-- Face Contour / U-Shape Outline -->
+  <path d="M 270 240 C 270 530 350 660 500 660 C 650 660 730 530 730 240 C 685 240 685 480 500 600 C 315 480 315 240 270 240 Z" />
+  
+  <!-- Shoulders & V-Neck Gown -->
+  <path d="M 48 960 C 120 780 360 670 360 670 L 500 845 L 640 670 C 640 670 880 780 952 960 Z" />
+</svg>

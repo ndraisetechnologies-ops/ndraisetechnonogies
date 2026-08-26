@@ -1,0 +1,216 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+  SUPER_ADMIN
+  REVIEWER
+  SUPPORT
+}
+
+enum ApplicationStatus {
+  APPLIED
+  SHORTLISTED
+  UNDER_REVIEW
+  SELECTED
+  REJECTED
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REVISION_REQUESTED
+}
+
+model User {
+  id                  String        @id @default(uuid())
+  name                String
+  email               String        @unique
+  password            String
+  role                Role          @default(STUDENT)
+  avatar              String?
+  lastLogin           DateTime?
+  failedLoginAttempts Int           @default(0)
+  lockoutUntil        DateTime?
+  college             String?
+  degree              String?
+  graduationYear      Int?
+  resumeUrl           String?
+  atsScore            Int?          @default(0)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  applications        Application[]
+  testResults         TestResult[]
+  certificates        Certificate[]
+  submissions         Submission[]
+  auditLogs           AuditLog[]
+  offerLetters        OfferLetter[]
+  payments            Payment[]
+  reviews             Review[]
+  notifications       Notification[]
+
+  @@map("users")
+}
+
+model Internship {
+  id           String        @id @default(uuid())
+  title        String
+  domain       String
+  description  String        @db.Text
+  duration     String
+  stipend      String        @default("Unpaid / Certificate")
+  status       String        @default("ACTIVE")
+  createdAt    DateTime      @default(now())
+
+  applications Application[]
+
+  @@map("internships")
+}
+
+model Application {
+  id           String            @id @default(uuid())
+  userId       String
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  internshipId String
+  internship   Internship        @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  status       ApplicationStatus @default(APPLIED)
+  appliedAt    DateTime          @default(now())
+
+  @@map("applications")
+}
+
+model Course {
+  id             String       @id @default(uuid())
+  title          String
+  category       String
+  duration       String
+  questionsCount Int
+  passScore      String
+  description    String       @db.Text
+  createdAt      DateTime     @default(now())
+
+  testResults    TestResult[]
+
+  @@map("courses")
+}
+
+model TestResult {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  score       Int
+  passed      Boolean
+  completedAt DateTime @default(now())
+
+  @@map("test_results")
+}
+
+model Certificate {
+  id              String   @id @default(uuid())
+  certificateCode String   @unique
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trackTitle      String
+  issueDate       DateTime @default(now())
+
+  @@map("certificates")
+}
+
+model Submission {
+  id            String           @id @default(uuid())
+  userId        String
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectTitle  String
+  domain        String
+  fileUrl       String
+  notes         String?          @db.Text
+  adminFeedback String?          @db.Text
+  status        SubmissionStatus @default(PENDING)
+  submittedAt   DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt @default(now())
+
+  @@map("submissions")
+}
+
+model AuditLog {
+  id             String   @id @default(uuid())
+  actorId        String?
+  actorEmail     String
+  action         String
+  targetResource String?
+  ipAddress      String?
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  actor          User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
+
+model OfferLetter {
+  id           String   @id @default(uuid())
+  offerCode    String   @unique
+  userId       String?
+  studentEmail String
+  studentName  String
+  trackTitle   String
+  duration     String?
+  stipend      String?
+  issuedAt     DateTime @default(now())
+
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("offer_letters")
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  userId        String
+  amount        Float
+  currency      String   @default("INR")
+  status        String   @default("SUCCESS")
+  paymentMethod String?
+  transactionId String?  @unique
+  createdAt     DateTime @default(now())
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  rating    Int      @default(5)
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+

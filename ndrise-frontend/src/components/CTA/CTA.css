@@ -1,0 +1,152 @@
+/* Premium Final CTA Section */
+
+.cta-section {
+  position: relative;
+  padding: 5rem 3.5rem 6rem 3.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.cta-ambient-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cta-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.3;
+}
+
+.cta-glow-blue {
+  width: 500px;
+  height: 500px;
+  background: #2563eb;
+  top: -20%;
+  left: 20%;
+}
+
+.cta-glow-purple {
+  width: 450px;
+  height: 450px;
+  background: #8b5cf6;
+  bottom: -20%;
+  right: 20%;
+}
+
+.cta-container {
+  position: relative;
+  z-index: 2;
+}
+
+.cta-card {
+  background: #080D1A;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  padding: 4.5rem 3rem;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #38bdf8;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.25rem;
+}
+
+.cta-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+}
+
+.cta-title span {
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cta-subtitle {
+  font-size: 1.05rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 2.25rem;
+  max-width: 620px;
+}
+
+.cta-button-wrap {
+  margin-bottom: 2rem;
+}
+
+.cta-btn-main {
+  font-size: 1.05rem;
+  padding: 0.95rem 2.2rem;
+}
+
+.cta-secondary-tags {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.04em;
+}
+
+.cta-secondary-tags span {
+  color: #94a3b8;
+}
+
+@media (max-width: 640px) {
+  .cta-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .cta-card {
+    padding: 2.5rem 1.25rem;
+    border-radius: 20px;
+  }
+
+  .cta-title {
+    font-size: 1.95rem;
+  }
+
+  .cta-subtitle {
+    font-size: 0.92rem;
+  }
+}

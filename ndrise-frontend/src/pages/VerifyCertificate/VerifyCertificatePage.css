@@ -1,0 +1,182 @@
+.verify-page-wrapper {
+  min-height: 100vh;
+  background: var(--bg-dark);
+  color: var(--text-main);
+  padding-bottom: 4rem;
+  transition: background-color 0.3s ease;
+}
+
+.verify-hero {
+  padding: 3.5rem 1.5rem 2.5rem;
+  text-align: center;
+  background: radial-gradient(circle at 50% 20%, rgba(37, 99, 235, 0.12), transparent 70%);
+}
+
+.verify-hero-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.verify-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 1.1rem;
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.3);
+  border-radius: var(--radius-full);
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.25rem;
+}
+
+.verify-hero-title {
+  font-family: var(--font-heading);
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.verify-hero-title span {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.verify-hero-desc {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 720px;
+  line-height: 1.65;
+  margin-bottom: 2rem;
+}
+
+.trust-features-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.trust-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-card);
+}
+
+.verify-content-container {
+  max-width: 1100px;
+  margin: -1rem auto 2rem;
+  padding: 0 1.5rem;
+}
+
+/* Employer Trust Cards Section */
+.employer-trust-section {
+  padding: 4rem 1.5rem;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.employer-trust-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.employer-trust-title {
+  font-family: var(--font-heading);
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 2.5rem;
+}
+
+.trust-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.trust-card {
+  padding: 2rem;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  text-align: left;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.trust-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+}
+
+.trust-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.trust-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.trust-card p {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .verify-hero-title {
+    font-size: 2rem;
+  }
+  .trust-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .verify-hero {
+    padding: 2.5rem 0.85rem 1.5rem;
+  }
+
+  .verify-hero-title {
+    font-size: 1.65rem;
+  }
+
+  .verify-content-container {
+    padding: 0 0.85rem;
+  }
+
+  .trust-card {
+    padding: 1.25rem;
+  }
+}

@@ -1,0 +1,612 @@
+/* Job Email Builder Page Styling */
+.job-email-page {
+  min-height: calc(100vh - 120px);
+  padding: 3.5rem 1.5rem 6rem;
+  background: var(--bg-dark, #f1f5f9);
+  color: var(--text-main, #0f172a);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.email-builder-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header Hero */
+.email-hero {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--primary, #2563eb);
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  background: rgba(37, 99, 235, 0.08);
+  padding: 0.45rem 1.15rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid rgba(37, 99, 235, 0.25);
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.12);
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-main, #0f172a);
+  margin-bottom: 0.75rem;
+  line-height: 1.15;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+  margin-bottom: 0.5rem;
+}
+
+.hero-explanation {
+  font-size: 0.98rem;
+  color: var(--text-muted, #475569);
+  line-height: 1.6;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* Copy Toast Banner */
+.copy-toast-banner {
+  position: fixed;
+  top: 100px;
+  right: 30px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: #064e3b;
+  border: 1.5px solid #10b981;
+  color: #34d399;
+  padding: 0.9rem 1.4rem;
+  border-radius: var(--radius-md);
+  font-size: 0.92rem;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Base Glass Section Card */
+.section-card {
+  padding: 2.25rem;
+  margin-bottom: 2rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-light, rgba(203, 213, 225, 0.8));
+  box-shadow: var(--shadow-card, 0 10px 30px -10px rgba(15, 23, 42, 0.08));
+}
+
+.section-heading {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--text-main, #0f172a);
+}
+
+/* Selectable Email Type Cards Grid */
+.type-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.1rem;
+}
+
+.type-card {
+  position: relative;
+  background: var(--bg-card-hover, #f8fafc);
+  border: 1.5px solid var(--border-light, #e2e8f0);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.type-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary, #2563eb);
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.type-card.selected {
+  border-color: var(--primary, #2563eb);
+  background: rgba(37, 99, 235, 0.08);
+  box-shadow: 0 0 18px rgba(37, 99, 235, 0.15);
+}
+
+.type-card-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.type-card.selected .type-card-icon {
+  background: var(--primary, #2563eb);
+  color: #ffffff;
+}
+
+.type-card-content {
+  flex: 1;
+}
+
+.type-card-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  margin-bottom: 0.35rem;
+}
+
+.type-card.selected .type-card-title {
+  color: var(--primary, #2563eb);
+}
+
+.type-card-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.45;
+}
+
+.type-card-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary, #2563eb);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Builder Main Two-Column Layout */
+.builder-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Form Controls Block */
+.form-group-block {
+  border-bottom: 1px solid var(--border-light, #e2e8f0);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.group-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary, #2563eb);
+  margin-bottom: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem;
+  margin-bottom: 1.1rem;
+}
+
+.field-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 1.1rem;
+  text-align: left;
+}
+
+.field-box label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+}
+
+.req-star {
+  color: #ef4444;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: var(--bg-card, #ffffff);
+  border: 1.5px solid var(--border-light, #cbd5e1);
+  border-radius: var(--radius-sm);
+  color: var(--text-main, #0f172a);
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  border-color: var(--primary, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.form-textarea {
+  resize: vertical;
+}
+
+.input-helper {
+  font-size: 0.75rem;
+  color: var(--text-muted, #64748b);
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  padding: 0.85rem 1.15rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* Modifiers Grid (Tone & Length) */
+.modifiers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem;
+}
+
+.btn-generate-main {
+  width: 100%;
+  padding: 0.95rem 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+/* Right Preview Column: Composer */
+.preview-card {
+  padding: 1.75rem;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-light, #e2e8f0);
+  box-shadow: var(--shadow-card, 0 10px 30px -10px rgba(0, 0, 0, 0.08));
+}
+
+.preview-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border-light, #e2e8f0);
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.composer-dots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot-red { background: #ef4444; }
+.dot-yellow { background: #f59e0b; }
+.dot-green { background: #10b981; }
+
+.composer-title-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-muted, #64748b);
+}
+
+/* Empty State Preview */
+.empty-preview-placeholder {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-mail-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+  color: var(--primary, #2563eb);
+}
+
+.empty-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-main, #0f172a);
+}
+
+.empty-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted, #64748b);
+  max-width: 340px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Active Email Composer */
+.subject-input-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--bg-glass, #f8fafc);
+  border: 1px solid var(--border-light, #e2e8f0);
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.1rem;
+}
+
+.subject-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary, #2563eb);
+  flex-shrink: 0;
+}
+
+.subject-input-field {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-main, #0f172a);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.body-editor-box {
+  margin-bottom: 1.5rem;
+}
+
+.body-editor-textarea {
+  width: 100%;
+  background: var(--bg-glass, #f8fafc);
+  border: 1px solid var(--border-light, #e2e8f0);
+  border-radius: var(--radius-sm);
+  padding: 1.15rem;
+  color: var(--text-main, #0f172a);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  font-family: inherit;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.body-editor-textarea:focus {
+  border-color: var(--primary, #2563eb);
+}
+
+/* Email Quality Widget */
+.email-quality-box {
+  background: var(--bg-glass, #f8fafc);
+  border: 1px solid var(--border-light, #e2e8f0);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.quality-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.quality-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quality-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.quality-score-pill {
+  font-size: 0.85rem;
+  color: var(--text-muted, #64748b);
+}
+
+.quality-score-pill strong {
+  color: #10b981;
+  font-size: 1rem;
+}
+
+.quality-checklist-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+}
+
+.text-ok { color: var(--text-main, #0f172a); }
+.text-warn { color: #f59e0b; }
+
+.quality-disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-muted, #64748b);
+  font-style: italic;
+}
+
+/* Action Buttons Bar */
+.composer-actions-bar {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.composer-actions-bar button {
+  padding: 0.65rem 1.1rem !important;
+  font-size: 0.85rem !important;
+}
+
+/* Dark Theme Specific Overrides */
+[data-theme="dark"] .job-email-page {
+  background: var(--bg-dark, #050811);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .hero-badge {
+  color: #38bdf8;
+  background: rgba(14, 165, 233, 0.08);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+[data-theme="dark"] .section-card,
+[data-theme="dark"] .preview-card {
+  background: rgba(13, 19, 36, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .type-card {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .type-card:hover {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+[data-theme="dark"] .type-card.selected {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .type-card-icon {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .type-card.selected .type-card-icon {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .type-card.selected .type-card-title {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .type-card-check {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .group-title,
+[data-theme="dark"] .subject-label {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-textarea,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .subject-input-box,
+[data-theme="dark"] .body-editor-textarea,
+[data-theme="dark"] .email-quality-box {
+  background: rgba(10, 14, 28, 0.8);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .subject-input-field {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .text-ok {
+  color: #f8fafc;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .builder-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .job-email-page {
+    padding: 2rem 1rem 4rem;
+  }
+
+  .section-card {
+    padding: 1.5rem;
+  }
+
+  .form-grid-2col,
+  .modifiers-grid,
+  .quality-checklist-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .composer-actions-bar button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .job-email-page {
+    padding: 1.5rem 0.85rem 3rem;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .section-card {
+    padding: 1.15rem;
+  }
+
+  .type-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
