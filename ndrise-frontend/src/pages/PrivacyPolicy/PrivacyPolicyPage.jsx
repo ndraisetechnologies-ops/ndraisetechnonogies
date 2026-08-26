@@ -23,6 +23,11 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
     { id: 'contact', label: 'Contact' }
   ];
 
+  // Always scroll page to top when Privacy Policy opens
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Scrollspy: Automatically detect active section as page scrolls
   useEffect(() => {
     const handleScroll = () => {
@@ -46,12 +51,20 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Auto-scroll the active TOC item inside the CONTENTS sidebar container
+  // Auto-scroll the active TOC item inside the CONTENTS sidebar container only
   useEffect(() => {
     if (tocNavRef.current) {
       const activeLink = tocNavRef.current.querySelector('.toc-link.active');
       if (activeLink) {
-        activeLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        const container = tocNavRef.current;
+        const linkTop = activeLink.offsetTop;
+        const linkHeight = activeLink.offsetHeight;
+        const containerHeight = container.clientHeight;
+        const containerScroll = container.scrollTop;
+
+        if (linkTop < containerScroll || (linkTop + linkHeight) > (containerScroll + containerHeight)) {
+          container.scrollTop = linkTop - containerHeight / 2 + linkHeight / 2;
+        }
       }
     }
   }, [activeSection]);

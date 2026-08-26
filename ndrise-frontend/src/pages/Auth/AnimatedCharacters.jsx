@@ -66,7 +66,8 @@ export default function AnimatedCharacters({ focusedField, textLength = 0, showP
       <div
         className="characters-group"
         style={{
-          transform: `perspective(1000px) rotateX(${stageRotateX}deg) rotateY(${stageRotateY}deg)`
+          '--rotate-x': `${stageRotateX}deg`,
+          '--rotate-y': `${stageRotateY}deg`
         }}
       >
 

@@ -276,54 +276,36 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
 
       {/* Main Content View */}
       <main className="dashboard-main">
-        
-        {/* Live Broadcast Announcement Banner Box */}
+           {/* Live Broadcast Announcement Banner Box */}
         {latestAnnouncement && (
           <FadeIn direction="down" duration={0.3}>
-            <div style={{
-              marginBottom: '1rem',
-              padding: '0.85rem 1.25rem',
-              borderRadius: '12px',
-              background: latestAnnouncement.type === 'URGENT_ALERT' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(56, 189, 248, 0.12)',
-              border: `1px solid ${latestAnnouncement.type === 'URGENT_ALERT' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(56, 189, 248, 0.3)'}`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '1rem',
-              backdropFilter: 'blur(8px)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{
-                  padding: '0.4rem',
-                  borderRadius: '8px',
-                  background: latestAnnouncement.type === 'URGENT_ALERT' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(56, 189, 248, 0.2)',
-                  color: latestAnnouncement.type === 'URGENT_ALERT' ? '#f87171' : '#38bdf8',
-                  display: 'flex',
-                  alignItems: 'center'
-                }}>
-                  {latestAnnouncement.type === 'URGENT_ALERT' ? <AlertTriangle size={18} /> : <Megaphone size={18} />}
-                </div>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: '700', padding: '0.15rem 0.45rem', borderRadius: '4px', background: 'rgba(255,255,255,0.1)', color: 'var(--text-main)' }}>
-                      {latestAnnouncement.type}
-                    </span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-main)' }}>
-                      {latestAnnouncement.title}
-                    </span>
+            <div className={`announcement-banner-box ${latestAnnouncement.type === 'URGENT_ALERT' ? 'urgent-alert' : ''}`}>
+              <div className="announcement-top-bar">
+                <div className="announcement-tag-group">
+                  <div className="announcement-icon-badge">
+                    {latestAnnouncement.type === 'URGENT_ALERT' ? <AlertTriangle size={16} /> : <Megaphone size={16} />}
                   </div>
-                  <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
-                    {latestAnnouncement.message}
-                  </div>
+                  <span className="announcement-type-pill">
+                    {latestAnnouncement.type}
+                  </span>
                 </div>
+
+                <button 
+                  className="announcement-dismiss-btn"
+                  onClick={() => setDismissedBannerIds(prev => [...prev, latestAnnouncement.id])} 
+                  title="Dismiss Banner"
+                >
+                  <X size={16} />
+                </button>
               </div>
-              <button 
-                onClick={() => setDismissedBannerIds(prev => [...prev, latestAnnouncement.id])} 
-                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.2rem', display: 'flex', alignItems: 'center' }}
-                title="Dismiss Banner"
-              >
-                <X size={16} />
-              </button>
+
+              <h4 className="announcement-banner-title">
+                {latestAnnouncement.title}
+              </h4>
+
+              <p className="announcement-banner-msg">
+                {latestAnnouncement.message}
+              </p>
             </div>
           </FadeIn>
         )}
@@ -386,42 +368,36 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.18 }}
-                    style={{
-                      position: 'absolute',
-                      right: 0,
-                      top: 'calc(100% + 0.6rem)',
-                      width: '360px',
-                      maxHeight: '440px',
-                      background: 'rgba(15, 23, 42, 0.98)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      borderRadius: '14px',
-                      backdropFilter: 'blur(20px)',
-                      boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 1px rgba(255, 255, 255, 0.2)',
-                      zIndex: 99999,
-                      overflow: 'hidden',
-                      display: 'flex',
-                      flexDirection: 'column'
-                    }}
+                    className="notif-dropdown-drawer"
                   >
                     {/* Popover Header */}
-                    <div style={{ padding: '0.85rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: '700', color: 'var(--text-main)', fontSize: '0.88rem' }}>
+                    <div className="notif-drawer-header">
+                      <div className="notif-drawer-title">
                         <Bell size={16} style={{ color: '#38bdf8' }} /> System Broadcast Notifications
                       </div>
-                      {unreadCount > 0 && (
-                        <button 
-                          onClick={() => setReadNotifIds(notifications.map(n => n.id))} 
-                          style={{ background: 'none', border: 'none', color: '#38bdf8', fontSize: '0.75rem', cursor: 'pointer', fontWeight: '600' }}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        {unreadCount > 0 && (
+                          <button 
+                            className="notif-mark-read-btn"
+                            onClick={() => setReadNotifIds(notifications.map(n => n.id))} 
+                          >
+                            Mark all read
+                          </button>
+                        )}
+                        <button
+                          className="notif-close-btn"
+                          onClick={() => setNotifDropdownOpen(false)}
+                          title="Close Notifications"
                         >
-                          Mark all read
+                          <X size={16} />
                         </button>
-                      )}
+                      </div>
                     </div>
 
                     {/* Notification List Body */}
-                    <div style={{ overflowY: 'auto', padding: '0.5rem' }}>
+                    <div className="notif-drawer-body">
                       {notifications.length === 0 ? (
-                        <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.82rem' }}>
+                        <div className="notif-empty-state">
                           No notifications right now.
                         </div>
                       ) : (
@@ -430,25 +406,20 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
                           return (
                             <div 
                               key={n.id} 
+                              className={`notif-item-card ${isRead ? 'read' : 'unread'}`}
                               onClick={() => setReadNotifIds(prev => isRead ? prev : [...prev, n.id])}
                               style={{
-                                padding: '0.75rem',
-                                borderRadius: '8px',
-                                marginBottom: '0.35rem',
-                                background: isRead ? 'transparent' : 'rgba(56, 189, 248, 0.06)',
-                                borderLeft: `3px solid ${n.type === 'URGENT_ALERT' ? '#f87171' : n.type === 'ANNOUNCEMENT' ? '#818cf8' : '#34d399'}`,
-                                cursor: 'pointer',
-                                transition: 'background 0.15s ease'
+                                borderLeft: `3px solid ${n.type === 'URGENT_ALERT' ? '#f87171' : n.type === 'ANNOUNCEMENT' ? '#818cf8' : '#34d399'}`
                               }}
                             >
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.2rem' }}>
-                                <span style={{ fontWeight: '700', fontSize: '0.83rem', color: 'var(--text-main)' }}>{n.title}</span>
-                                {!isRead && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#38bdf8', marginTop: '4px' }} />}
+                              <div className="notif-item-header">
+                                <span className="notif-item-title">{n.title}</span>
+                                {!isRead && <span className="notif-unread-dot" />}
                               </div>
-                              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.35rem', lineHeight: '1.3' }}>
+                              <div className="notif-item-msg">
                                 {n.message}
                               </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>
+                              <div className="notif-item-meta">
                                 <span>{n.sentBy}</span>
                                 <span>{new Date(n.sentAt).toLocaleDateString()}</span>
                               </div>
@@ -648,11 +619,11 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
         {/* Full-Width Assigned Projects Section */}
         <FadeIn direction="up" delay={0.15}>
           <div className="command-card glass-panel" style={{ border: '1.5px solid var(--primary, #2563eb)', marginBottom: '1.75rem' }}>
-            <div className="card-header-flex" style={{ alignItems: 'flex-start' }}>
+            <div className="card-header-flex">
               <div>
-                <h3 className="section-card-heading" style={{ marginBottom: '0.25rem', fontSize: '1.4rem' }}>Assigned Projects</h3>
-                <div style={{ fontSize: '0.88rem', fontWeight: '600', color: 'var(--primary, #2563eb)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <Code size={18} />
+                <h3 className="section-card-heading" style={{ marginBottom: '0.25rem', fontSize: '1.35rem' }}>Assigned Projects</h3>
+                <div className="enrolled-track-badge">
+                  <Code size={18} style={{ flexShrink: 0 }} />
                   <span>Enrolled Track: <strong>{primaryTrackTitle}</strong></span>
                 </div>
               </div>
@@ -660,7 +631,7 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
               <motion.button 
                 type="button" 
                 className="btn-table-action"
-                style={{ fontSize: '0.85rem' }}
+                style={{ fontSize: '0.85rem', whiteSpace: 'nowrap' }}
                 onClick={() => setCurrentView && setCurrentView('project-guidelines')}
                 whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
                 whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
@@ -669,7 +640,7 @@ export default function StudentDashboard({ user, onLogout, setCurrentView }) {
               </motion.button>
             </div>
 
-            <div className="project-overview-bar" style={{ marginTop: '1rem', marginBottom: '1.25rem' }}>
+            <div className="project-overview-bar">
               <span>Completed: <strong>{submissions.filter(s => s.status === 'APPROVED').length || data.projects?.completed || 0}</strong></span>
               <span>In Progress: <strong>{submissions.filter(s => s.status === 'PENDING' || s.status === 'REVISION_REQUESTED').length || (data.projectsList?.length || 3) - submissions.filter(s => s.status === 'APPROVED').length}</strong></span>
               <span>Submissions Logged: <strong>{submissions.length} live in Neon DB</strong></span>

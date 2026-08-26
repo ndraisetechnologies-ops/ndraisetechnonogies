@@ -374,11 +374,11 @@ export default function AuthPage({ initialMode = 'login', onAuthSuccess, onGoHom
             <div className="auth-card-footer">
               {mode === 'login' && (
                 <p>
-                  Don't have an account?{' '}
+                  <span className="footer-prompt">Don't have an account?</span>
                   <span className="auth-action-link" onClick={() => { setMode('register'); setErrorMessage(''); }}>
                     Sign Up
                   </span>
-                  {' '}•{' '}
+                  <span className="footer-divider">•</span>
                   <span className="auth-action-link" onClick={() => { setMode('admin-login'); setErrorMessage(''); }}>
                     Admin Portal
                   </span>
@@ -387,7 +387,7 @@ export default function AuthPage({ initialMode = 'login', onAuthSuccess, onGoHom
 
               {mode === 'register' && (
                 <p>
-                  Already have an account?{' '}
+                  <span className="footer-prompt">Already have an account?</span>
                   <span className="auth-action-link" onClick={() => { setMode('login'); setErrorMessage(''); }}>
                     Log In
                   </span>
@@ -396,7 +396,7 @@ export default function AuthPage({ initialMode = 'login', onAuthSuccess, onGoHom
 
               {mode === 'forgot-password' && (
                 <p>
-                  Remembered your password?{' '}
+                  <span className="footer-prompt">Remembered your password?</span>
                   <span className="auth-action-link" onClick={() => { setMode('login'); setErrorMessage(''); }}>
                     Back to Log In
                   </span>
@@ -405,7 +405,7 @@ export default function AuthPage({ initialMode = 'login', onAuthSuccess, onGoHom
 
               {mode === 'admin-login' && (
                 <p>
-                  Student Sign In?{' '}
+                  <span className="footer-prompt">Student Sign In?</span>
                   <span className="auth-action-link" onClick={() => { setMode('login'); setErrorMessage(''); }}>
                     Student Portal
                   </span>

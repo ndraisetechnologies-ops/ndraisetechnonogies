@@ -177,6 +177,11 @@ export default function App() {
       document.body.style.overflow = '';
     };
   }, [isAnyModalOpen]);
+
+  // Scroll window to top whenever view changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentView]);
   
   // Toast
   const [toast, setToast] = useState(null);
