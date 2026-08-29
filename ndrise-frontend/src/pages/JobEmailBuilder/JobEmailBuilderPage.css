@@ -496,9 +496,9 @@
 }
 
 [data-theme="dark"] .hero-badge {
-  color: #38bdf8;
-  background: rgba(14, 165, 233, 0.08);
-  border-color: rgba(56, 189, 248, 0.3);
+  color: var(--primary);
+  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.25);
 }
 
 [data-theme="dark"] .section-card,
@@ -513,37 +513,37 @@
 }
 
 [data-theme="dark"] .type-card:hover {
-  background: rgba(56, 189, 248, 0.08);
-  border-color: rgba(56, 189, 248, 0.4);
+  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.4);
 }
 
 [data-theme="dark"] .type-card.selected {
-  background: rgba(56, 189, 248, 0.15);
-  border-color: #38bdf8;
+  background: rgba(37, 99, 235, 0.15);
+  border-color: var(--primary);
 }
 
 [data-theme="dark"] .type-card-icon {
-  background: rgba(56, 189, 248, 0.15);
-  color: #38bdf8;
+  background: rgba(37, 99, 235, 0.15);
+  color: var(--primary);
 }
 
 [data-theme="dark"] .type-card.selected .type-card-icon {
-  background: #38bdf8;
-  color: #0f172a;
+  background: var(--primary);
+  color: #ffffff;
 }
 
 [data-theme="dark"] .type-card.selected .type-card-title {
-  color: #38bdf8;
+  color: var(--primary);
 }
 
 [data-theme="dark"] .type-card-check {
-  background: #38bdf8;
-  color: #0f172a;
+  background: var(--primary);
+  color: #ffffff;
 }
 
 [data-theme="dark"] .group-title,
 [data-theme="dark"] .subject-label {
-  color: #38bdf8;
+  color: var(--primary);
 }
 
 [data-theme="dark"] .form-input,

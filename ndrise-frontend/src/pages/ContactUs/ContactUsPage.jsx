@@ -55,7 +55,7 @@ export default function ContactUsPage({ user, setCurrentView }) {
             <StaggerItem>
               <motion.div className="info-card" whileHover={{ y: -5, scale: 1.015 }}>
                 <div className="info-icon-badge">
-                  <MapPin size={20} color="#00acc1" />
+                  <MapPin size={20} color="#2563eb" />
                 </div>
                 <div className="info-card-text">
                   <h3 className="info-card-title">Visit Us</h3>
@@ -68,7 +68,7 @@ export default function ContactUsPage({ user, setCurrentView }) {
             <StaggerItem>
               <motion.div className="info-card" whileHover={{ y: -5, scale: 1.015 }}>
                 <div className="info-icon-badge">
-                  <Mail size={20} color="#00acc1" />
+                  <Mail size={20} color="#2563eb" />
                 </div>
                 <div className="info-card-text">
                   <h3 className="info-card-title">Email Us</h3>
@@ -83,7 +83,7 @@ export default function ContactUsPage({ user, setCurrentView }) {
             {/* <StaggerItem>
               <motion.div className="info-card" whileHover={{ y: -5, scale: 1.015 }}>
                 <div className="info-icon-badge">
-                  <Phone size={20} color="#00acc1" />
+                  <Phone size={20} color="#2563eb" />
                 </div>
                 <div className="info-card-text">
                   <h3 className="info-card-title">Call Us</h3>

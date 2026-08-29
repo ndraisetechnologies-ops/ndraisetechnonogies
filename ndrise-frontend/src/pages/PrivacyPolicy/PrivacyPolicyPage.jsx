@@ -104,30 +104,14 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
     <div className="policy-page">
       <div className="policy-container">
         
-        {/* Left Sticky Sidebar Table of Contents */}
-        <aside className="policy-sidebar">
-          <div className="toc-header">CONTENTS</div>
-          <nav className="toc-nav" ref={tocNavRef}>
-            {sections.map((sec) => (
-              <button
-                key={sec.id}
-                className={`toc-link ${activeSection === sec.id ? 'active' : ''}`}
-                onClick={() => scrollToSection(sec.id)}
-              >
-                {sec.label}
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* Right Main Document Area */}
+        {/* Main Document Area */}
         <main className="policy-content">
           
           {/* Header Card */}
           <div className="policy-document-header">
             <div className="header-title-row">
               <div className="document-icon-badge">
-                <FileText size={26} color="#00acc1" />
+                <FileText size={26} color="#2563eb" />
               </div>
               <div className="header-meta">
                 <div className="title-row">
@@ -155,7 +139,7 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
             <section id="info-collected" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Database size={16} color="#00acc1" />
+                  <Database size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Information Collected</h2>
               </div>
@@ -174,7 +158,7 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
             <section id="how-data-used" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Activity size={16} color="#00acc1" />
+                  <Activity size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">How Data Is Used</h2>
               </div>
@@ -194,7 +178,7 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
             <section id="data-protection" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <ShieldCheck size={16} color="#00acc1" />
+                  <ShieldCheck size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Data Protection</h2>
               </div>
@@ -207,7 +191,7 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
             <section id="data-sharing" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Share2 size={16} color="#00acc1" />
+                  <Share2 size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Data Sharing</h2>
               </div>
@@ -220,7 +204,7 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
             <section id="user-rights" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <UserCheck size={16} color="#00acc1" />
+                  <UserCheck size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">User Rights</h2>
               </div>
@@ -233,7 +217,7 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
             <section id="data-retention" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Clock size={16} color="#00acc1" />
+                  <Clock size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Data Retention</h2>
               </div>
@@ -246,7 +230,7 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
             <section id="childrens-privacy" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Users size={16} color="#00acc1" />
+                  <Users size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Children's Privacy</h2>
               </div>
@@ -259,7 +243,7 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
             <section id="updates" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <RefreshCw size={16} color="#00acc1" />
+                  <RefreshCw size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Updates</h2>
               </div>
@@ -272,7 +256,7 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
             <section id="contact" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Mail size={16} color="#00acc1" />
+                  <Mail size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Contact</h2>
               </div>
@@ -290,7 +274,7 @@ export default function PrivacyPolicyPage({ setCurrentView }) {
             {/* Bottom Support Callout */}
             <div className="still-questions-box">
               <div className="chat-bubble-badge">
-                <MessageCircle size={22} color="#00acc1" />
+                <MessageCircle size={22} color="#2563eb" />
               </div>
               <h3 className="questions-title">Still have questions?</h3>
               <p className="questions-desc">

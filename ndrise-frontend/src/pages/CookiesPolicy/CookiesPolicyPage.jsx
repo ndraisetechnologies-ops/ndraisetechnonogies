@@ -102,30 +102,14 @@ export default function CookiesPolicyPage({ setCurrentView }) {
     <div className="policy-page">
       <div className="policy-container">
         
-        {/* Left Sticky Sidebar Table of Contents */}
-        <aside className="policy-sidebar">
-          <div className="toc-header">CONTENTS</div>
-          <nav className="toc-nav" ref={tocNavRef}>
-            {sections.map((sec) => (
-              <button
-                key={sec.id}
-                className={`toc-link ${activeSection === sec.id ? 'active' : ''}`}
-                onClick={() => scrollToSection(sec.id)}
-              >
-                {sec.label}
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* Right Main Document Area */}
+        {/* Main Document Area */}
         <main className="policy-content">
           
           {/* Header Card */}
           <div className="policy-document-header">
             <div className="header-title-row">
               <div className="document-icon-badge">
-                <Cookie size={26} color="#00acc1" />
+                <Cookie size={26} color="#2563eb" />
               </div>
               <div className="header-meta">
                 <div className="title-row">
@@ -153,7 +137,7 @@ export default function CookiesPolicyPage({ setCurrentView }) {
             <section id="what-are-cookies" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Cookie size={16} color="#00acc1" />
+                  <Cookie size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">What Are Cookies</h2>
               </div>
@@ -166,7 +150,7 @@ export default function CookiesPolicyPage({ setCurrentView }) {
             <section id="how-we-use-cookies" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Settings size={16} color="#00acc1" />
+                  <Settings size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">How We Use Cookies</h2>
               </div>
@@ -185,7 +169,7 @@ export default function CookiesPolicyPage({ setCurrentView }) {
             <section id="types-of-cookies" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Sliders size={16} color="#00acc1" />
+                  <Sliders size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Types of Cookies Used</h2>
               </div>
@@ -202,7 +186,7 @@ export default function CookiesPolicyPage({ setCurrentView }) {
             <section id="managing-cookies" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Shield size={16} color="#00acc1" />
+                  <Shield size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Managing & Disabling Cookies</h2>
               </div>
@@ -215,7 +199,7 @@ export default function CookiesPolicyPage({ setCurrentView }) {
             <section id="third-party-cookies" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Layers size={16} color="#00acc1" />
+                  <Layers size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Third-Party Cookies</h2>
               </div>
@@ -228,7 +212,7 @@ export default function CookiesPolicyPage({ setCurrentView }) {
             <section id="updates" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <RefreshCw size={16} color="#00acc1" />
+                  <RefreshCw size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Updates to Policy</h2>
               </div>
@@ -241,7 +225,7 @@ export default function CookiesPolicyPage({ setCurrentView }) {
             <section id="contact" className="policy-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Mail size={16} color="#00acc1" />
+                  <Mail size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Contact Us</h2>
               </div>
@@ -259,7 +243,7 @@ export default function CookiesPolicyPage({ setCurrentView }) {
             {/* Bottom Support Callout */}
             <div className="still-questions-box">
               <div className="chat-bubble-badge">
-                <MessageCircle size={22} color="#00acc1" />
+                <MessageCircle size={22} color="#2563eb" />
               </div>
               <h3 className="questions-title">Still have questions?</h3>
               <p className="questions-desc">

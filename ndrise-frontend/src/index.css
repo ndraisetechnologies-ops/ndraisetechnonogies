@@ -190,12 +190,19 @@ p, span, a, label {
   border-color: rgba(37, 99, 235, 0.25);
 }
 
+/* Form Controls & Buttons Typography Base */
+button, input, select, textarea {
+  font-family: var(--font-heading);
+}
+
 /* Buttons */
 .btn-primary {
   background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #7c3aed 100%);
   color: #ffffff;
+  font-family: var(--font-heading);
   font-weight: 600;
   font-size: 0.95rem;
+  font-style: normal;
   border: none;
   padding: 0.78rem 1.7rem;
   border-radius: var(--radius-full);
@@ -207,6 +214,11 @@ p, span, a, label {
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
   text-decoration: none;
+}
+
+.btn-primary span {
+  font-family: inherit;
+  font-style: normal;
 }
 
 .btn-primary:hover {
@@ -221,8 +233,10 @@ p, span, a, label {
 .btn-secondary {
   background: var(--bg-card);
   color: var(--text-main);
+  font-family: var(--font-heading);
   font-weight: 600;
   font-size: 0.95rem;
+  font-style: normal;
   border: 1px solid var(--border-light);
   padding: 0.78rem 1.7rem;
   border-radius: var(--radius-full);
@@ -234,6 +248,11 @@ p, span, a, label {
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   text-decoration: none;
+}
+
+.btn-secondary span {
+  font-family: inherit;
+  font-style: normal;
 }
 
 .btn-secondary:hover {

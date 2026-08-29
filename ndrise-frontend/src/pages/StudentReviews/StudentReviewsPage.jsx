@@ -265,7 +265,7 @@ export default function StudentReviewsPage({ user, setCurrentView }) {
               <div className="story-form-col">
                 <div className="story-header">
                   <div className="plus-icon-circle">
-                    <PlusCircle size={22} color="#00acc1" />
+                    <PlusCircle size={22} color="#2563eb" />
                   </div>
                   <h2 className="story-title">Share Your Story</h2>
                 </div>
@@ -361,7 +361,7 @@ export default function StudentReviewsPage({ user, setCurrentView }) {
                     Join our community and help us build the future of tech education.
                   </p>
 
-                  <button onClick={handleBackToHome} className="back-home-btn">
+                  <button onClick={handleBackToHome} className="back-home-btn" title="Back to Home" aria-label="Back to Home">
                     <Home size={16} />
                     <span>Back to Home</span>
                   </button>

@@ -488,22 +488,24 @@
   }
 
   .hero-buttons {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     max-width: 100%;
-    gap: 0.85rem;
-    align-items: stretch;
-    margin: 0 auto 2rem auto;
+    gap: 0.75rem;
+    margin: 0 auto 1.75rem auto;
   }
 
   .hero-btn-main,
   .hero-btn-sub {
-    width: 100%;
+    width: auto;
     max-width: 100%;
     justify-content: center;
     text-align: center;
-    padding: 0.85rem 1.25rem;
-    font-size: 0.92rem;
+    padding: 0.65rem 1.35rem;
+    font-size: 0.88rem;
     margin: 0;
   }
 
@@ -575,35 +577,109 @@
   }
 
   .hero-buttons {
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 1.25rem;
+    width: 100%;
   }
 
   .hero-btn-main,
   .hero-btn-sub {
-    padding: 0.75rem 1.1rem;
-    font-size: 0.88rem;
+    padding: 0.55rem 1.05rem;
+    font-size: 0.82rem;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: -0.01em;
+    width: auto;
+    max-width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
   }
 
   .hero-features-strip {
-    gap: 0.5rem;
-    padding-top: 0.85rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.35rem 0.75rem;
+    padding-top: 0.75rem;
+    width: 100%;
   }
 
   .strip-item {
-    font-size: 0.78rem;
+    width: auto;
+    max-width: 100%;
+    justify-content: center;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 0.75rem;
+  }
+
+  .hero-visual-3d-stage {
+    margin-top: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero-3d-card-wrapper {
+    max-width: 100%;
+  }
+
+  .ide-header-bar {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .ide-body-content {
+    padding: 0.75rem 0.65rem;
+  }
+
+  .ide-logo-header {
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .ide-logo-badge {
+    width: 34px;
+    height: 34px;
+  }
+
+  .ide-logo-title {
+    font-size: 0.88rem;
+  }
+
+  .ide-logo-sub {
+    font-size: 0.7rem;
   }
 
   .ide-code-block {
     overflow-x: auto;
-    font-size: 0.72rem;
-    padding: 0.65rem;
+    font-size: 0.68rem;
+    padding: 0.55rem 0.65rem;
+    line-height: 1.5;
+  }
+
+  .chip-certificate,
+  .chip-rating,
+  .pill-learn-3d,
+  .pill-build-3d,
+  .pill-grow-3d,
+  .hero-3d-micro-chip,
+  .hero-pill-badge-3d {
+    display: none !important;
   }
 }
 
 @media (max-width: 380px) {
   .hero-section {
-    padding: 1.25rem 0.5rem 1.75rem 0.5rem;
+    padding: 1rem 0.5rem 1.5rem 0.5rem;
+    gap: 1.25rem;
   }
 
   .hero-badge-tag {
@@ -613,10 +689,30 @@
 
   .hero-title {
     font-size: 1.3rem;
-    min-height: 2.5rem;
+    min-height: 2.3rem;
   }
 
   .hero-description {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .hero-buttons {
+    gap: 0.4rem;
+  }
+
+  .hero-btn-main,
+  .hero-btn-sub {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.78rem;
+  }
+
+  .strip-item {
+    font-size: 0.7rem;
+  }
+
+  .ide-code-block {
+    font-size: 0.64rem;
+    padding: 0.45rem 0.55rem;
   }
 }

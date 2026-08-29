@@ -38,6 +38,7 @@ const VIEW_TO_PATH = {
   'internships': '/internships',
   'browse-courses': '/courses',
   'ats-score': '/ats-score',
+  'job-search': '/job-search',
   'job-email-builder': '/job-email-builder',
   'interview-preparation': '/interview-preparation',
   'project-guidelines': '/project-guidelines',
@@ -74,6 +75,18 @@ export default function App() {
     if (path === '/internships') return 'internships';
     if (path === '/courses') return 'browse-courses';
     if (path === '/verify') return 'verify';
+    if (path === '/job-search') return 'job-search';
+    if (path === '/job-email-builder') return 'job-email-builder';
+    if (path === '/ats-score') return 'ats-score';
+    if (path === '/interview-preparation') return 'interview-preparation';
+    if (path === '/project-guidelines') return 'project-guidelines';
+    if (path === '/offer-letter') return 'offer-letter';
+    if (path === '/my-certificates') return 'my-certificates';
+    if (path === '/reviews') return 'reviews';
+    if (path === '/contact') return 'contact';
+    if (path === '/terms') return 'terms';
+    if (path === '/privacy') return 'privacy';
+    if (path === '/cookies') return 'cookies';
     return PATH_TO_VIEW[path] || 'home';
   });
   const [selectedInternship, setSelectedInternship] = useState(ALL_INTERNSHIPS[0]);

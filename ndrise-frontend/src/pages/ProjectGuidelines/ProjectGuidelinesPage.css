@@ -35,7 +35,7 @@
 }
 
 [data-theme="dark"] .btn-back-link {
-  color: #38bdf8;
+  color: var(--primary);
 }
 
 .btn-back-link:hover {
@@ -64,7 +64,7 @@
 }
 
 [data-theme="dark"] .guidelines-tag {
-  color: #38bdf8;
+  color: var(--primary);
 }
 
 .guidelines-main-title {
@@ -333,7 +333,7 @@
 }
 
 [data-theme="dark"] .deliv-number {
-  color: #38bdf8;
+  color: var(--primary);
 }
 
 .deliv-title {
@@ -396,8 +396,8 @@
 }
 
 [data-theme="dark"] .phase-icon-circle {
-  background: rgba(56, 189, 248, 0.15);
-  color: #38bdf8;
+  background: rgba(37, 99, 235, 0.15);
+  color: var(--primary);
 }
 
 .phase-title {
@@ -501,7 +501,7 @@
 }
 
 [data-theme="dark"] .eval-weight {
-  color: #38bdf8;
+  color: var(--primary);
 }
 
 .eval-name {
@@ -539,7 +539,7 @@
 }
 
 [data-theme="dark"] .rocket-cta-icon {
-  color: #38bdf8;
+  color: var(--primary);
 }
 
 .cta-title {

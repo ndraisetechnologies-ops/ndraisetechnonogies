@@ -109,30 +109,14 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
     <div className="terms-page">
       <div className="terms-container">
         
-        {/* Left Sticky Sidebar Table of Contents */}
-        <aside className="terms-sidebar">
-          <div className="toc-header">CONTENTS</div>
-          <nav className="toc-nav" ref={tocNavRef}>
-            {sections.map((sec) => (
-              <button
-                key={sec.id}
-                className={`toc-link ${activeSection === sec.id ? 'active' : ''}`}
-                onClick={() => scrollToSection(sec.id)}
-              >
-                {sec.label}
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* Right Main Document Area */}
+        {/* Main Document Area */}
         <main className="terms-content">
           
           {/* Header Card */}
           <div className="terms-document-header">
             <div className="header-title-row">
               <div className="document-icon-badge">
-                <FileText size={26} color="#00acc1" />
+                <FileText size={26} color="#2563eb" />
               </div>
               <div className="header-meta">
                 <div className="title-row">
@@ -160,7 +144,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="introduction" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Info size={16} color="#00acc1" />
+                  <Info size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Introduction</h2>
               </div>
@@ -173,7 +157,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="services-offered" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Briefcase size={16} color="#00acc1" />
+                  <Briefcase size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Services Offered</h2>
               </div>
@@ -196,7 +180,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="eligibility" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <UserCheck size={16} color="#00acc1" />
+                  <UserCheck size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Eligibility</h2>
               </div>
@@ -209,7 +193,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="user-responsibilities" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <ShieldAlert size={16} color="#00acc1" />
+                  <ShieldAlert size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">User Responsibilities</h2>
               </div>
@@ -231,7 +215,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="fees-payments" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <CreditCard size={16} color="#00acc1" />
+                  <CreditCard size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Internship Fees & Payments</h2>
               </div>
@@ -242,7 +226,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
               {/* Fee Box */}
               <div className="fee-card-box">
                 <div className="fee-box-header">
-                  <CreditCard size={18} color="#00acc1" />
+                  <CreditCard size={18} color="#2563eb" />
                   <span className="fee-box-title">Internship Task Submission Fee</span>
                 </div>
                 <div className="fee-cards-grid">
@@ -269,7 +253,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="refund-policy" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Info size={16} color="#00acc1" />
+                  <Info size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Refund Policy</h2>
               </div>
@@ -290,7 +274,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="certificates" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Award size={16} color="#00acc1" />
+                  <Award size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Certificates & Deliverables</h2>
               </div>
@@ -303,7 +287,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="intellectual-property" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Scale size={16} color="#00acc1" />
+                  <Scale size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Intellectual Property</h2>
               </div>
@@ -316,7 +300,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="confidentiality" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Lock size={16} color="#00acc1" />
+                  <Lock size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Confidentiality</h2>
               </div>
@@ -329,7 +313,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="liability" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Activity size={16} color="#00acc1" />
+                  <Activity size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Limitation of Liability</h2>
               </div>
@@ -348,7 +332,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="third-party-tools" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Layers size={16} color="#00acc1" />
+                  <Layers size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Third-Party Tools</h2>
               </div>
@@ -361,7 +345,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="governing-law" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Gavel size={16} color="#00acc1" />
+                  <Gavel size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Governing Law</h2>
               </div>
@@ -374,7 +358,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="updates" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <RefreshCw size={16} color="#00acc1" />
+                  <RefreshCw size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Updates to Terms</h2>
               </div>
@@ -387,7 +371,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             <section id="contact" className="terms-section">
               <div className="section-header">
                 <div className="section-icon-badge">
-                  <Mail size={16} color="#00acc1" />
+                  <Mail size={16} color="#2563eb" />
                 </div>
                 <h2 className="section-title">Contact</h2>
               </div>
@@ -409,7 +393,7 @@ export default function TermsAndConditionsPage({ setCurrentView }) {
             {/* Bottom Support Callout */}
             <div className="still-questions-box">
               <div className="chat-bubble-badge">
-                <MessageCircle size={22} color="#00acc1" />
+                <MessageCircle size={22} color="#2563eb" />
               </div>
               <h3 className="questions-title">Still have questions?</h3>
               <p className="questions-desc">

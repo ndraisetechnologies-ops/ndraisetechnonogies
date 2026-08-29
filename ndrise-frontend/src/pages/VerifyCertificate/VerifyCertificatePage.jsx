@@ -34,7 +34,7 @@ export default function VerifyCertificatePage() {
                 <span>100% Cryptographic Verification</span>
               </div>
               <div className="trust-feature">
-                <Lock size={16} color="#38bdf8" />
+                <Lock size={16} color="#3b82f6" />
                 <span>Tamper-Proof QR Code Records</span>
               </div>
               <div className="trust-feature">
