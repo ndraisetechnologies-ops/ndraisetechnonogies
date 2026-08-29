@@ -393,12 +393,35 @@ router.post('/reset-password', async (req, res, next) => {
 // POST /api/auth/google
 router.post('/google', async (req, res, next) => {
   try {
-    const { email, name, avatar } = req.body;
-    if (!email) {
+    const { credential, email, name, avatar } = req.body;
+    let userEmail = email;
+    let userName = name;
+    let userAvatar = avatar;
+
+    if (credential) {
+      const { OAuth2Client } = require('google-auth-library');
+      const googleClientId = process.env.GOOGLE_CLIENT_ID || '805789827367-jfne031qvt7q62bt5jitd20spoqqle9t.apps.googleusercontent.com';
+      const client = new OAuth2Client(googleClientId);
+
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: googleClientId
+      });
+      const payload = ticket.getPayload();
+      if (!payload || !payload.email) {
+        return res.status(400).json({ success: false, error: 'Invalid Google token payload.' });
+      }
+
+      userEmail = payload.email;
+      userName = payload.name || payload.email.split('@')[0];
+      userAvatar = payload.picture || '/student-avatar.svg';
+    }
+
+    if (!userEmail) {
       return res.status(400).json({ success: false, error: 'Google email is required.' });
     }
 
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedEmail = userEmail.toLowerCase().trim();
 
     let user = await prisma.user.findUnique({
       where: { email: normalizedEmail }
@@ -408,11 +431,19 @@ router.post('/google', async (req, res, next) => {
       const defaultPassword = await bcrypt.hash('GoogleAuth_' + Math.random(), 10);
       user = await prisma.user.create({
         data: {
-          name: name || normalizedEmail.split('@')[0],
+          name: userName || normalizedEmail.split('@')[0],
           email: normalizedEmail,
           password: defaultPassword,
           role: 'STUDENT',
-          avatar: avatar || '/student-avatar.svg'
+          avatar: userAvatar || '/student-avatar.svg'
+        }
+      });
+    } else {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          lastLogin: new Date(),
+          ...(userAvatar && (!user.avatar || user.avatar === '/student-avatar.svg') ? { avatar: userAvatar } : {})
         }
       });
     }
@@ -433,6 +464,14 @@ router.post('/google', async (req, res, next) => {
 
     setAuthCookie(res, token);
 
+    await logAuditEvent({
+      actorId: user.id,
+      actorEmail: user.email,
+      action: 'GOOGLE_LOGIN_SUCCESS',
+      req,
+      metadata: { role: user.role }
+    });
+
     return res.json({
       success: true,
       token,
@@ -445,8 +484,10 @@ router.post('/google', async (req, res, next) => {
       }
     });
   } catch (error) {
-    next(error);
+    console.error('Google Auth Error:', error);
+    return res.status(401).json({ success: false, error: 'Google authentication failed: ' + (error.message || 'Invalid Token') });
   }
 });
+
 
 module.exports = router;

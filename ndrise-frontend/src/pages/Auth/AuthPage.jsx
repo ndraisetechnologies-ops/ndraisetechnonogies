@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldAlert, CheckCircle2, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { useGoogleLogin } from '@react-oauth/google';
 import { authAPI, setAuthToken } from '../../services/apiClient';
 import AnimatedCharacters from './AnimatedCharacters';
 import './AuthPage.css';
@@ -115,38 +116,55 @@ export default function AuthPage({ initialMode = 'login', onAuthSuccess, onGoHom
     }
   };
 
-  const handleGoogleAuth = async () => {
-    setLoading(true);
-    setErrorMessage('');
-    try {
-      const gEmail = email || `user_${Math.floor(1000 + Math.random() * 9000)}@gmail.com`;
-      const gName = name || (gEmail.split('@')[0]);
-      
-      const res = await authAPI.googleAuth({
-        email: gEmail,
-        name: gName,
-        avatar: '/student-avatar.svg'
-      });
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setLoading(true);
+      setErrorMessage('');
+      try {
+        const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+        });
+        const googleUser = await userInfoRes.json();
 
-      if (res.success && res.user) {
-        const userRole = (res.user.role || '').toUpperCase();
-        if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
-          setAuthToken(null);
-          setErrorMessage('Admin accounts must log in via the Admin Security Portal.');
-          return;
+        if (!googleUser || !googleUser.email) {
+          throw new Error('Could not retrieve account details from Google.');
         }
-        if (res.token) setAuthToken(res.token);
-        if (showToast) showToast(`Signed in with Google as ${res.user.email}`);
-        onAuthSuccess(res.user);
-      } else {
-        setErrorMessage(res.error || 'Google authentication failed.');
+
+        const res = await authAPI.googleAuth({
+          email: googleUser.email,
+          name: googleUser.name || googleUser.given_name || googleUser.email.split('@')[0],
+          avatar: googleUser.picture || '/student-avatar.svg'
+        });
+
+        if (res.success && res.user) {
+          const userRole = (res.user.role || '').toUpperCase();
+          if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
+            setAuthToken(null);
+            setErrorMessage('Admin accounts must log in via the Admin Security Portal.');
+            return;
+          }
+          if (res.token) setAuthToken(res.token);
+          if (showToast) showToast(`Signed in with Google as ${res.user.email}`);
+          onAuthSuccess(res.user);
+        } else {
+          setErrorMessage(res.error || 'Google authentication failed.');
+        }
+      } catch (err) {
+        setErrorMessage(err.message || 'Google Auth service error.');
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      setErrorMessage(err.message || 'Google Auth service error.');
-    } finally {
-      setLoading(false);
+    },
+    onError: (error) => {
+      console.error('Google Login Error:', error);
+      setErrorMessage('Google Sign-In was cancelled or failed.');
     }
+  });
+
+  const handleGoogleAuth = () => {
+    googleLogin();
   };
+
 
   const activeTextLength = focusedField === 'username' ? name.length : email.length;
 
