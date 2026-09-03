@@ -537,7 +537,7 @@
 
 @media (max-width: 640px) {
   .brand-tech-word {
-    display: none !important;
+    display: inline !important;
   }
 
   .user-profile-dropdown {

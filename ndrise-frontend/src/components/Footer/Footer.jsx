@@ -27,11 +27,11 @@ export default function Footer({ setCurrentView, user, onAuthClick }) {
       <div className="footer-top-brand">
         <div className="nav-brand">
           <div className="brand-logo-badge">
-            <img src="/logo.jpg" alt="ND Technologies Logo" className="brand-logo-img" />
+            <img src="/logo.jpg" alt="ND Raise Technologies Logo" className="brand-logo-img" />
           </div>
           <div className="brand-text">
             <div className="brand-title">
-              ND <span>TECHNOLOGIES</span>
+              ND <span>Raise Technologies</span>
             </div>
             <div className="brand-tagline">LEARN • CODE • GROW</div>
           </div>
