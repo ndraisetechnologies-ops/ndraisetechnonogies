@@ -421,7 +421,8 @@
 
 .pill-grow-3d {
   bottom: 12%;
-  left: 20%;
+  right: -25px;
+  left: auto;
   color: #34d399;
 }
 
@@ -608,6 +609,7 @@
     position: absolute !important;
     bottom: 0.2rem !important;
     right: 0 !important;
+    left: auto !important;
     padding: 0.35rem 0.75rem !important;
     font-size: 0.72rem !important;
     z-index: 16 !important;
@@ -856,6 +858,7 @@
     position: absolute !important;
     bottom: 0 !important;
     right: 0 !important;
+    left: auto !important;
     padding: 0.28rem 0.6rem !important;
     font-size: 0.66rem !important;
   }
